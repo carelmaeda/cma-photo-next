@@ -12,7 +12,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container">
+      <div className="container-fluid px-5">
         {/* Logo */}
         <Link className="navbar-brand" href="/">
           <Image src="/logo.webp" width={76} height={50} alt="Logo" />

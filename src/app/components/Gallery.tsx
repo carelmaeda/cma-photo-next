@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const albums = [
   {
@@ -22,6 +23,30 @@ const albums = [
     alt: "Vienna Album",
     slug: "vienna",
   },
+  {
+    name: "Braga",
+    src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742935884/Braga/_DSF5631_thcn3s.jpg",
+    alt: "Braga Album",
+    slug: "braga",
+  },
+  {
+    name: "Brugge",
+    src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742935924/Brugge/DSCF4756_vxptpv.jpg",
+    alt: "Brugge Album",
+    slug: "brugge",
+  },
+  {
+    name: "Porto",
+    src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742935938/Porto/Posted/_DSF5660_monjnl.jpg",
+    alt: "Porto Album",
+    slug: "porto",
+  },
+  {
+    name: "London",
+    src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742935899/London/Posted/_DSF3690_jehqle.jpg",
+    alt: "London Album",
+    slug: "london",
+  },
 ];
 
 export default function Gallery() {
@@ -30,7 +55,14 @@ export default function Gallery() {
       <h1 className="text-center mb-4 d-none">Photo Gallery</h1>
       <div className="row justify-content-center">
         {albums.map((album, index) => (
-          <div key={index} className="col-md-6 col-lg-4 mb-4">
+          <motion.div
+            key={index}
+            className="col-6 col-md-4 col-lg-3"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <Link href={`/albums/${album.slug}`} className="text-decoration-none">
               <div className="album-wrapper">
                 <Image
@@ -39,11 +71,12 @@ export default function Gallery() {
                   width={400}
                   height={500}
                   className="img-fluid"
+                  loading="lazy"
                 />
                 <div className="album-title">{album.name}</div>
               </div>
             </Link>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

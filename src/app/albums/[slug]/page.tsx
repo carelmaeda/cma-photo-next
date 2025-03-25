@@ -3,57 +3,9 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import '../../styles.css';
- 
-
-const albumData = {
-  salzburg: [
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858160/Salzburg/efrmqrhtetgustmoblr0.jpg",
-      alt: "Salzburg Photo 1",
-    },
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858160/Salzburg/s5mt7ldzeeoxtsp9l7bk.jpg",
-      alt: "Salzburg Photo 2",
-    },
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858160/Salzburg/bfknun2bbokmdsaptxdq.jpg",
-      alt: "Salzburg Photo 3",
-    },
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858160/Salzburg/ucwsgftyghfriaotjivh.jpg",
-      alt: "Salzburg Photo 3",
-    },
-  ],
-  innsbruck: [
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858159/Salzburg/japek7sn5xbzeimf2q59.jpg",
-      alt: "Innsbruck Photo 1",
-    },
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858159/Salzburg/idnpfspiqqdjut5bjsr3.jpg",
-      alt: "Innsbruck Photo 2",
-    },
-      {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858158/Salzburg/mjsuroc19gre40sazzpm.jpg",
-      alt: "Innsbruck Photo 3",
-    },
-  ],
-  vienna: [
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858221/Vienna/we18qdnfbdcfbbvsnqv1.jpg",
-      alt: "Innsbruck Photo 1",
-    },
-    {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858221/Vienna/yljqflbifpfj3ihsvmqf.jpg",
-      alt: "Innsbruck Photo 2",
-    },
-      {
-      src: "https://res.cloudinary.com/duwhxzb0q/image/upload/v1742858221/Vienna/uszawu6xn7aishutq1dx.jpg",
-      alt: "Innsbruck Photo 3",
-    },
-  ],
-};
+import { motion } from "framer-motion";
+import albumData from "@/app/data/albumData";
+import "../../styles.css";
 
 export default function AlbumSubGallery() {
   const { slug } = useParams();
@@ -106,20 +58,32 @@ export default function AlbumSubGallery() {
   return (
     <div className="container-fluid">
       <h1 className="text-center">{albumName}</h1>
+
       <div className="row">
         {photos.map((photo, index) => (
-          <div key={index} className="col-6 col-md-4 col-lg-3">
-            <div className="">
+          <motion.div
+            key={index}
+            className="col-6 col-md-4 col-lg-3"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
               <Image
                 src={photo.src}
-                alt={photo.alt}
+                alt={`${albumName} Photo ${index + 1}`}
                 width={400}
                 height={500}
                 className="img-fluid galery-img"
                 onClick={() => openLightbox(index)}
               />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
 
@@ -127,24 +91,29 @@ export default function AlbumSubGallery() {
 
       {/* Lightbox Modal */}
       {lightboxOpen && (
-        <div className="lightbox">
+        <motion.div
+          className="lightbox"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+        >
           <div className="d-flex w-100 justify-content-end">
-         <button className="close-btn" onClick={closeLightbox}>&times;</button>
+            <button className="close-btn" onClick={closeLightbox}>&times;</button>
           </div>
           <div className="lightbox-content">
             <button className="prev-btn" onClick={prevImage}>&#10094;</button>
             <Image
               src={photos[currentIndex].src}
-              alt={photos[currentIndex].alt}
+              alt={"Gallery Image"}
               width={800}
               height={1000}
               className="lightbox-img"
+              loading="lazy"
             />
             <button className="next-btn" onClick={nextImage}>&#10095;</button>
           </div>
-        </div>
+        </motion.div>
       )}
-      
     </div>
   );
 }
