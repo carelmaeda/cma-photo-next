@@ -1,15 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import { FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = () => {
-  useEffect(() => {
-    require("bootstrap/dist/js/bootstrap.bundle.min.js"); // Load Bootstrap JS dynamically
-  }, []);
-
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid px-5">
