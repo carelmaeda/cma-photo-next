@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import albumData from "@/app/data/albumData";
+import Link from "next/link";
 
 export default function AlbumSubGallery() {
   const { slug } = useParams();
@@ -86,7 +87,7 @@ export default function AlbumSubGallery() {
         ))}
       </div>
 
-      <a href="/" className="btn btn-light">&#10094; Return</a>
+      <Link href="/" className="btn btn-light">&#10094; Return</Link>
 
       {/* Lightbox Modal */}
       {lightboxOpen && (
