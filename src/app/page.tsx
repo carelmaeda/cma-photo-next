@@ -4,6 +4,7 @@
 import Gallery from "./components/Gallery";
 import About from "./components/About";
 import Contact from "./components/Contact";
+import Hero from "./components/Hero";
 
 
 export default function Homepage() {
@@ -11,6 +12,9 @@ export default function Homepage() {
     <>
       <div className="container-fluid p-5">
         <h1 className="d-none">Carel Maeda - Portfolio</h1>
+        <section className="d-none">
+        < Hero/>
+        </section>
         <section>
         <Gallery/>
         </section>

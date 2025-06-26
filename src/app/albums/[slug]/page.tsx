@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import albumData from "@/app/data/albumData";
-import "../../styles.css";
 
 export default function AlbumSubGallery() {
   const { slug } = useParams();

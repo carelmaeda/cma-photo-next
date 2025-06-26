@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Zen_Kaku_Gothic_New, Yomogi } from "next/font/google";
 import Navbar from "./components/Navbar"; 
-import './styles.css';
+import './styles/styles.scss';
+import './styles/variables.scss';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+
+// Soft retro Japanese fonts
+const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-primary",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const yomogi = Yomogi({
   subsets: ["latin"],
+  weight: "400",
+  variable: "--font-secondary",
 });
 
 export const metadata: Metadata = {
@@ -19,14 +24,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Photo Gallery",
     description: "Explore beautiful photos from around the world.",
-    url: "https://www.yoursite.com",  // Add your site URL here
+    url: "https://www.yoursite.com",
     siteName: "Photo Gallery",
   },
   twitter: {
     card: "summary_large_image",
     title: "Photo Gallery",
     description: "Explore beautiful photos from around the world.",
-    images: "/path/to/image.jpg",  // Optional: Add an image for social sharing
+    images: "/path/to/image.jpg",
   },
 };
 
@@ -36,12 +41,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${zenKakuGothicNew.variable} ${yomogi.variable}`}>
       <head>
-        {/* Optional: Add other head elements like favicon */}
+        {/* Preload fonts for better performance */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Yomogi&display=swap"
+          as="style"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Yomogi&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Navbar />  {/* Navbar will appear on every page */}
+      <body>
+        <Navbar />
         {children}
       </body>
     </html>
