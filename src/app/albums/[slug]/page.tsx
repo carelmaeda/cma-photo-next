@@ -21,20 +21,20 @@ export default function AlbumSubGallery() {
     setLightboxOpen(true);
   };
 
-  // Close Lightbox
-  const closeLightbox = () => {
+  // Memoized Close Lightbox
+  const closeLightbox = useCallback(() => {
     setLightboxOpen(false);
-  };
+  }, []);
 
-  // Navigate Next
-  const nextImage = () => {
+  // Memoized Next Image
+  const nextImage = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % photos.length);
-  };
+  }, [photos.length]);
 
-  // Navigate Previous
-  const prevImage = () => {
+  // Memoized Previous Image
+  const prevImage = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
-  };
+  }, [photos.length]);
 
   // Keyboard Navigation (Esc, Left/Right Arrows)
   const handleKeyDown = useCallback(
@@ -43,7 +43,7 @@ export default function AlbumSubGallery() {
       if (event.key === "ArrowRight") nextImage();
       if (event.key === "ArrowLeft") prevImage();
     },
-    [photos.length]
+    [closeLightbox, nextImage, prevImage]
   );
 
   useEffect(() => {
