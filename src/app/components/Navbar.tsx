@@ -1,59 +1,49 @@
-"use client";
+'use client';
 
-import { FaInstagram } from "react-icons/fa";
-import Image from "next/image";
-import Link from "next/link";
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [navbarVisible, setNavbarVisible] = useState(true);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container-fluid px-5">
-        {/* Logo */}
-        <Link className="navbar-brand" href="/">
-          <Image src="/logo.webp" width={76} height={50} alt="Logo" />
-        </Link>
-
-        {/* Mobile Toggle Button */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        {/* Navbar Content */}
-        <div className="collapse navbar-collapse" id="navbarNav">
-          {/* Navbar Links */}
-          <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <Link className="nav-link active" href="/">
-                Portfolio
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" href="#contact">
-                Contact
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" href="#about">
-                About
-              </Link>
-            </li>
-          </ul>
-
-          {/* Social Media Icons */}
-          <div className="social d-flex justify-content-center justify-content-lg-end w-100">
-            <a href="https://instagram.com/carel011" target="_blank">
-              <FaInstagram />
-            </a>
-          </div>
+    <nav className={`nav-container ${!navbarVisible ? 'hidden' : ''}`}>
+      <div className="navbar">
+        <div className="nav-header">
+          <Link href="/" className="logo">         
+            <Image src="/logo.webp" alt="Logo" width={100} height={50} />
+          </Link>
+          <button
+            className={`menu-toggle ${menuOpen ? 'open' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle navigation"
+          >
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </button>
         </div>
+
+        <ul className={`nav-dropdown ${menuOpen ? 'open' : ''}`}>
+          {['Portfolio', 'About', 'FAQ'].map((label) => (
+            <li key={label}>
+              <Link href={`#${label.toLowerCase()}`} onClick={closeMenu}>
+                {label}
+              </Link>
+            </li>
+          ))}
+
+          <li className="nav-socials">
+              <a href="https://www.instagram.com/the.lyonsking" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              </a>
+          </li>
+        </ul>
       </div>
     </nav>
   );

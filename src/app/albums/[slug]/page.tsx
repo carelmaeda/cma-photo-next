@@ -87,7 +87,7 @@ export default function AlbumSubGallery() {
         ))}
       </div>
 
-      <Link href="/" className="btn btn-light">&#10094; Return</Link>
+      <Link href="/" className="btn btn-secondary">&#10094; Return</Link>
 
       {/* Lightbox Modal */}
       {lightboxOpen && (

@@ -1,8 +1,135 @@
-// Import Bootstrap
-@import "bootstrap/dist/css/bootstrap.min.css";
+@import "../styles/variables.scss";
 
 // =========================
-// 🎞️ Albums Section
+// About Section
+// =========================
+.nav-container {
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out;
+
+  &.hidden {
+    transform: translateY(-100%);
+  }
+}
+
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .navbar {
+    width: 100%;
+    padding: 1rem;
+    transition: box-shadow 0.3s ease;
+
+    .nav-header {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      .logo {
+        height: 28px;
+      }
+    }
+
+    .menu-toggle {
+      height: 32px;
+      width: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      z-index: 1001; // Ensure it stays above other elements
+
+      .bar {
+        background: $black;
+        width: 32px;
+        height: 3px;
+        transition: all 0.3s ease;
+        position: absolute;
+
+        &:nth-child(1) {
+          transform: translateY(-6px);
+        }
+
+        &:nth-child(2) {
+          transform: translateY(6px);
+        }
+      }
+
+      &.open {
+        .bar:nth-child(1) {
+          transform: rotate(45deg);
+        }
+        .bar:nth-child(2) {
+          display: none;
+        }
+        .bar:nth-child(3) {
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  .nav-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    display: grid;
+    gap: 0;
+    opacity: 0;
+    pointer-events: none;
+
+    text-transform: uppercase;
+    font-weight: 400;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .nav-socials {
+      display: flex;
+      gap: 1rem;
+    }
+
+    &.open {
+      max-height: 500px;
+      opacity: 1;
+      pointer-events: auto;
+      gap: 1rem;
+      padding-top: 1rem;
+    }
+    li {
+      a {
+        text-decoration: none;
+        display: flex;
+        justify-content: space-between;
+        &:hover {
+          color: $grey-400;
+          .nav-icon {
+            transition: all 0.3s ease;
+            transform: rotate(90deg);
+          }
+        }
+      }
+      .nav-icon {
+        color: $black;
+      }
+    }
+  }
+}
+
+// =========================
+// About Section
+// =========================
+
+// =========================
+// Albums Section
 // =========================
 
 .album-wrapper {
@@ -47,7 +174,7 @@
 }
 
 // =========================
-// 🖼️ SubGallery Section
+// SubGallery Section
 // =========================
 
 .galery-img {
@@ -55,7 +182,7 @@
 }
 
 // =========================
-// 💡 Lightbox Section
+// Lightbox Section
 // =========================
 
 .lightbox {
@@ -110,7 +237,7 @@
 }
 
 // =========================
-// 👤 About Section
+// About Section
 // =========================
 
 .about-wrapper {
@@ -135,7 +262,7 @@
 }
 
 // =========================
-// ✉️ Contact Section
+// Contact Section
 // =========================
 
 form {
@@ -147,7 +274,7 @@ form {
 }
 
 // =========================
-// 🦶 Footer Section
+// Footer Section
 // =========================
 
 .footer {
@@ -160,12 +287,121 @@ form {
   }
 
   a {
-    color: var(--color-primary);
+    color: $black;
     text-decoration: none;
 
     &:hover {
-      color: var(--color-accent);
+      color: $black;
       text-decoration: underline;
     }
+  }
+}
+
+.hero {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  background-color: #0ca4a5;
+}
+
+.scale {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+}
+
+.picture {
+  height: 393px;
+  width: 336px;
+  background-color: #ddc;
+  background-image: linear-gradient(
+    135deg,
+    transparent 35%,
+    rgba(0, 0, 0, 0.1)
+  );
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: -1;
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.45),
+    inset -1px -1px 1px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.5);
+
+  &::before {
+    content: "";
+    top: 20px;
+    background-color: #ccc;
+    filter: saturate(1.5) contrast(60%);
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 3px;
+    z-index: 0;
+  }
+
+  &::after {
+    content: "";
+    top: 20px;
+    background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 42%,
+      transparent 55%
+    );
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 3px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.15),
+      inset 1px 1px 2px rgba(0, 0, 0, 0.5),
+      inset -1px -1px 2px rgba(255, 255, 255, 0.95);
+    z-index: 1;
+  }
+
+  .text {
+    position: absolute;
+    bottom: -30px;
+    font-size: 42px;
+    font-family: "Permanent Marker", cursive;
+    color: rgba(40, 20, 20, 0.8);
+    transform: rotate(357deg);
+  }
+
+  // Picture-specific image backgrounds handled via inline styles in TSX
+  &__image {
+    content: "";
+    top: 20px;
+    background-size: cover;
+    background-position: center;
+    filter: saturate(1.5) contrast(60%);
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 3px;
+    z-index: 0;
+  }
+}
+
+.picture1 {
+  transform: perspective(2500px) rotateX(60deg) rotateZ(40deg) translateY(150px)
+    translateX(150px);
+  position: absolute;
+}
+
+.picture2 {
+  transform: perspective(2500px) rotateX(60deg) rotateZ(-32deg) translateX(50px)
+    translateY(65px) translateX(25px);
+  position: absolute;
+}
+
+.picture3 {
+  transform: perspective(2500px) rotateX(60deg) rotateY(6deg) rotateZ(15deg)
+    translateX(-50px) translateY(175px);
+  position: absolute;
+}
+
+@media only screen and (max-width: 800px) {
+  .scale {
+    transform: scale(0.5);
   }
 }

@@ -1,21 +1,27 @@
+// app/layout.tsx
+
 import type { Metadata } from "next";
-import { Zen_Kaku_Gothic_New, Yomogi } from "next/font/google";
-import Navbar from "./components/Navbar"; 
+import Navbar from "./components/Navbar";
 import './styles/styles.scss';
 import './styles/variables.scss';
 
+// Import only Urbanist and Permanent Marker
+import { Urbanist, Permanent_Marker } from 'next/font/google';
+import Script from 'next/script'; // Import Script from next/script for external scripts
 
-// Soft retro Japanese fonts
-const zenKakuGothicNew = Zen_Kaku_Gothic_New({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-primary",
+// Configure Urbanist
+const urbanist = Urbanist({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-urbanist', // CSS variable for easy use
 });
 
-const yomogi = Yomogi({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-secondary",
+// Configure Permanent Marker
+const permanentMarker = Permanent_Marker({
+  subsets: ['latin'],
+  weight: '400', // Permanent Marker is typically only 400 weight
+  display: 'swap',
+  variable: '--font-permanent-marker', // CSS variable for easy use
 });
 
 export const metadata: Metadata = {
@@ -24,14 +30,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Photo Gallery",
     description: "Explore beautiful photos from around the world.",
-    url: "https://www.yoursite.com",
+    url: "https://www.yoursite.com", // Remember to change this to your actual site URL
     siteName: "Photo Gallery",
   },
   twitter: {
     card: "summary_large_image",
     title: "Photo Gallery",
     description: "Explore beautiful photos from around the world.",
-    images: "/path/to/image.jpg",
+    images: "/path/to/image.jpg", // Update this path to a relevant image for Twitter card
   },
 };
 
@@ -41,22 +47,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${zenKakuGothicNew.variable} ${yomogi.variable}`}>
-      <head>
-        {/* Preload fonts for better performance */}
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Yomogi&display=swap"
-          as="style"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Yomogi&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    // Apply the font CSS variables to the <html> tag
+    <html lang="en" className={`${urbanist.variable} ${permanentMarker.variable}`}>
       <body>
         <Navbar />
         {children}
+
+        {/* Bootstrap JavaScript using next/script for optimal loading */}
+        <Script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+          crossOrigin="anonymous"
+          strategy="lazyOnload" // Load the script when the browser is idle
+        />
       </body>
     </html>
   );

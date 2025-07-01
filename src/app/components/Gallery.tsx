@@ -45,7 +45,7 @@ const albums = [
 export default function Gallery() {
   return (
     <section>
-      <h1>Photo Gallery</h1>
+      <h1>My Travel Photos</h1>
       <div className="row justify-content-center">
         {albums.map((album, index) => (
           <motion.div

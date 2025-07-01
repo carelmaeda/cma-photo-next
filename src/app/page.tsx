@@ -11,8 +11,8 @@ export default function Homepage() {
   return (
     <>
       <div className="container-fluid p-5">
-        <h1 className="d-none">Carel Maeda - Portfolio</h1>
-        <section className="d-none">
+        <h1>Carel Maeda - Portfolio</h1>
+        <section>
         < Hero/>
         </section>
         <section>
