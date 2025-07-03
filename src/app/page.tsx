@@ -10,7 +10,7 @@ import Hero from "./components/Hero";
 export default function Homepage() {
   return (
     <>
-      <div className="container-fluid p-5">
+      <div className="container">
         <h1>Carel Maeda - Portfolio</h1>
         <section>
         < Hero/>

@@ -193,6 +193,14 @@ table {
   display: none !important;
 }
 
+.d-none {
+  display: none !important;
+}
+
+// =========================
+/*LAYOUT*/
+// =========================
+
 // =========================
 /*ASSETS*/
 // =========================
@@ -210,5 +218,35 @@ body {
 }
 
 .font-marker {
+  color: $black;
+  text-align: center;
   font-family: var(--font-permanent-marker), sans-serif;
+}
+
+/*IMAGES*/
+
+.polaroid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem 1rem;
+  background: $white;
+  filter: drop-shadow(3.098px 3.098px 2.478px rgba(0, 0, 0, 0.25));
+
+  img {
+    flex: 1;
+    object-fit: cover;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+    line-height: 1.25;
+    color: $black;
+    text-align: center;
+    font-family: var(--font-permanent-marker), sans-serif;
+  }
+}
+
+.section {
+  display: flex;
 }

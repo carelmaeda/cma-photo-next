@@ -52,7 +52,6 @@ export default function RootLayout({
       <body>
         <Navbar />
         {children}
-
         {/* Bootstrap JavaScript using next/script for optimal loading */}
         <Script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"

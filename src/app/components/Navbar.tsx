@@ -1,51 +1,52 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [navbarVisible, setNavbarVisible] = useState(true);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <nav className={`nav-container ${!navbarVisible ? 'hidden' : ''}`}>
-      <div className="navbar">
-        <div className="nav-header">
-          <Link href="/" className="logo">         
-            <Image src="/logo.webp" alt="Logo" width={100} height={50} />
-          </Link>
-          <button
-            className={`menu-toggle ${menuOpen ? 'open' : ''}`}
-            onClick={toggleMenu}
-            aria-label="Toggle navigation"
-          >
-            <span className="bar"></span>
-            <span className="bar"></span>
-            <span className="bar"></span>
-          </button>
-        </div>
-
-        <ul className={`nav-dropdown ${menuOpen ? 'open' : ''}`}>
-          {['Portfolio', 'About', 'FAQ'].map((label) => (
-            <li key={label}>
-              <Link href={`#${label.toLowerCase()}`} onClick={closeMenu}>
-                {label}
+    <section className="nav">
+      <div className="section-wrapper">
+        <div className="section-content">
+          <nav className="nav-container">
+            <div className="navbar">
+              <Link href="/" className="logo">         
+                <Image src="/logo.webp" alt="Logo" width={100} height={50} />
               </Link>
-            </li>
-          ))}
 
-          <li className="nav-socials">
-              <a href="https://www.instagram.com/the.lyonsking" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              </a>
-          </li>
-        </ul>
+              {/* Desktop Navigation */}
+              <ul className="nav-links desktop-nav">
+                <li><Link href="#gallery">Gallery</Link></li>
+                <li><Link href="#store">Store</Link></li>
+              </ul>
+
+              {/* Mobile Menu Toggle */}
+              <button
+                className={`menu-toggle ${menuOpen ? 'open' : ''}`}
+                onClick={toggleMenu}
+                aria-label="Toggle navigation"
+              >
+                <span className="bar"></span>
+                <span className="bar"></span>
+                <span className="bar"></span>
+              </button>
+
+              {/* Mobile Navigation */}
+              <ul className={`nav-dropdown mobile-nav ${menuOpen ? 'open' : ''}`}>
+                <li><Link href="#gallery" onClick={closeMenu}>Gallery</Link></li>
+                <li><Link href="#store" onClick={closeMenu}>Store</Link></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
       </div>
-    </nav>
+    </section>
   );
 };
 
