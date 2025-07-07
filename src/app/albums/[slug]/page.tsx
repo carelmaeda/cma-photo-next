@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import albumData from "@/app/data/albumData";
+import albumData from "@/app/data/photoDB";
 import Link from "next/link";
 
 export default function AlbumSubGallery() {

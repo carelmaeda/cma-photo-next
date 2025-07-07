@@ -12,13 +12,8 @@
   .section-wrapper {
     display: flex;
     height: 100%;
-
     .section-content {
-      width: 100%;
-
       .nav-container {
-        width: 100%;
-
         .navbar {
           display: flex;
           align-items: center;
@@ -33,6 +28,7 @@
 
             img {
               height: auto;
+              width: 100%;
               max-width: 100%;
             }
           }
@@ -164,17 +160,20 @@
   .section-wrapper {
     .section-content {
       display: flex;
+      gap: 2rem;
       justify-content: space-between;
       align-items: center;
       .hero-title {
         text-align: center;
         h2 {
-          font-size: 3rem;
+          font-size: 4rem;
           font-weight: 700;
           line-height: 1;
+          letter-spacing: -2px;
         }
         p {
-          font-size: 1rem;
+          margin-block: 1rem;
+          font-size: 2rem;
         }
       }
     }

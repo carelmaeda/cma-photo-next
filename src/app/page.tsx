@@ -15,13 +15,13 @@ export default function Homepage() {
         <section>
         < Hero/>
         </section>
-        <section>
+        <section className="d-none">
         <Gallery/>
         </section>
-      <section id="about" className="container py-4">
+      <section id="about" className="d-none">
         <About />
       </section>
-      <section id="contact" className="container py-4">
+      <section id="contact" className="d-none">
         <Contact />
       </section>
       </div>
