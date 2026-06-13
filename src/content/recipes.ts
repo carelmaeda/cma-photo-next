@@ -1,44 +1,7 @@
 import type { Photo } from "@/lib/types";
 
 /**
- * Vanilla Summer — the free recipe. A Classic Chrome look for X-Trans IV / V
- * bodies. Values mirror the published recipe card exactly. NEVER invent
- * settings — if a value isn't on the card, it doesn't belong here.
- */
-
-export interface RecipeSetting {
-  label: string;
-  /** The value to dial in (X-Trans IV / V bodies). */
-  value: string;
-}
-
-export const vanillaSummer = {
-  name: "Vanilla Summer",
-  tagline: "Warm shadows, soft highlights, that 4pm-light feeling.",
-  /** The look this recipe is built on. */
-  filmSimulation: "Classic Chrome",
-  /** Bodies the recipe targets — matches the recipe card. */
-  compatibility: "X-Trans IV / V",
-  // Values are taken straight from the Vanilla Summer recipe card.
-  settings: [
-    { label: "Film Simulation", value: "Classic Chrome" },
-    { label: "White Balance", value: "6300K" },
-    { label: "WB Shift", value: "R +2 · B −5" },
-    { label: "Dynamic Range Priority", value: "Weak" },
-    { label: "Grain Effect", value: "Weak · Small" },
-    { label: "Color Chrome Effect", value: "Weak" },
-    { label: "Color Chrome FX Blue", value: "Strong" },
-    { label: "Noise Reduction", value: "−4" },
-    { label: "Color", value: "0" },
-    { label: "Sharpening", value: "0" },
-    { label: "Clarity", value: "0" },
-    { label: "ISO", value: "Auto · max 6400" },
-    { label: "Exposure Compensation", value: "+1/3 to +2/3" },
-  ] satisfies RecipeSetting[],
-};
-
-/**
- * Sample frames shown on /recipes.
+ * Sample frames from the Vanilla Summer look. Used as store product imagery.
  * TODO (owner): replace with frames actually shot on Vanilla Summer and add
  * recipe: "Vanilla Summer" to each — captions stay honest until then.
  */

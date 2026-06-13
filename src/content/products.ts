@@ -1,7 +1,7 @@
 import type { Product, ProductKind } from "@/lib/types";
 import { siteConfig } from "@/lib/siteConfig";
 import { prints } from "@/content/prints";
-import { vanillaSummer, sampleFrames } from "@/content/recipes";
+import { sampleFrames } from "@/content/recipes";
 
 /**
  * The store catalog (SPEC §2/§5). Digital-only, free + paid.
@@ -18,15 +18,6 @@ import { vanillaSummer, sampleFrames } from "@/content/recipes";
 
 // — Recipes —
 export const recipeProducts: Product[] = [
-  {
-    slug: "vanilla-summer",
-    kind: "recipe",
-    name: vanillaSummer.name,
-    description: vanillaSummer.tagline,
-    image: sampleFrames[0],
-    free: true,
-    // Free recipe is delivered as the on-site settings page after the gate.
-  },
   {
     slug: "vanilla-summer-recipe-card",
     kind: "recipe",

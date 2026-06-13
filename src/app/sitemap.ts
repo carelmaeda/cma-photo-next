@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { realAlbums } from "@/content/albums";
+import { paidProducts } from "@/content/products";
 import { getAllGuides } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
 
@@ -11,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/gallery",
     "/prints",
     "/downloads",
-    "/downloads/vanilla-summer",
     "/blog",
     "/contact",
   ].map((path) => ({
@@ -19,6 +19,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly",
     priority: path === "" ? 1 : 0.8,
   }));
+
+  const productRoutes: MetadataRoute.Sitemap = paidProducts("recipe").map(
+    (product) => ({
+      url: `${siteConfig.url}/downloads/${product.slug}`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    })
+  );
 
   const albumRoutes: MetadataRoute.Sitemap = realAlbums.map((album) => ({
     url: `${siteConfig.url}/gallery/${album.slug}`,
@@ -33,5 +41,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...albumRoutes, ...blogRoutes];
+  return [...staticRoutes, ...productRoutes, ...albumRoutes, ...blogRoutes];
 }

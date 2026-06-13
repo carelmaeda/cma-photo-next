@@ -10,32 +10,45 @@ import type { Product } from "@/lib/types";
 /**
  * Paid-product actions: add to cart, or buy now (single-item Stripe checkout).
  * Free products never render this — they use the goodwill gate.
+ * `compact` renders just the "Add to cart" button — used on grid cards.
  */
-export function AddToCart({ product }: { product: Product }) {
+export function AddToCart({
+  product,
+  compact = false,
+}: {
+  product: Product;
+  compact?: boolean;
+}) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const [busy, setBusy] = useState(false);
 
   if (product.free || !product.price || !product.stripePriceId) return null;
 
+  const addButton = (
+    <Button
+      type="button"
+      onClick={() => {
+        add(product);
+        setAdded(true);
+        window.setTimeout(() => setAdded(false), 1600);
+      }}
+    >
+      {added ? (
+        <>
+          <CheckIcon /> Added
+        </>
+      ) : (
+        "Add to cart"
+      )}
+    </Button>
+  );
+
+  if (compact) return addButton;
+
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Button
-        type="button"
-        onClick={() => {
-          add(product);
-          setAdded(true);
-          window.setTimeout(() => setAdded(false), 1600);
-        }}
-      >
-        {added ? (
-          <>
-            <CheckIcon /> Added
-          </>
-        ) : (
-          "Add to cart"
-        )}
-      </Button>
+      {addButton}
 
       <Button
         type="button"

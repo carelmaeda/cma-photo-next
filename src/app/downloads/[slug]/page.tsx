@@ -82,7 +82,7 @@ export default async function RecipeProductPage({
 
           <ul className="mt-10 space-y-2 border-t border-line pt-6 text-sm text-ink-muted">
             <li>Delivered as a digital download right after checkout.</li>
-            <li>X-mount and GFX versions, with loading notes.</li>
+            <li>The full settings on a recipe card — for X-Trans IV and V bodies.</li>
             <li>Secure checkout by Stripe.</li>
           </ul>
         </div>
