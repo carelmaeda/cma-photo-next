@@ -27,7 +27,7 @@ export function CartWidget() {
         <button
           type="button"
           aria-label={`Cart, ${count} item${count === 1 ? "" : "s"}`}
-          className="relative inline-flex size-9 items-center justify-center text-ink transition-colors hover:text-indigo"
+          className="relative inline-flex size-10 items-center justify-center text-ink transition-colors hover:text-indigo"
         >
           <ShoppingBagIcon className="size-5" />
           {count > 0 && (

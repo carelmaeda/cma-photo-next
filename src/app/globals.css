@@ -81,6 +81,7 @@
     --w-prose: 680px;
     --w-content: 1024px;
     --w-wide: 1280px;
+    --spacing-header: 3.125rem;    /* 50px — single knob for the sticky bar; logo + controls derive from it */
 }
 
 /* Non-tokenized vars (scrim, masonry, focus ring, z-index) — referenced in CSS, not utilities. */

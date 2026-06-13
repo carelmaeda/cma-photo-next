@@ -7,8 +7,8 @@ import { CartWidget } from "./cart-widget";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-paper/90 px-gutter backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between py-4">
+    <header className="sticky top-0 z-50 bg-paper/90 px-gutter">
+      <div className="mx-auto flex h-header max-w-7xl items-center justify-between">
         <Link
           href="/"
           aria-label={`${siteConfig.name} — home`}
@@ -20,7 +20,7 @@ export function SiteHeader() {
             width={92}
             height={52}
             priority
-            className="h-9 w-auto"
+            className="h-[calc(var(--spacing-header)*0.56)] w-auto"
           />
         </Link>
 
