@@ -1,37 +1,39 @@
 import type { Photo } from "@/lib/types";
 
 /**
- * Vanilla Summer — the free recipe. Names and structure only;
- * every setting value is a TODO for the owner. NEVER invent settings.
+ * Vanilla Summer — the free recipe. A Classic Chrome look for X-Trans IV / V
+ * bodies. Values mirror the published recipe card exactly. NEVER invent
+ * settings — if a value isn't on the card, it doesn't belong here.
  */
 
 export interface RecipeSetting {
   label: string;
-  /** X-mount value (X100V / X-Pro3 / X-T / X-S) */
-  xMount: string;
-  /** GFX value (GFX100RF / GFX50–100) */
-  gfx: string;
+  /** The value to dial in (X-Trans IV / V bodies). */
+  value: string;
 }
 
 export const vanillaSummer = {
   name: "Vanilla Summer",
   tagline: "Warm shadows, soft highlights, that 4pm-light feeling.",
-  // TODO (owner): fill in the real values. The table renders whatever is here.
+  /** The look this recipe is built on. */
+  filmSimulation: "Classic Chrome",
+  /** Bodies the recipe targets — matches the recipe card. */
+  compatibility: "X-Trans IV / V",
+  // Values are taken straight from the Vanilla Summer recipe card.
   settings: [
-    { label: "Film Simulation", xMount: "TODO", gfx: "TODO" },
-    { label: "Grain Effect", xMount: "TODO", gfx: "TODO" },
-    { label: "Color Chrome Effect", xMount: "TODO", gfx: "TODO" },
-    { label: "Color Chrome FX Blue", xMount: "TODO", gfx: "TODO" },
-    { label: "White Balance", xMount: "TODO", gfx: "TODO" },
-    { label: "WB Shift", xMount: "TODO", gfx: "TODO" },
-    { label: "Dynamic Range", xMount: "TODO", gfx: "TODO" },
-    { label: "Highlight", xMount: "TODO", gfx: "TODO" },
-    { label: "Shadow", xMount: "TODO", gfx: "TODO" },
-    { label: "Color", xMount: "TODO", gfx: "TODO" },
-    { label: "Sharpness", xMount: "TODO", gfx: "TODO" },
-    { label: "Noise Reduction", xMount: "TODO", gfx: "TODO" },
-    { label: "Clarity", xMount: "TODO", gfx: "TODO" },
-    { label: "Exposure Compensation", xMount: "TODO", gfx: "TODO" },
+    { label: "Film Simulation", value: "Classic Chrome" },
+    { label: "White Balance", value: "6300K" },
+    { label: "WB Shift", value: "R +2 · B −5" },
+    { label: "Dynamic Range Priority", value: "Weak" },
+    { label: "Grain Effect", value: "Weak · Small" },
+    { label: "Color Chrome Effect", value: "Weak" },
+    { label: "Color Chrome FX Blue", value: "Strong" },
+    { label: "Noise Reduction", value: "−4" },
+    { label: "Color", value: "0" },
+    { label: "Sharpening", value: "0" },
+    { label: "Clarity", value: "0" },
+    { label: "ISO", value: "Auto · max 6400" },
+    { label: "Exposure Compensation", value: "+1/3 to +2/3" },
   ] satisfies RecipeSetting[],
 };
 

@@ -5,7 +5,7 @@ import { vanillaSummer } from "@/content/recipes";
 export const metadata: Metadata = {
   title: "Vanilla Summer — the settings",
   description:
-    "The full Vanilla Summer Fujifilm recipe settings — X-mount and GFX versions, side by side.",
+    "The full Vanilla Summer Fujifilm recipe — a Classic Chrome look for X-Trans IV and V bodies, every setting listed.",
 };
 
 export default function VanillaSummerPage() {
@@ -17,8 +17,8 @@ export default function VanillaSummerPage() {
         </p>
         <h1 className="text-h2 mt-4">{vanillaSummer.name} — the settings</h1>
         <p className="mt-3 max-w-prose text-ink-muted">
-          Both versions, side by side. Set it once, then forget the menus and
-          go shoot.
+          A {vanillaSummer.filmSimulation} look for {vanillaSummer.compatibility}{" "}
+          bodies. Set it once, then forget the menus and go shoot.
         </p>
       </header>
 
@@ -29,11 +29,8 @@ export default function VanillaSummerPage() {
               <th className="py-3 pr-4 text-cap font-mono tracking-frame uppercase font-normal text-ink-muted">
                 Setting
               </th>
-              <th className="py-3 pr-4 text-cap font-mono tracking-frame uppercase font-normal text-ink-muted">
-                X-mount
-              </th>
               <th className="py-3 text-cap font-mono tracking-frame uppercase font-normal text-ink-muted">
-                GFX
+                {vanillaSummer.compatibility}
               </th>
             </tr>
           </thead>
@@ -41,8 +38,7 @@ export default function VanillaSummerPage() {
             {vanillaSummer.settings.map((setting) => (
               <tr key={setting.label} className="border-b border-line">
                 <td className="py-3 pr-4">{setting.label}</td>
-                <td className="py-3 pr-4 text-ink-muted">{setting.xMount}</td>
-                <td className="py-3 text-ink-muted">{setting.gfx}</td>
+                <td className="py-3 text-ink-muted">{setting.value}</td>
               </tr>
             ))}
           </tbody>
@@ -53,8 +49,8 @@ export default function VanillaSummerPage() {
             Loading it
           </h2>
           <p>
-            On X-mount: save it as a custom slot (C1–C7) so it&apos;s one dial
-            away. On GFX: same idea, custom settings menu.
+            Save it as a custom slot (C1–C7) so it&apos;s one dial away — then
+            you switch into the look without touching the menus again.
           </p>
           <p>
             Then stop thinking about it. The whole point is that the camera
