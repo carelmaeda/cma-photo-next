@@ -1,0 +1,54 @@
+# Netlify configuration. The Next.js runtime plugin is auto-detected.
+[build]
+  command = "npm run build"
+
+# Stripe Functions (SPEC §5) — bundled with the esbuild bundler.
+[functions]
+  node_bundler = "esbuild"
+
+# Old → new IA 301s (SPEC §2). Pre-launch, but kept for any shared links.
+# Gallery (was /albums)
+[[redirects]]
+  from = "/albums"
+  to = "/gallery"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/albums/*"
+  to = "/gallery/:splat"
+  status = 301
+  force = true
+
+# Blog (was /guides)
+[[redirects]]
+  from = "/guides"
+  to = "/blog"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/guides/*"
+  to = "/blog/:splat"
+  status = 301
+  force = true
+
+# Downloads (was /recipes)
+[[redirects]]
+  from = "/recipes"
+  to = "/downloads"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/recipes/*"
+  to = "/downloads/:splat"
+  status = 301
+  force = true
+
+# Prints store stays at /prints; /gear folded into /about
+[[redirects]]
+  from = "/gear"
+  to = "/about"
+  status = 301
+  force = true

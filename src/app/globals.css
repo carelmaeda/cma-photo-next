@@ -1,0 +1,247 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Carel system v1 — brand tokens (SPEC.md §3 · carel-brand-kit).
+   Light-only, photo-first. These are the only sources of color, type, radius,
+   spacing, and elevation on the site.
+--------------------------------------------------------------------------- */
+@theme {
+    /* — Color · roles — */
+    --color-paper: #F4F1EA;        /* page background */
+    --color-paper-2: #ECE7DB;      /* raised surface / hover fill */
+    --color-ink: #1A1925;          /* primary text */
+    --color-ink-soft: #3A3947;     /* secondary text on paper */
+    --color-warm: #86837C;         /* muted text, captions */
+    --color-indigo: #2E3A6E;       /* primary accent: links, buttons, focus */
+    --color-indigo-700: #26305C;   /* indigo hover/active */
+    --color-brick: #BC4A3C;        /* spark: tags, one highlight — use sparingly */
+    --color-brick-700: #9E3B2F;    /* brick hover */
+    --color-line: #E0DACD;         /* hairlines, dividers, photo frames */
+    --color-line-2: #CFC8B8;       /* stronger border (inputs, focus base) */
+    --color-danger: #A32D2D;       /* destructive (admin delete) */
+    --color-success: #3B6D11;      /* confirmations */
+
+    /* — Type scale — */
+    --text-display: 2.75rem;       /* 44 */
+    --text-h1: 2.125rem;           /* 34 */
+    --text-h2: 1.625rem;           /* 26 */
+    --text-h3: 1.25rem;            /* 20 */
+    --text-lg: 1.125rem;           /* 18 */
+    --text-body: 1rem;             /* 16 */
+    --text-sm: 0.875rem;           /* 14 */
+    --text-cap: 0.75rem;           /* 12 — mono captions/EXIF */
+    --text-micro: 0.6875rem;       /* 11 — mono eyebrows */
+
+    --leading-tight: 1.12;
+    --leading-snug: 1.35;
+    --leading-body: 1.65;
+    --tracking-eyebrow: 0.14em;
+    --tracking-frame: 0.12em;
+
+    /* — Spacing (4px base) — */
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.5rem;
+    --spacing-6: 2rem;
+    --spacing-7: 3rem;
+    --spacing-8: 4rem;
+    --spacing-9: 6rem;
+    --spacing-gutter: clamp(16px, 4vw, 40px);
+    --spacing-section: clamp(4rem, 10vh, 6rem);
+
+    /* — Radius (crisp / photo-first; photos stay square) — */
+    --radius-none: 0;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-xl: 10px;
+    --radius-2xl: 10px;
+    --radius-3xl: 10px;
+    --radius-full: 9999px;
+
+    /* — Elevation (mostly flat) — */
+    --shadow-none: 0 0 #0000;
+    --shadow-pop: 0 6px 22px rgba(26, 25, 37, 0.10);     /* dropdowns, sticky header on scroll */
+    --shadow-overlay: 0 16px 50px rgba(26, 25, 37, 0.30); /* lightbox controls */
+
+    /* — Motion — */
+    --dur-fast: 120ms;
+    --dur-base: 200ms;
+    --dur-slow: 320ms;
+    --ease-brand: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out-brand: cubic-bezier(0, 0, 0.2, 1);
+
+    /* — Layout — */
+    --w-prose: 680px;
+    --w-content: 1024px;
+    --w-wide: 1280px;
+}
+
+/* Non-tokenized vars (scrim, masonry, focus ring, z-index) — referenced in CSS, not utilities. */
+:root {
+    --scrim: rgba(26, 25, 37, 0.92);
+    --ring-brand: 0 0 0 2px var(--color-paper), 0 0 0 4px var(--color-indigo);
+
+    --cols: 2;
+    --photo-gap: 4px;
+
+    --z-header: 100;
+    --z-dropdown: 200;
+    --z-overlay: 1000;
+    --z-toast: 1100;
+}
+@media (min-width: 768px)  { :root { --cols: 3; } }
+@media (min-width: 1280px) { :root { --cols: 4; } }
+
+/* Fonts come from next/font variables set on <html> in layout.tsx */
+@theme inline {
+    --font-sans: var(--font-jakarta);
+    --font-mono: var(--font-space-mono);
+    --font-display: var(--font-jakarta);
+
+    /* shadcn semantic bridge */
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+}
+
+/* shadcn semantic variables mapped onto brand tokens. Light only — no .dark. */
+:root {
+    --radius: 6px;
+    --background: var(--color-paper);
+    --foreground: var(--color-ink);
+    --card: var(--color-paper);
+    --card-foreground: var(--color-ink);
+    --popover: var(--color-paper);
+    --popover-foreground: var(--color-ink);
+    /* Primary action = indigo (Carel system buttons) */
+    --primary: var(--color-indigo);
+    --primary-foreground: var(--color-paper);
+    --secondary: var(--color-paper);
+    --secondary-foreground: var(--color-ink);
+    --muted: var(--color-paper-2);
+    --muted-foreground: var(--color-warm);
+    --accent: var(--color-paper-2);
+    --accent-foreground: var(--color-ink);
+    --destructive: var(--color-danger);
+    --border: var(--color-line);
+    --input: var(--color-line-2);
+    /* Focus is indigo — the primary accent */
+    --ring: var(--color-indigo);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    html {
+        @apply font-sans;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-paper text-ink antialiased;
+        line-height: var(--leading-body);
+    }
+
+    h1, h2, h3, h4 {
+        @apply font-sans font-bold;
+        line-height: var(--leading-tight);
+    }
+
+    a {
+        @apply transition-colors;
+    }
+
+    ::selection {
+        background: var(--color-indigo);
+        color: var(--color-paper);
+    }
+
+    /* Mono eyebrow helper — uppercase, letterspaced data labels */
+    .eyebrow {
+        font-family: var(--font-mono);
+        font-size: var(--text-micro);
+        letter-spacing: var(--tracking-eyebrow);
+        text-transform: uppercase;
+        color: var(--color-warm);
+    }
+
+    /* SPEC §3 — all motion off for users who ask for it */
+    @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+/* ---------------------------------------------------------------------------
+   Motion (SPEC §3) — the one orchestrated moment + a shared scroll reveal.
+   The prefers-reduced-motion guard above disables all of it.
+--------------------------------------------------------------------------- */
+@layer components {
+    @keyframes hero-fade {
+        from { opacity: 0; transform: scale(1.05); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes title-rise {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-fade  { animation: hero-fade 0.9s var(--ease-out-brand) both; }
+    .title-rise { animation: title-rise 0.9s var(--ease-out-brand) 0.15s both; }
+
+    /* Scroll reveal — toggled by the <Reveal> client wrapper */
+    .reveal {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.4s var(--ease-out-brand), transform 0.4s var(--ease-out-brand);
+    }
+
+    .reveal[data-visible="true"] {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Masonry gallery — square, edge-to-edge (SPEC.md §3) */
+    .masonry {
+        column-count: var(--cols);
+        column-gap: var(--photo-gap);
+    }
+
+    .masonry > * {
+        break-inside: avoid;
+        margin-bottom: var(--photo-gap);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1; transform: none; }
+    }
+}

@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# photo.carelmaeda.com
 
-## Getting Started
+Photography platform for [Carel Maeda](https://instagram.com/carel011) — travel albums, the free Vanilla Summer Fujifilm recipe, free prints, and a guide library. Built to turn Instagram visitors into email subscribers and Google searchers into readers.
 
-First, run the development server:
+**`SPEC.md` is the source of truth** — strategy, design system, copy voice, SEO contract, and the phase roadmap. `CLAUDE.md` holds the working rules for AI-assisted sessions.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+- Next.js 15 (App Router, Server Components by default) + TypeScript
+- Tailwind CSS v4 (CSS-first config in `src/app/globals.css` — no `tailwind.config.js`)
+- shadcn/ui (six components, mapped to the brand tokens)
+- Cloudinary via `next-cloudinary` (all images, publicIds only)
+- Netlify hosting + **Netlify Forms** (newsletter, recipe/prints gates, contact)
+- MDX guides via `next-mdx-remote-client` — add a `.mdx` file to `src/content/guides/`, zero code changes
+
+## Commands
+
+```
+npm run dev      # localhost:3000
+npm run build    # must pass with zero errors
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/app/          routes (each exports unique metadata)
+src/components/   site components + ui/ (shadcn)
+src/content/      albums.ts, recipes.ts, gear.ts, prints.ts, guides/*.mdx
+src/lib/          types.ts, siteConfig.ts, guides.ts loader, nav.ts
+public/__forms.html   Netlify form definitions — keep in sync with React forms
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Before launch (owner checklist)
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Enable **Forms** in the Netlify dashboard + add an email notification (forms silently no-op otherwise). Test each form on a deploy preview.
+2. Fill the Vanilla Summer settings in `src/content/recipes.ts` (all `TODO`).
+3. Edit the four guide drafts in `src/content/guides/` (marked with TODO comments).
+4. Replace placeholder album images (Innsbruck, Vaduz, Brugge, Porto) — they're `noindex` until then.
+5. Point `photo.carelmaeda.com` at Netlify, then update the Instagram bio link.
+6. After deploy: create a GA4 property, set the ID in `src/lib/siteConfig.ts`, flip `analytics.enabled`.

@@ -1,0 +1,13 @@
+/* Carel — brand tokens v1 */
+:root{
+  --paper:#F4F1EA;   /* background, surfaces */
+  --ink:#1A1925;     /* primary text */
+  --grey:#86837C;    /* muted / secondary text */
+  --indigo:#2E3A6E;  /* primary accent: links, buttons, structure */
+  --brick:#BC4A3C;   /* spark: tags, hover, single highlights — use sparingly */
+  --line:#E0DACD;    /* hairlines, photo frames */
+  --paper-2:#ECE7DB; /* slightly deeper surface */
+
+  --font-sans:'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:'Space Mono', ui-monospace, monospace;
+}

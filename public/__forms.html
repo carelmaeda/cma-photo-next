@@ -1,0 +1,26 @@
+<!doctype html>
+<!--
+  Netlify form definitions. Netlify's build-time crawler reads THIS file to
+  register the forms — the React components only POST to it.
+
+  SYNC RULE (CLAUDE.md): any field added/renamed in a React form component
+  must be mirrored here, and vice versa. Form names must match
+  src/lib/siteConfig.ts -> forms.
+-->
+<html lang="en">
+  <head><meta charset="utf-8" /><title>Forms</title></head>
+  <body>
+    <form name="newsletter" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="email" name="email" />
+      <input type="text" name="source" />
+      <input type="text" name="bot-field" />
+    </form>
+
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
+  </body>
+</html>

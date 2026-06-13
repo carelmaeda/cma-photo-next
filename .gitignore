@@ -24,6 +24,12 @@
 .DS_Store
 *.pem
 
+# personal strategy docs — never commit
+carel011_*.md
+
+# visual studio
+.vs/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
