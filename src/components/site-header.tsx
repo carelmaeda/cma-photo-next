@@ -12,6 +12,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label={`${siteConfig.name} — home`}
+          data-ga-nav="logo"
           className="text-ink transition-opacity hover:opacity-70"
         >
           <Image
@@ -25,7 +26,7 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-5">
-          <nav aria-label="Main" className="hidden md:block">
+          <nav aria-label="Main" data-ga-nav="header" className="hidden md:block">
             <ul className="flex items-center gap-7">
               {navLinks.map((link) => (
                 <li key={link.href}>

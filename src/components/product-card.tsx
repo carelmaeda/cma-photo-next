@@ -40,7 +40,7 @@ export function ProductCard({ product }: { product: Product }) {
           {priceLabel(product)}
         </span>
       </div>
-      <p className="mt-1 max-w-prose text-sm text-ink-muted">
+      <p className="mt-1 max-w-prose text-sm text-ink-soft">
         {product.description}
       </p>
 

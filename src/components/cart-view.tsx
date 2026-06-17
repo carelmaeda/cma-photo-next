@@ -14,14 +14,10 @@ export function CartView() {
 
   if (lines.length === 0) {
     return (
-      <p className="max-w-prose text-ink-muted">
+      <p className="max-w-prose text-ink-soft">
         Your cart is empty. Browse the{" "}
         <Link href="/downloads" className="underline hover:text-indigo">
           recipes
-        </Link>{" "}
-        and{" "}
-        <Link href="/prints" className="underline hover:text-indigo">
-          prints
         </Link>
         .
       </p>
@@ -50,33 +46,39 @@ export function CartView() {
                 {formatMoney(line.price, line.currency)}
               </p>
               <div className="mt-3 flex items-center gap-2">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-sm"
                   aria-label="Decrease quantity"
                   onClick={() => setQuantity(line.slug, line.quantity - 1)}
-                  className="inline-flex size-7 items-center justify-center border border-line-2 hover:border-indigo"
+                  className="size-7 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
                 >
                   <MinusIcon className="size-3.5" />
-                </button>
+                </Button>
                 <span className="w-8 text-center font-mono text-cap">
                   {line.quantity}
                 </span>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-sm"
                   aria-label="Increase quantity"
                   onClick={() => setQuantity(line.slug, line.quantity + 1)}
-                  className="inline-flex size-7 items-center justify-center border border-line-2 hover:border-indigo"
+                  className="size-7 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
                 >
                   <PlusIcon className="size-3.5" />
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   aria-label="Remove item"
                   onClick={() => remove(line.slug)}
-                  className="ml-4 inline-flex items-center gap-1 font-mono text-micro tracking-eyebrow uppercase text-warm hover:text-brick"
+                  className="ml-4 h-auto gap-1 rounded-none px-0 font-mono text-micro font-normal tracking-eyebrow uppercase text-warm hover:bg-transparent hover:text-brick"
                 >
                   <XIcon className="size-3.5" /> Remove
-                </button>
+                </Button>
               </div>
             </div>
             <p className="shrink-0 font-semibold">
@@ -93,11 +95,12 @@ export function CartView() {
           </span>
           <span className="text-lg font-semibold">{formatMoney(subtotal)}</span>
         </div>
-        <p className="mt-2 text-sm text-ink-muted">
+        <p className="mt-2 text-sm text-ink-soft">
           Taxes are calculated at checkout. Everything here is a digital
           download.
         </p>
         <Button
+         variant="default"
           type="button"
           size="lg"
           className="mt-6 w-full"

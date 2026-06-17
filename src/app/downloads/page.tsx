@@ -19,7 +19,7 @@ export default function DownloadsPage() {
     <div className="px-gutter">
       <header className="mx-auto max-w-7xl py-12 md:py-16">
         <h1 className="text-display leading-[1.05]">Digital Downloads</h1>
-        <p className="mt-6 max-w-prose text-ink-muted">
+        <p className="mt-6 max-w-prose text-ink-soft">
           Things I made to use in your own photography — delivered as instant
           downloads right after checkout.
         </p>
@@ -53,13 +53,13 @@ export default function DownloadsPage() {
                       className="mb-4 w-full border border-line transition-opacity group-hover:opacity-90"
                     />
                   )}
-                  <p className="text-cap font-mono tracking-frame text-ink-muted uppercase">
+                  <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
                     {categoryLabels[guide.category]}
                   </p>
                   <h3 className="mt-2 font-display text-xl font-semibold group-hover:text-indigo">
                     {guide.title}
                   </h3>
-                  <p className="mt-2 max-w-prose text-sm text-ink-muted">
+                  <p className="mt-2 max-w-prose text-sm text-ink-soft">
                     {guide.description}
                   </p>
                 </Link>

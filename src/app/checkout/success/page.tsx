@@ -15,7 +15,7 @@ export default function CheckoutSuccessPage() {
       </header>
       <section className="mx-auto max-w-7xl pb-8">
         <Suspense
-          fallback={<p className="text-ink-muted">Confirming your order…</p>}
+          fallback={<p className="text-ink-soft">Confirming your order…</p>}
         >
           <CheckoutSuccess />
         </Suspense>

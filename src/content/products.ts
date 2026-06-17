@@ -28,8 +28,8 @@ export const recipeProducts: Product[] = [
     free: false,
     price: 300, // 300 = $3.00 CAD (smallest unit)
     stripePriceId: "price_1Thvm3ANgGBn4EAZV5q9IHms",
-    // TODO (owner): upload the recipe PDF to Cloudinary and paste its publicId.
-    // Until then the product shows and checks out, but delivery has no file.
+    // Delivery comes from the Stripe product's metadata.downloadPublicId (read by
+    // verify-session after payment); this field is only a repo-side reference.
     downloadPublicId: "TODO_recipe_pdf_publicId",
   },
 ];
@@ -50,7 +50,12 @@ export const printProducts: Product[] = prints.map((print) => ({
 
 export const allProducts: Product[] = [...recipeProducts, ...printProducts];
 
-/** A paid product is live only when it has a real (non-TODO_) Stripe price id. */
+/**
+ * A paid product is live once it has a real (non-"TODO_") Stripe price id.
+ * Delivery itself is driven by the Stripe *product metadata* `downloadPublicId`
+ * that `verify-session` reads after payment — so a paid product only needs its
+ * price id here; the file is configured on the Stripe product, not in this repo.
+ */
 export function isLive(p: Product): boolean {
   if (p.free) return true;
   return Boolean(p.stripePriceId && !p.stripePriceId.startsWith("TODO_"));

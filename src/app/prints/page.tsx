@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   title: "Prints",
   description:
     "Frames as digital print downloads — free and paid, full resolution, good up to A3. Print at home.",
+  // Hidden from nav for launch — keep it out of the index + sitemap until it ships.
+  robots: { index: false, follow: false },
 };
 
 export default function PrintsPage() {
@@ -23,7 +25,7 @@ export default function PrintsPage() {
     <div className="px-gutter">
       <header className="mx-auto max-w-7xl py-12 md:py-16">
         <h1 className="text-h2">Prints</h1>
-        <div className="mt-3 max-w-prose space-y-4 text-ink-muted">
+        <div className="mt-3 max-w-prose space-y-4 text-ink-soft">
           <p>
             Frames I&apos;d hang myself, as full-resolution digital files. Print
             them at home or at a lab, up to A3.
@@ -84,7 +86,7 @@ export default function PrintsPage() {
       <section className="mx-auto max-w-7xl pt-section pb-4">
         <div className="max-w-prose">
           <h2 className="font-display text-xl font-semibold">Printing notes</h2>
-          <ul className="mt-4 space-y-3 text-sm text-ink-muted">
+          <ul className="mt-4 space-y-3 text-sm text-ink-soft">
             <li>
               Matte or semi-matte paper suits these — the look leans warm and
               soft, and glossy fights it.

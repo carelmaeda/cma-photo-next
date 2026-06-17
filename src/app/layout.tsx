@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PersonJsonLd } from "@/components/json-ld";
 import { Analytics } from "@/components/analytics";
+import { AnalyticsTracking } from "@/components/analytics-tracking";
 import { CartProvider } from "@/lib/cart";
 import "./globals.css";
 
@@ -68,14 +69,27 @@ export default function RootLayout({
       className={`${jakarta.variable} ${spaceMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Every photo loads from Cloudinary — open the connection early so the
+            LCP hero image isn't delayed by DNS + TLS negotiation. */}
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className="flex min-h-svh flex-col" suppressHydrationWarning>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-paper focus:px-4 focus:py-2 focus:text-cap focus:font-mono focus:tracking-frame focus:text-ink focus:uppercase focus:outline-2 focus:outline-indigo"
+        >
+          Skip to content
+        </a>
         <PersonJsonLd />
         <CartProvider>
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main id="main" className="flex-1">{children}</main>
           <SiteFooter />
         </CartProvider>
         <Analytics />
+        <AnalyticsTracking />
       </body>
     </html>
   );

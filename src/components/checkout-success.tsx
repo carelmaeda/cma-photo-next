@@ -60,17 +60,22 @@ export function CheckoutSuccess() {
   }, [sessionId]);
 
   if (state.status === "loading") {
-    return <p className="text-ink-muted">Confirming your order…</p>;
+    return <p className="text-ink-soft">Confirming your order…</p>;
   }
 
   if (state.status === "error") {
     return (
       <div>
-        <p className="text-ink-muted">{state.message}</p>
-        <p className="mt-4 text-sm text-ink-muted">
-          If you were charged, email{" "}
-          <a href={siteConfig.instagram} className="underline hover:text-indigo">
-            me
+        <p className="text-ink-soft">{state.message}</p>
+        <p className="mt-4 text-sm text-ink-soft">
+          If you were charged, message me on{" "}
+          <a
+            href={siteConfig.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-indigo"
+          >
+            Instagram
           </a>{" "}
           and I&apos;ll sort it out.
         </p>
@@ -80,7 +85,7 @@ export function CheckoutSuccess() {
 
   if (state.status === "unpaid") {
     return (
-      <p className="text-ink-muted">
+      <p className="text-ink-soft">
         This order isn&apos;t marked paid yet. If you just completed checkout,
         give it a moment and refresh — or{" "}
         <Link href="/cart" className="underline hover:text-indigo">
@@ -93,7 +98,7 @@ export function CheckoutSuccess() {
 
   return (
     <div>
-      <p className="max-w-prose text-ink-muted">
+      <p className="max-w-prose text-ink-soft">
         Thank you — your payment went through
         {state.email ? `, and a receipt is on its way to ${state.email}` : ""}.
         Your downloads are below.
@@ -111,7 +116,7 @@ export function CheckoutSuccess() {
                 {item.name}
               </a>
             ) : (
-              <span className="text-sm text-ink-muted">
+              <span className="text-sm text-ink-soft">
                 {item.name} — I&apos;ll email your file shortly.
               </span>
             )}
@@ -119,14 +124,10 @@ export function CheckoutSuccess() {
         ))}
       </ul>
 
-      <p className="mt-10 text-sm text-ink-muted">
+      <p className="mt-10 text-sm text-ink-soft">
         Browse more in the{" "}
         <Link href="/downloads" className="underline hover:text-indigo">
           recipes
-        </Link>{" "}
-        and{" "}
-        <Link href="/prints" className="underline hover:text-indigo">
-          shop
         </Link>
         .
       </p>

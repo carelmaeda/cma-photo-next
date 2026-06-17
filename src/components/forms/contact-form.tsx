@@ -39,7 +39,7 @@ export function ContactForm() {
     return (
       <div aria-live="polite">
         <p className="font-display text-xl font-semibold">Got it. Thanks.</p>
-        <p className="mt-2 text-sm text-ink-muted">
+        <p className="mt-2 text-sm text-ink-soft">
           I read everything and reply when I can.
         </p>
       </div>
@@ -102,9 +102,14 @@ export function ContactForm() {
       </div>
 
       {status === "error" && (
-        <p aria-live="polite" className="text-sm text-ink-muted">
+        <p aria-live="polite" className="text-sm text-ink-soft">
           That didn&apos;t go through. If it keeps happening, reach me on{" "}
-          <a href={siteConfig.instagram} className="underline hover:text-indigo">
+          <a
+            href={siteConfig.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-indigo"
+          >
             Instagram
           </a>
           .

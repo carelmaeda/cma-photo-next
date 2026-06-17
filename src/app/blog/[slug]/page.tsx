@@ -84,7 +84,7 @@ export default async function GuidePage({ params }: Props) {
 
       <article className="mx-auto max-w-3xl py-12 md:py-16">
         <header>
-          <p className="text-cap font-mono tracking-frame text-ink-muted uppercase">
+          <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
             {categoryLabels[guide.category]} ·{" "}
             {new Date(guide.date).toLocaleDateString("en-CA", {
               year: "numeric",
@@ -93,7 +93,7 @@ export default async function GuidePage({ params }: Props) {
             })}
           </p>
           <h1 className="text-h2 mt-4">{guide.title}</h1>
-          <p className="mt-4 max-w-prose text-ink-muted">{guide.description}</p>
+          <p className="mt-4 max-w-prose text-ink-soft">{guide.description}</p>
         </header>
 
         {guide.cover && (

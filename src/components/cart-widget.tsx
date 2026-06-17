@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { CldImage } from "@/components/cld-image";
 import { useCart, formatMoney } from "@/lib/cart";
 import { startCheckout } from "@/lib/checkout";
+import { track } from "@/lib/analytics";
+import { EVENTS } from "@/lib/analytics-events";
 
 export function CartWidget() {
   const { lines, count, subtotal, setQuantity, remove } = useCart();
@@ -22,20 +24,27 @@ export function CartWidget() {
   const [busy, setBusy] = useState(false);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (next) track(EVENTS.cartOpen, { item_count: count });
+      }}
+    >
       <SheetTrigger asChild>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           aria-label={`Cart, ${count} item${count === 1 ? "" : "s"}`}
-          className="relative inline-flex size-10 items-center justify-center text-ink transition-colors hover:text-indigo"
+          className="relative hover:bg-transparent hover:text-indigo"
         >
           <ShoppingBagIcon className="size-5" />
           {count > 0 && (
-            <span className="absolute -top-1 -right-1 inline-flex min-w-4 items-center justify-center rounded-full bg-brick px-1 font-mono text-[10px] leading-4 text-paper">
+            <span className="absolute -top-1 -right-1 inline-flex min-w-4 items-center justify-center rounded-full bg-brick-700 px-1 font-mono text-micro leading-4 text-paper">
               {count}
             </span>
           )}
-        </button>
+        </Button>
       </SheetTrigger>
 
       <SheetContent className="bg-paper">
@@ -46,22 +55,14 @@ export function CartWidget() {
         </SheetHeader>
 
         {lines.length === 0 ? (
-          <p className="px-4 text-sm text-ink-muted">
-            Your cart is empty. Browse{" "}
+          <p className="px-4 text-sm text-ink-soft">
+            Your cart is empty. Browse the{" "}
             <Link
               href="/downloads"
               className="underline hover:text-indigo"
               onClick={() => setOpen(false)}
             >
               recipes
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/prints"
-              className="underline hover:text-indigo"
-              onClick={() => setOpen(false)}
-            >
-              prints
             </Link>
             .
           </p>
@@ -86,33 +87,39 @@ export function CartWidget() {
                     {formatMoney(line.price, line.currency)}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon-sm"
                       aria-label="Decrease quantity"
                       onClick={() => setQuantity(line.slug, line.quantity - 1)}
-                      className="inline-flex size-6 items-center justify-center border border-line-2 hover:border-indigo"
+                      className="size-6 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
                     >
                       <MinusIcon className="size-3" />
-                    </button>
+                    </Button>
                     <span className="w-6 text-center font-mono text-cap">
                       {line.quantity}
                     </span>
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon-sm"
                       aria-label="Increase quantity"
                       onClick={() => setQuantity(line.slug, line.quantity + 1)}
-                      className="inline-flex size-6 items-center justify-center border border-line-2 hover:border-indigo"
+                      className="size-6 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
                     >
                       <PlusIcon className="size-3" />
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon-sm"
                       aria-label="Remove"
                       onClick={() => remove(line.slug)}
-                      className="ml-auto inline-flex size-6 items-center justify-center text-warm hover:text-brick"
+                      className="ml-auto size-6 rounded-none text-warm hover:bg-transparent hover:text-brick"
                     >
                       <XIcon className="size-3.5" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </li>
@@ -129,6 +136,7 @@ export function CartWidget() {
               <span className="font-semibold">{formatMoney(subtotal)}</span>
             </div>
             <Button
+            variant="default"
               type="button"
               size="lg"
               disabled={busy}

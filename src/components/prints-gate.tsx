@@ -20,7 +20,7 @@ export function PrintsGate({ downloads }: PrintsGateProps) {
     return (
       <div aria-live="polite">
         <p className="font-display text-xl font-semibold">They&apos;re yours.</p>
-        <p className="mt-2 text-sm text-ink-muted">
+        <p className="mt-2 text-sm text-ink-soft">
           Full-resolution files, good up to A3. Print them, frame them, gift
           them — just don&apos;t sell them.
         </p>

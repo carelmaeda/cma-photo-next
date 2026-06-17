@@ -15,7 +15,7 @@ export default function GalleryPage() {
     <div className="px-gutter">
       <header className="mx-auto max-w-7xl py-12 md:py-16">
         <h1 className="text-h2">Gallery</h1>
-        <p className="mt-3 max-w-prose text-ink-muted">
+        <p className="mt-3 max-w-prose text-ink-soft">
           City by city. Everything here is JPG straight out of camera.
         </p>
       </header>

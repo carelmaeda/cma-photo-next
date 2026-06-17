@@ -8,7 +8,7 @@ Photography platform for Carel Maeda (@carel011) at photo.carelmaeda.com — con
 
 ## Stack
 
-Next.js 15 App Router · TypeScript · Tailwind CSS v4 (CSS-first, tokens in `@theme` in `src/app/globals.css`, **no tailwind.config.js**) · shadcn/ui (selective) · next-cloudinary (cloud `duwhxzb0q`) · Netlify hosting + Forms + Functions (Stripe only) · Stripe (digital checkout) · MDX blog via next-mdx-remote-client.
+Next.js 15 App Router · TypeScript · Tailwind CSS v4 (CSS-first, tokens in `@theme` in `src/app/globals.css`, **no tailwind.config.js**) · shadcn/ui (selective) · Cloudinary images (cloud `duwhxzb0q`) via `next/image` + a Cloudinary loader in the `CldImage` wrapper (no `next-cloudinary` runtime — keeps the client bundle lean) · Netlify hosting + Forms + Functions (Stripe only) · Stripe (digital checkout) · MDX blog via next-mdx-remote-client.
 
 ## Commands
 

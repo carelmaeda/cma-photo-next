@@ -16,7 +16,7 @@ export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
 
   return (
     <aside className="mt-14 border-t border-line pt-8">
-      <h2 className="text-cap font-mono tracking-frame text-ink-muted uppercase">
+      <h2 className="text-cap font-mono tracking-frame text-ink-soft uppercase">
         Keep going
       </h2>
       <ul className="mt-4 space-y-2 text-sm">
@@ -35,7 +35,7 @@ export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
             href="/downloads"
             className="underline underline-offset-2 hover:text-indigo"
           >
-            Vanilla Summer — the free recipe
+            Vanilla Summer — the recipe
           </Link>
         </li>
         <li>

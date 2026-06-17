@@ -10,7 +10,7 @@ export const gear: GearItem[] = [
     name: "Fujifilm GFX100RF",
     category: "Cameras",
     blurb:
-      "The trip camera. Medium format in a body I'll actually carry all day — the France series is all this.",
+      "The trip camera. Medium format in a body I'll actually carry all day.",
   },
   {
     name: "Fujifilm X100V",

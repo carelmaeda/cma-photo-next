@@ -19,9 +19,22 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = getProduct("print", slug);
   if (!product) return {};
+  const ogImage = `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${product.image.publicId}`;
   return {
     title: `${product.name} — digital print`,
     description: product.description,
+    openGraph: {
+      title: `${product.name} — ${siteConfig.name}`,
+      description: product.description,
+      type: "website",
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} — ${siteConfig.name}`,
+      description: product.description,
+      images: [ogImage],
+    },
   };
 }
 
@@ -43,6 +56,7 @@ export default async function PrintProductPage({
           "@type": "Product",
           name: product.name,
           description: product.description,
+          image: `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${product.image.publicId}`,
           offers: {
             "@type": "Offer",
             price: ((product.price ?? 0) / 100).toFixed(2),
@@ -72,7 +86,7 @@ export default async function PrintProductPage({
         <div className="md:pt-6">
           <h1 className="text-h2">{product.name}</h1>
           <p className="mt-3 font-mono text-lg text-ink">{priceLabel(product)}</p>
-          <p className="mt-6 max-w-prose text-ink-muted">
+          <p className="mt-6 max-w-prose text-ink-soft">
             {product.description}
           </p>
 
@@ -80,7 +94,7 @@ export default async function PrintProductPage({
             <AddToCart product={product} />
           </div>
 
-          <ul className="mt-10 space-y-2 border-t border-line pt-6 text-sm text-ink-muted">
+          <ul className="mt-10 space-y-2 border-t border-line pt-6 text-sm text-ink-soft">
             <li>High-resolution digital file, delivered after checkout.</li>
             <li>Print at home or at a lab, good up to A3.</li>
             <li>Secure checkout by Stripe.</li>

@@ -25,7 +25,7 @@ export function FrameCaption({
   return (
     <p
       className={cn(
-        "border-t border-line pt-1.5 text-cap font-mono tracking-frame text-ink-muted uppercase",
+        "border-t border-line pt-1.5 text-cap font-mono tracking-frame text-warm uppercase",
         className
       )}
     >

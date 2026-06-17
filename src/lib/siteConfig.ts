@@ -6,7 +6,7 @@ export const siteConfig = {
   name: "Carel Maeda",
   title: "Carel Maeda — Travel & Fujifilm Photography",
   description:
-    "Travel photography from a Fujifilm shooter. São Paulo made, Toronto based. Free Vanilla Summer recipe, prints, and guides on shooting JPG straight out of camera.",
+    "Travel photography from a Fujifilm shooter. São Paulo made, Toronto based. The Vanilla Summer recipe, prints, and guides on shooting JPG straight out of camera.",
   url: "https://photo.carelmaeda.com",
   instagram: "https://instagram.com/carel011",
   threads: "https://threads.net/@carel011",
@@ -18,16 +18,17 @@ export const siteConfig = {
     newsletter: "newsletter",
     contact: "contact",
   },
-  /** Google Analytics — flipped on by the owner after deploy */
+  /** Google Analytics 4 — gtag.js is injected by <Analytics> (@next/third-parties). */
   analytics: {
-    enabled: false,
-    gaId: "TODO_GA_MEASUREMENT_ID",
+    enabled: true,
+    gaId: "G-EQRSTMDRHZ",
   },
   /**
    * Stripe — digital checkout (SPEC §5). Publishable key is client-safe.
    * The SECRET key lives only in Netlify env (STRIPE_SECRET_KEY), never here.
-   * Per-product price IDs live in src/content/{recipes,prints}.ts as TODO_ until
-   * the owner creates them in the Stripe dashboard.
+   * Per-product price IDs + delivery publicIds live in src/content/products.ts;
+   * paid items stay TODO_ (and hidden via isLive) until the owner creates them in
+   * the Stripe dashboard.
    */
   stripe: {
     publishableKey:

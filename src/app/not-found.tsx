@@ -4,11 +4,11 @@ export default function NotFound() {
   return (
     <div className="px-gutter">
       <div className="mx-auto max-w-7xl py-24">
-        <p className="text-cap font-mono tracking-frame text-ink-muted uppercase">
+        <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
           FR-404 · Not found
         </p>
         <h1 className="text-h2 mt-6">This frame doesn&apos;t exist.</h1>
-        <p className="mt-4 max-w-prose text-ink-muted">
+        <p className="mt-4 max-w-prose text-ink-soft">
           The page you&apos;re after isn&apos;t here. The photographs are,
           though.
         </p>

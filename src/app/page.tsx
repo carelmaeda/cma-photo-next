@@ -19,7 +19,7 @@ const paths = [
   {
     href: "/downloads",
     title: "The recipe",
-    line: "Vanilla Summer — the in-camera recipe behind most of these frames. Free.",
+    line: "Vanilla Summer — the in-camera recipe behind most of these frames.",
     photo: realAlbums[2].cover,
   },
   {
@@ -53,7 +53,7 @@ export default function HomePage() {
           <h1 className="title-rise text-display mt-10 leading-[1.05]">
             Photographer. Travel. Fujifilm.
           </h1>
-          <p className="mt-6 max-w-prose text-ink-muted">
+          <p className="mt-6 max-w-prose text-ink-soft">
             São Paulo made. Toronto based. I shoot JPG straight out of camera —
             in-camera recipes do the work. Recipes, prints, and the in-between.
           </p>
@@ -61,7 +61,7 @@ export default function HomePage() {
             href="/downloads"
             className="mt-8 inline-block border border-ink px-5 py-3 text-cap font-mono tracking-frame uppercase transition-colors hover:border-indigo hover:text-indigo"
           >
-            Get the free Vanilla Summer recipe →
+            Get the Vanilla Summer recipe →
           </Link>
         </section>
 
@@ -85,7 +85,7 @@ export default function HomePage() {
                   <h3 className="mt-5 font-display text-xl font-semibold group-hover:text-indigo">
                     {path.title}
                   </h3>
-                  <p className="mt-2 max-w-prose text-sm text-ink-muted">
+                  <p className="mt-2 max-w-prose text-sm text-ink-soft">
                     {path.line}
                   </p>
                 </Link>
@@ -135,7 +135,7 @@ export default function HomePage() {
                     <h3 className="font-display text-xl font-semibold group-hover:text-indigo">
                       {guide.title}
                     </h3>
-                    <p className="mt-1 max-w-prose text-sm text-ink-muted">
+                    <p className="mt-1 max-w-prose text-sm text-ink-soft">
                       {guide.description}
                     </p>
                   </Link>
@@ -150,7 +150,7 @@ export default function HomePage() {
             <h2 className="text-h2 max-w-2xl">
               One email a month, mostly photos.
             </h2>
-            <p className="mt-4 max-w-prose text-ink-muted">
+            <p className="mt-4 max-w-prose text-ink-soft">
               New albums, the occasional recipe note, nothing else.
               Unsubscribe anytime.
             </p>

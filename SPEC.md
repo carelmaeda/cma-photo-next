@@ -20,9 +20,11 @@
 
 | Free | Paid |
 |---|---|
-| Vanilla Summer recipe | Additional / collection recipes |
+| Intro / other recipes (TBD) | **Vanilla Summer recipe** + collection recipes |
 | Free print downloads | Paid digital prints |
 | Honest gear list (on About) | Affiliate links (later) |
+
+> **Vanilla Summer is a paid recipe (always).** It is delivered as a digital recipe card (PDF) via Stripe — there is no free Vanilla Summer. The free recipe counterpart will be a separate intro/other recipe, added later. (Decided June 13, 2026; a homepage redesign to match is pending.)
 
 **The feel:** a warm personal storyteller — generosity first, the store quiet and tasteful. No countdowns, no fake scarcity, no exit popups, no "coming soon" teasers. A real "Buy" exists now, stated plainly.
 
@@ -43,8 +45,7 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 /prints            Print store — grid of free + paid digital prints      [was /prints; "Loja"]
 /prints/[slug]     Print detail (free → Forms gate; paid → Stripe)
 /downloads         Recipe / downloads store — free + paid Fujifilm recipes  [was /recipes]
-/downloads/[slug]  Recipe detail (paid → Stripe)
-/downloads/vanilla-summer   Free recipe settings page (gate delivery; indexable)
+/downloads/[slug]  Recipe detail (paid → Stripe; e.g. Vanilla Summer)
 /blog              Blog/guide index (the SEO engine)                     [was /guides]
 /blog/[slug]       Individual MDX post (Article + Breadcrumb JSON-LD)    [was /guides/[slug]]
 /contact           Simple inquiry form (split out of About)
@@ -71,7 +72,7 @@ Light-only, photo-first, warm personal storyteller. **Authority:** the codified 
 | `--color-paper-2` | `#ECE7DB` | Raised surface / hover fill. |
 | `--color-ink` | `#1A1925` | Primary text. |
 | `--color-ink-soft` | `#3A3947` | Secondary text on paper. |
-| `--color-warm` | `#86837C` | Muted text, captions. |
+| `--color-warm` | `#696660` | Muted text, captions. (AA-safe on paper/paper-2.) |
 | `--color-indigo` | `#2E3A6E` | **Primary accent:** links, buttons, focus, structure. |
 | `--color-indigo-700` | `#26305C` | Indigo hover/active. |
 | `--color-brick` | `#BC4A3C` | **Spark:** tags, one highlight — use sparingly, never body copy. |
@@ -148,8 +149,8 @@ Handwritten mark only — never re-typed. Assets in `carel-brand-kit/assets/` (c
 ## 7. Content notes & known data issues
 
 - `src/content/albums.ts` is the migrated, typed album data. **Placeholder albums** — Innsbruck and Vaduz (Salzburg/repeated images), Brugge and Porto (Braga images) — are flagged `placeholderImages: true` with TODO comments. Never invent publicIds; the owner uploads real photos.
-- Guide library seeds with the **Fujifilm-recipes cluster** (highest search intent, funnels to the free recipe): what-are-fujifilm-recipes, vanilla-summer-recipe-explained, why-i-shoot-jpeg-only, x100v-settings-i-actually-use. Claude drafts in the owner's voice; the owner edits before publish.
-- The Vanilla Summer settings on `/recipes/vanilla-summer` are written by the owner — the build ships the page structure with `TODO_` setting values, never invented numbers.
+- Guide library seeds with the **Fujifilm-recipes cluster** (highest search intent, funnels to the Vanilla Summer recipe): what-are-fujifilm-recipes, vanilla-summer-recipe-explained, why-i-shoot-jpeg-only, x100v-settings-i-actually-use. Claude drafts in the owner's voice; the owner edits before publish.
+- Vanilla Summer is a **paid** recipe card (digital PDF), delivered via Stripe (the file is set on the Stripe product's `downloadPublicId` metadata, read by `verify-session`). Its settings live in the deliverable, not on a public page — there is no free `/downloads/vanilla-summer` route.
 
 ---
 

@@ -13,7 +13,7 @@ export default function ContactPage() {
     <div className="px-gutter">
       <header className="mx-auto max-w-7xl py-12 md:py-16">
         <h1 className="text-h2">Say hi</h1>
-        <p className="mt-4 max-w-prose text-ink-muted">
+        <p className="mt-4 max-w-prose text-ink-soft">
           Questions about a recipe, a place, a print — or anything else. I read
           everything.
         </p>
@@ -27,12 +27,17 @@ export default function ContactPage() {
 
       <section className="mx-auto max-w-7xl pt-section pb-4">
         <div className="max-w-2xl border-t border-line pt-8">
-          <h2 className="text-cap font-mono tracking-frame text-ink-muted uppercase">
+          <h2 className="text-cap font-mono tracking-frame text-ink-soft uppercase">
             Press &amp; collaborations
           </h2>
-          <p className="mt-3 max-w-prose text-sm text-ink-muted">
+          <p className="mt-3 max-w-prose text-sm text-ink-soft">
             For publications and brand work, use the form above or reach me on{" "}
-            <a href={siteConfig.instagram} className="underline hover:text-indigo">
+            <a
+              href={siteConfig.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-indigo"
+            >
               Instagram
             </a>
             .

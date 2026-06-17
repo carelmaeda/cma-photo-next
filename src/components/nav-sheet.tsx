@@ -12,12 +12,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { navLinks } from "@/lib/nav";
+import { track } from "@/lib/analytics";
+import { EVENTS } from "@/lib/analytics-events";
 
 export function NavSheet() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (next) track(EVENTS.mobileMenuOpen);
+      }}
+    >
       <SheetTrigger asChild className="md:hidden">
         <Button variant="ghost" size="icon" aria-label="Open menu">
           <MenuIcon />
@@ -27,7 +35,7 @@ export function NavSheet() {
         <SheetHeader>
           <SheetTitle className="font-display font-semibold">Menu</SheetTitle>
         </SheetHeader>
-        <nav aria-label="Mobile" className="px-4">
+        <nav aria-label="Mobile" data-ga-nav="mobile_menu" className="px-4">
           <ul className="flex flex-col gap-5">
             {navLinks.map((link) => (
               <li key={link.href}>

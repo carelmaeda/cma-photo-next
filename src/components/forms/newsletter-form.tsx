@@ -62,7 +62,7 @@ export function NewsletterForm({
     return (
       <div aria-live="polite" className="max-w-md">
         <p className="font-display text-xl font-semibold">{successTitle}</p>
-        <p className="mt-2 text-sm text-ink-muted">{successBody}</p>
+        <p className="mt-2 text-sm text-ink-soft">{successBody}</p>
         {successHref && successLinkLabel && (
           <Link
             href={successHref}
@@ -106,9 +106,14 @@ export function NewsletterForm({
       </div>
 
       {status === "error" && (
-        <p aria-live="polite" className="mt-3 text-sm text-ink-muted">
+        <p aria-live="polite" className="mt-3 text-sm text-ink-soft">
           That didn&apos;t go through. If it keeps happening, reach me on{" "}
-          <a href={siteConfig.instagram} className="underline hover:text-indigo">
+          <a
+            href={siteConfig.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-indigo"
+          >
             Instagram
           </a>
           .

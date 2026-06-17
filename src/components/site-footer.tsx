@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="px-gutter mt-section">
       <div className="mx-auto max-w-7xl border-t border-line py-10">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <ul className="flex items-center gap-6">
+          <ul data-ga-nav="footer" className="flex items-center gap-6">
             <li>
               <a
                 href={siteConfig.instagram}
@@ -29,14 +29,6 @@ export function SiteFooter() {
             </li>
             <li>
               <Link
-                href="/prints"
-                className="text-cap font-mono tracking-frame uppercase hover:text-indigo"
-              >
-                Prints
-              </Link>
-            </li>
-            <li>
-              <Link
                 href="/contact"
                 className="text-cap font-mono tracking-frame uppercase hover:text-indigo"
               >
@@ -44,7 +36,7 @@ export function SiteFooter() {
               </Link>
             </li>
           </ul>
-          <p className="text-cap font-mono tracking-frame text-ink-muted uppercase">
+          <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
             © {new Date().getFullYear()} {siteConfig.name} · Built by me
           </p>
         </div>

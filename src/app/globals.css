@@ -15,7 +15,7 @@
     --color-paper-2: #ECE7DB;      /* raised surface / hover fill */
     --color-ink: #1A1925;          /* primary text */
     --color-ink-soft: #3A3947;     /* secondary text on paper */
-    --color-warm: #86837C;         /* muted text, captions */
+    --color-warm: #696660;         /* muted text, captions — darkened for WCAG AA (5.07:1 on paper, 4.64:1 on paper-2) */
     --color-indigo: #2E3A6E;       /* primary accent: links, buttons, focus */
     --color-indigo-700: #26305C;   /* indigo hover/active */
     --color-brick: #BC4A3C;        /* spark: tags, one highlight — use sparingly */

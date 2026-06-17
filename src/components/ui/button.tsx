@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // Primary — indigo (Carel system §02)
-        default: "bg-indigo text-paper hover:bg-indigo-700",
+        default: "bg-indigo text-white hover:bg-indigo-700",
         // Secondary — indigo outline
         outline:
           "border-indigo text-indigo bg-transparent hover:bg-paper-2",
@@ -19,7 +19,7 @@ const buttonVariants = cva(
         // Ghost — quiet
         ghost: "bg-transparent text-ink hover:bg-paper-2",
         // Spark — brick, used sparingly
-        spark: "bg-brick text-paper hover:bg-brick-700",
+        spark: "bg-brick text-white hover:bg-brick-700",
         // Destructive — outline danger
         destructive:
           "border-destructive text-destructive bg-transparent hover:bg-destructive/10",
