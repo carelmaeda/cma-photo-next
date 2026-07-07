@@ -19,13 +19,32 @@ type State =
   | { status: "error"; message: string }
   | { status: "paid"; email: string | null; items: VerifiedItem[] };
 
+/**
+ * The session id resolves to the buyer's email via verify-session, so it must
+ * not linger in the URL where analytics and browser history pick it up. It's
+ * moved to localStorage instead — that also keeps "reopen the confirmation
+ * page for a fresh download link" working on the buyer's own browser.
+ */
+const SESSION_KEY = "carel-last-order";
+
 export function CheckoutSuccess() {
   const params = useSearchParams();
-  const sessionId = params.get("session_id");
+  const urlSessionId = params.get("session_id");
   const { clear } = useCart();
   const [state, setState] = useState<State>({ status: "loading" });
 
   useEffect(() => {
+    let sessionId = urlSessionId;
+    try {
+      if (sessionId) {
+        window.localStorage.setItem(SESSION_KEY, sessionId);
+        window.history.replaceState(null, "", window.location.pathname);
+      } else {
+        sessionId = window.localStorage.getItem(SESSION_KEY);
+      }
+    } catch {
+      // storage blocked — fall through with whatever the URL gave us
+    }
     if (!sessionId) {
       setState({ status: "error", message: "No checkout session was found." });
       return;
@@ -57,7 +76,7 @@ export function CheckoutSuccess() {
     };
     // clear is stable; intentionally run once per session id
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionId]);
+  }, [urlSessionId]);
 
   if (state.status === "loading") {
     return <p className="text-ink-soft">Confirming your order…</p>;

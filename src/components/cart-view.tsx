@@ -56,7 +56,7 @@ export function CartView() {
                   size="sm"
                   aria-label="Remove item"
                   onClick={() => remove(line.slug)}
-                  className="ml-4 h-auto gap-1 rounded-none px-0 font-mono text-micro font-normal tracking-eyebrow uppercase text-warm hover:bg-transparent hover:text-brick"
+                  className="ml-4 h-auto gap-1 rounded-none px-0 font-mono text-micro font-normal tracking-eyebrow uppercase text-warm hover:bg-transparent hover:text-brick-700"
                 >
                   <XIcon className="size-3.5" /> Remove
                 </Button>

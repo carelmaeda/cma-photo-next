@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { albums } from "@/content/albums";
+import { realAlbums } from "@/content/albums";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
 import { social } from "@/lib/seo";
@@ -25,7 +25,9 @@ export default function GalleryPage() {
       </header>
 
       <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-3">
-        {albums.map((album) => (
+        {/* realAlbums: a future placeholder-image album must stay hidden here
+            too, matching the home page and sitemap (it'd be noindex anyway). */}
+        {realAlbums.map((album) => (
           <li key={album.slug}>
             <Link href={`/gallery/${album.slug}`} className="group block">
               <CldImage

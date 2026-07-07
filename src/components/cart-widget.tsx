@@ -97,7 +97,7 @@ export function CartWidget() {
                       size="icon-sm"
                       aria-label="Remove"
                       onClick={() => remove(line.slug)}
-                      className="ml-auto size-6 rounded-none text-warm hover:bg-transparent hover:text-brick"
+                      className="ml-auto size-6 rounded-none text-warm hover:bg-transparent hover:text-brick-700"
                     >
                       <XIcon className="size-3.5" />
                     </Button>
