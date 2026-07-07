@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
+import { social } from "@/lib/seo";
+
+const description =
+  "What this site collects, why, and how to get your data removed. Short version: your email if you give it, purchase details via Stripe, and anonymous analytics.";
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description:
-    "What this site collects, why, and how to get your data removed. Short version: your email if you give it, purchase details via Stripe, and anonymous analytics.",
+  description,
+  ...social("Privacy", description),
 };
 
 /*

@@ -3,11 +3,15 @@ import Link from "next/link";
 import { albums } from "@/content/albums";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
+import { social } from "@/lib/seo";
+
+const description =
+  "Travel photography gallery — Amsterdam, London, Salzburg, Vienna, Braga and more. Shot on Fujifilm, JPG straight out of camera.";
 
 export const metadata: Metadata = {
   title: "Gallery",
-  description:
-    "Travel photography gallery — Amsterdam, London, Salzburg, Vienna, Braga and more. Shot on Fujifilm, JPG straight out of camera.",
+  description,
+  ...social("Gallery", description),
 };
 
 export default function GalleryPage() {

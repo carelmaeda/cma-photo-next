@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/json-ld";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
 import { siteConfig } from "@/lib/siteConfig";
+import { ogImageUrl, defaultOgImage } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -24,9 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const guide = getGuide(slug);
   if (!guide) return {};
 
-  const ogImage = guide.cover
-    ? `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${guide.cover.publicId}`
-    : undefined;
+  const ogImage = guide.cover ? ogImageUrl(guide.cover.publicId) : defaultOgImage;
 
   return {
     title: guide.title,
@@ -36,7 +35,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: guide.description,
       type: "article",
       publishedTime: guide.date,
-      images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : undefined,
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    // Without this, the twitter block inherits the root layout's — generic
+    // site title + default image on an article share.
+    twitter: {
+      card: "summary_large_image",
+      title: `${guide.title} — ${siteConfig.name}`,
+      description: guide.description,
+      images: [ogImage],
     },
   };
 }
@@ -65,9 +72,7 @@ export default async function GuidePage({ params }: Props) {
             name: siteConfig.name,
             url: siteConfig.url,
           },
-          ...(guide.cover && {
-            image: `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${guide.cover.publicId}`,
-          }),
+          ...(guide.cover && { image: ogImageUrl(guide.cover.publicId) }),
         }}
       />
       <JsonLd

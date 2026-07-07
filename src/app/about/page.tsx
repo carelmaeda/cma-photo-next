@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { gear, gearCategories } from "@/content/gear";
+import { social } from "@/lib/seo";
+
+const description =
+  "São Paulo made, Toronto based. Why I shoot Fujifilm, why JPG only, why one prime lens is enough — and the short list of gear I actually carry.";
 
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "São Paulo made, Toronto based. Why I shoot Fujifilm, why JPG only, why one prime lens is enough — and the short list of gear I actually carry.",
+  description,
+  ...social("About", description),
 };
 
 /*

@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
+import { social } from "@/lib/seo";
+
+const description =
+  "The plain-language terms for buying digital downloads here: what you get, what you can do with it, and how refunds work.";
 
 export const metadata: Metadata = {
   title: "Terms & refunds",
-  description:
-    "The plain-language terms for buying digital downloads here: what you get, what you can do with it, and how refunds work.",
+  description,
+  ...social("Terms & refunds", description),
 };
 
 /*

@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { siteConfig } from "@/lib/siteConfig";
+import { social } from "@/lib/seo";
+
+const description =
+  "Questions about a recipe, a place, a print — or press and brand work. I read everything.";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description:
-    "Questions about a recipe, a place, a print — or press and brand work. I read everything.",
+  description,
+  ...social("Contact", description),
 };
 
 export default function ContactPage() {
