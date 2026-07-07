@@ -46,6 +46,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const standalonePages: MetadataRoute.Sitemap = [
     "/about",
     "/contact",
+    "/privacy",
+    "/terms",
   ].map((path) => ({
     url: `${url}${path}`,
     changeFrequency: "yearly",
