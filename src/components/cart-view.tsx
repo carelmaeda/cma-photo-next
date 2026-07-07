@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CldImage } from "@/components/cld-image";
 import { useCart, formatMoney } from "@/lib/cart";
 import { startCheckout } from "@/lib/checkout";
 
 export function CartView() {
-  const { lines, subtotal, setQuantity, remove } = useCart();
+  const { lines, subtotal, remove } = useCart();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -47,29 +47,9 @@ export function CartView() {
                 {formatMoney(line.price, line.currency)}
               </p>
               <div className="mt-3 flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Decrease quantity"
-                  onClick={() => setQuantity(line.slug, line.quantity - 1)}
-                  className="size-7 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
-                >
-                  <MinusIcon className="size-3.5" />
-                </Button>
-                <span className="w-8 text-center font-mono text-cap">
-                  {line.quantity}
+                <span className="font-mono text-micro tracking-eyebrow uppercase text-warm">
+                  Digital download
                 </span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Increase quantity"
-                  onClick={() => setQuantity(line.slug, line.quantity + 1)}
-                  className="size-7 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
-                >
-                  <PlusIcon className="size-3.5" />
-                </Button>
                 <Button
                   type="button"
                   variant="ghost"
@@ -83,7 +63,7 @@ export function CartView() {
               </div>
             </div>
             <p className="shrink-0 font-semibold">
-              {formatMoney(line.price * line.quantity, line.currency)}
+              {formatMoney(line.price, line.currency)}
             </p>
           </li>
         ))}

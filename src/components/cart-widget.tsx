@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingBagIcon, MinusIcon, PlusIcon, XIcon } from "lucide-react";
+import { ShoppingBagIcon, XIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -19,7 +19,7 @@ import { track } from "@/lib/analytics";
 import { EVENTS } from "@/lib/analytics-events";
 
 export function CartWidget() {
-  const { lines, count, subtotal, setQuantity, remove } = useCart();
+  const { lines, count, subtotal, remove } = useCart();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -88,29 +88,9 @@ export function CartWidget() {
                     {formatMoney(line.price, line.currency)}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      aria-label="Decrease quantity"
-                      onClick={() => setQuantity(line.slug, line.quantity - 1)}
-                      className="size-6 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
-                    >
-                      <MinusIcon className="size-3" />
-                    </Button>
-                    <span className="w-6 text-center font-mono text-cap">
-                      {line.quantity}
+                    <span className="font-mono text-micro tracking-eyebrow uppercase text-warm">
+                      Digital download
                     </span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      aria-label="Increase quantity"
-                      onClick={() => setQuantity(line.slug, line.quantity + 1)}
-                      className="size-6 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
-                    >
-                      <PlusIcon className="size-3" />
-                    </Button>
                     <Button
                       type="button"
                       variant="ghost"
