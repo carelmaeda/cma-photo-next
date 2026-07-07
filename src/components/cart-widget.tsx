@@ -22,6 +22,7 @@ export function CartWidget() {
   const { lines, count, subtotal, setQuantity, remove } = useCart();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   return (
     <Sheet
@@ -142,6 +143,7 @@ export function CartWidget() {
               disabled={busy}
               onClick={async () => {
                 setBusy(true);
+                setFailed(false);
                 try {
                   await startCheckout(
                     lines.map((l) => ({
@@ -149,6 +151,8 @@ export function CartWidget() {
                       quantity: l.quantity,
                     }))
                   );
+                } catch {
+                  setFailed(true);
                 } finally {
                   setBusy(false);
                 }
@@ -156,6 +160,12 @@ export function CartWidget() {
             >
               {busy ? "Redirecting…" : "Checkout"}
             </Button>
+            {failed && (
+              <p aria-live="polite" className="text-sm text-danger">
+                Checkout didn&apos;t go through — nothing was charged. Try
+                again in a minute.
+              </p>
+            )}
             <p className="text-center font-mono text-micro text-warm">
               Secure checkout by Stripe · digital download
             </p>

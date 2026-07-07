@@ -11,6 +11,7 @@ import { startCheckout } from "@/lib/checkout";
 export function CartView() {
   const { lines, subtotal, setQuantity, remove } = useCart();
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   if (lines.length === 0) {
     return (
@@ -107,6 +108,7 @@ export function CartView() {
           disabled={busy}
           onClick={async () => {
             setBusy(true);
+            setFailed(false);
             try {
               await startCheckout(
                 lines.map((l) => ({
@@ -114,6 +116,8 @@ export function CartView() {
                   quantity: l.quantity,
                 }))
               );
+            } catch {
+              setFailed(true);
             } finally {
               setBusy(false);
             }
@@ -121,6 +125,12 @@ export function CartView() {
         >
           {busy ? "Redirecting…" : "Checkout"}
         </Button>
+        {failed && (
+          <p aria-live="polite" className="mt-3 text-sm text-danger">
+            Checkout didn&apos;t go through — nothing was charged. Try again in
+            a minute.
+          </p>
+        )}
         <p className="mt-3 text-center font-mono text-micro text-warm">
           Secure checkout by Stripe
         </p>
