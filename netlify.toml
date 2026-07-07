@@ -43,6 +43,14 @@
   status = 301
   force = true
 
+# The old free-recipe route was live briefly before the store rework — anyone
+# who saved or indexed it lands on the product instead of a 404.
+[[redirects]]
+  from = "/downloads/vanilla-summer"
+  to = "/downloads/vanilla-summer-recipe-card"
+  status = 301
+  force = true
+
 # Downloads (was /recipes)
 [[redirects]]
   from = "/recipes"
