@@ -41,7 +41,9 @@ export const handler = async (event: {
     return json(400, { error: "Invalid request body." });
   }
 
-  // Validate: known-shaped, configured price ids only.
+  // Validate: known-shaped, configured price ids only. Everything sold is a
+  // digital download, so quantity is always 1 — one file per product — and a
+  // cart can't plausibly exceed the catalog size.
   const lineItems = items
     .filter(
       (i) =>
@@ -50,7 +52,8 @@ export const handler = async (event: {
         Number.isInteger(i.quantity) &&
         i.quantity > 0
     )
-    .map((i) => ({ price: i.stripePriceId, quantity: i.quantity }));
+    .slice(0, 20)
+    .map((i) => ({ price: i.stripePriceId, quantity: 1 }));
 
   if (lineItems.length === 0) {
     return json(400, { error: "No valid items to check out." });
@@ -71,7 +74,9 @@ export const handler = async (event: {
     });
     return json(200, { url: session.url });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Checkout failed.";
-    return json(502, { error: message });
+    // Log the real error for the function log; never echo Stripe internals
+    // (price ids, account state) back to the browser.
+    console.error("create-checkout-session:", err);
+    return json(502, { error: "Checkout failed. Nothing was charged." });
   }
 };

@@ -110,7 +110,9 @@ export const handler = async (event: {
       items,
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Verification failed.";
-    return json(502, { error: message });
+    // Log the real error; a raw Stripe message here leaks internals and acts
+    // as a session-id oracle ("No such checkout.session: …").
+    console.error("verify-session:", err);
+    return json(502, { error: "Could not verify this order." });
   }
 };

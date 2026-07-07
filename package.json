@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsc -p netlify/tsconfig.json && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:functions": "tsc -p netlify/tsconfig.json"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.9",
