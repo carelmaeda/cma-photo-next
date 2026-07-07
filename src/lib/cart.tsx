@@ -26,6 +26,28 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
+/**
+ * Guard against corrupt/hand-edited storage: CartProvider wraps every page,
+ * so a malformed entry must never reach state (lines.reduce would throw in
+ * render and take the whole site down).
+ */
+function isCartLine(value: unknown): value is CartLine {
+  if (typeof value !== "object" || value === null) return false;
+  const line = value as Partial<CartLine>;
+  return (
+    typeof line.slug === "string" &&
+    typeof line.name === "string" &&
+    typeof line.price === "number" &&
+    typeof line.stripePriceId === "string" &&
+    typeof line.quantity === "number" &&
+    Number.isFinite(line.quantity) &&
+    typeof line.image === "object" &&
+    line.image !== null &&
+    typeof (line.image as { publicId?: unknown }).publicId === "string" &&
+    typeof (line.image as { alt?: unknown }).alt === "string"
+  );
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -34,7 +56,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setLines(JSON.parse(raw) as CartLine[]);
+      if (raw) {
+        const parsed: unknown = JSON.parse(raw);
+        if (Array.isArray(parsed)) setLines(parsed.filter(isCartLine));
+      }
     } catch {
       // ignore corrupt storage
     }
