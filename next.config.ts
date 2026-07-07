@@ -7,14 +7,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["radix-ui", "lucide-react"],
   },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-      },
-    ],
-  },
+  // No images.remotePatterns: every Cloudinary image goes through CldImage's
+  // custom loader, which bypasses the optimizer's remote allow-list entirely.
+  // A remote image added without a loader will fail loudly — that's intended.
 };
 
 export default nextConfig;

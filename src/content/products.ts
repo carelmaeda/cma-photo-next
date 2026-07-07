@@ -48,8 +48,6 @@ export const printProducts: Product[] = prints.map((print) => ({
    kind: "print", a real `price` + `stripePriceId`, and a high-res
    `downloadPublicId`. They appear in /shop automatically once configured. */
 
-export const allProducts: Product[] = [...recipeProducts, ...printProducts];
-
 /**
  * A paid product is live once it has a real (non-"TODO_") Stripe price id.
  * Delivery itself is driven by the Stripe *product metadata* `downloadPublicId`
