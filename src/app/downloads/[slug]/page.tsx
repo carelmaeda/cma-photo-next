@@ -6,6 +6,7 @@ import { AddToCart } from "@/components/add-to-cart";
 import { JsonLd } from "@/components/json-ld";
 import { getProduct, paidProducts, priceLabel, isLive } from "@/content/products";
 import { siteConfig } from "@/lib/siteConfig";
+import { social, ogImageUrl } from "@/lib/seo";
 
 export function generateStaticParams() {
   return paidProducts("recipe").map((p) => ({ slug: p.slug }));
@@ -19,22 +20,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = getProduct("recipe", slug);
   if (!product) return {};
-  const ogImage = `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${product.image.publicId}`;
   return {
     title: `${product.name} — Fujifilm recipe`,
     description: product.description,
-    openGraph: {
-      title: `${product.name} — ${siteConfig.name}`,
-      description: product.description,
-      type: "website",
-      images: [{ url: ogImage, width: 1200, height: 630 }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${product.name} — ${siteConfig.name}`,
-      description: product.description,
-      images: [ogImage],
-    },
+    ...social(product.name, product.description, ogImageUrl(product.image.publicId)),
   };
 }
 
@@ -56,7 +45,7 @@ export default async function RecipeProductPage({
           "@type": "Product",
           name: product.name,
           description: product.description,
-          image: `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${product.image.publicId}`,
+          image: ogImageUrl(product.image.publicId),
           offers: {
             "@type": "Offer",
             price: ((product.price ?? 0) / 100).toFixed(2),

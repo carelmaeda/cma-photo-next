@@ -58,7 +58,7 @@ export default function HomePage() {
             in-camera recipes do the work. Recipes, prints, and the in-between.
           </p>
           <Link
-            href="/downloads"
+            href="/downloads/vanilla-summer-recipe-card"
             className="mt-8 inline-block border border-ink px-5 py-3 text-cap font-mono tracking-frame uppercase transition-colors hover:border-indigo hover:text-indigo"
           >
             Get the Vanilla Summer recipe →

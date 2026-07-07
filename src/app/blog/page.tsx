@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllGuides, categoryLabels } from "@/lib/guides";
+import { social } from "@/lib/seo";
+
+const description =
+  "What I've figured out about Fujifilm recipes, shooting JPG only, and travel photography — written down properly.";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description:
-    "What I've figured out about Fujifilm recipes, shooting JPG only, and travel photography — written down properly.",
+  description,
+  ...social("Blog", description),
 };
 
 export default function GuidesPage() {

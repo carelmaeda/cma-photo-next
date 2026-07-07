@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { albums, getAlbum } from "@/content/albums";
 import { AlbumGallery } from "@/components/album-gallery";
 import { getAllGuides } from "@/lib/guides";
-import { siteConfig } from "@/lib/siteConfig";
+import { social, ogImageUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -24,22 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: album.description,
     // Albums still showing placeholder images stay out of Google (SPEC.md §6)
     robots: album.placeholderImages ? { index: false } : undefined,
-    openGraph: {
-      title: `${album.title}, ${album.country} — Carel Maeda`,
-      description: album.description,
-      images: [
-        {
-          url: `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/${album.cover.publicId}`,
-          width: 1200,
-          height: 630,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${album.title}, ${album.country} — Carel Maeda`,
-      description: album.description,
-    },
+    ...social(
+      `${album.title}, ${album.country}`,
+      album.description,
+      ogImageUrl(album.cover.publicId)
+    ),
   };
 }
 

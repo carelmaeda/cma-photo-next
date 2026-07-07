@@ -22,6 +22,7 @@ export function AddToCart({
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   if (product.free || !product.price || !product.stripePriceId) return null;
 
@@ -47,26 +48,37 @@ export function AddToCart({
   if (compact) return addButton;
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      {addButton}
+    <div>
+      <div className="flex flex-wrap items-center gap-3">
+        {addButton}
 
-      <Button
-        type="button"
-        variant="outline"
-        disabled={busy}
-        onClick={async () => {
-          setBusy(true);
-          try {
-            await startCheckout([
-              { stripePriceId: product.stripePriceId!, quantity: 1 },
-            ]);
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        {busy ? "Redirecting…" : "Buy now"}
-      </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            setFailed(false);
+            try {
+              await startCheckout([
+                { stripePriceId: product.stripePriceId!, quantity: 1 },
+              ]);
+            } catch {
+              setFailed(true);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          {busy ? "Redirecting…" : "Buy now"}
+        </Button>
+      </div>
+      {failed && (
+        <p aria-live="polite" className="mt-3 text-sm text-danger">
+          Checkout didn&apos;t go through — nothing was charged. Try again in a
+          minute.
+        </p>
+      )}
     </div>
   );
 }

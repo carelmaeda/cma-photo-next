@@ -20,11 +20,32 @@ interface CartContextValue {
   subtotal: number;
   add: (product: Product) => void;
   remove: (slug: string) => void;
-  setQuantity: (slug: string, quantity: number) => void;
   clear: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
+
+/**
+ * Guard against corrupt/hand-edited storage: CartProvider wraps every page,
+ * so a malformed entry must never reach state (lines.reduce would throw in
+ * render and take the whole site down).
+ */
+function isCartLine(value: unknown): value is CartLine {
+  if (typeof value !== "object" || value === null) return false;
+  const line = value as Partial<CartLine>;
+  return (
+    typeof line.slug === "string" &&
+    typeof line.name === "string" &&
+    typeof line.price === "number" &&
+    typeof line.stripePriceId === "string" &&
+    typeof line.quantity === "number" &&
+    Number.isFinite(line.quantity) &&
+    typeof line.image === "object" &&
+    line.image !== null &&
+    typeof (line.image as { publicId?: unknown }).publicId === "string" &&
+    typeof (line.image as { alt?: unknown }).alt === "string"
+  );
+}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
@@ -34,7 +55,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setLines(JSON.parse(raw) as CartLine[]);
+      if (raw) {
+        const parsed: unknown = JSON.parse(raw);
+        if (Array.isArray(parsed)) setLines(parsed.filter(isCartLine));
+      }
     } catch {
       // ignore corrupt storage
     }
@@ -54,12 +78,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     // Only paid, configured products are addable.
     if (product.free || !product.price || !product.stripePriceId) return;
     setLines((prev) => {
-      const existing = prev.find((l) => l.slug === product.slug);
-      if (existing) {
-        return prev.map((l) =>
-          l.slug === product.slug ? { ...l, quantity: l.quantity + 1 } : l
-        );
-      }
+      // Digital downloads: one copy per product. Adding again is a no-op —
+      // paying twice for the same file helps nobody.
+      if (prev.some((l) => l.slug === product.slug)) return prev;
       const line: CartLine = {
         slug: product.slug,
         kind: product.kind,
@@ -78,21 +99,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setLines((prev) => prev.filter((l) => l.slug !== slug));
   }, []);
 
-  const setQuantity = useCallback((slug: string, quantity: number) => {
-    setLines((prev) =>
-      quantity <= 0
-        ? prev.filter((l) => l.slug !== slug)
-        : prev.map((l) => (l.slug === slug ? { ...l, quantity } : l))
-    );
-  }, []);
-
   const clear = useCallback(() => setLines([]), []);
 
   const value = useMemo<CartContextValue>(() => {
-    const count = lines.reduce((n, l) => n + l.quantity, 0);
-    const subtotal = lines.reduce((n, l) => n + l.price * l.quantity, 0);
-    return { lines, count, subtotal, add, remove, setQuantity, clear };
-  }, [lines, add, remove, setQuantity, clear]);
+    const count = lines.length;
+    const subtotal = lines.reduce((n, l) => n + l.price, 0);
+    return { lines, count, subtotal, add, remove, clear };
+  }, [lines, add, remove, clear]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

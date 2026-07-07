@@ -7,6 +7,7 @@ import { PersonJsonLd } from "@/components/json-ld";
 import { Analytics } from "@/components/analytics";
 import { AnalyticsTracking } from "@/components/analytics-tracking";
 import { CartProvider } from "@/lib/cart";
+import { defaultOgImage } from "@/lib/seo";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -22,8 +23,6 @@ const spaceMono = Space_Mono({
   variable: "--font-space-mono",
   weight: ["400", "700"],
 });
-
-const ogImage = `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload/w_1200,h_630,c_fill,g_auto,f_auto,q_auto/Europe/Netherlands/Amsterdam/DSCF5151_eintko`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -45,13 +44,13 @@ export const metadata: Metadata = {
     url: siteConfig.url,
     siteName: siteConfig.name,
     type: "website",
-    images: [{ url: ogImage, width: 1200, height: 630 }],
+    images: [{ url: defaultOgImage, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [ogImage],
+    images: [defaultOgImage],
   },
 };
 

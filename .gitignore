@@ -36,8 +36,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# env files — with or without the leading dot (a dot-less `env.local` once
+# slipped into history; never again)
 .env*
-.env.local  
+env.local
+env.*.local
+*.env
+!.env.example
 
 # vercel
 .vercel

@@ -24,8 +24,6 @@ export interface Album {
   photos: Photo[];
   /** True while an album still shows another city's images — page gets noindex */
   placeholderImages?: boolean;
-  /** Slug of a related guide, once one exists */
-  relatedGuide?: string;
 }
 
 export type GearCategory =
@@ -47,8 +45,6 @@ export interface GearItem {
 export interface Print {
   photo: Photo;
   title: string;
-  /** Cloudinary fl_attachment URL, revealed after the newsletter gate */
-  downloadUrl?: string;
 }
 
 export type ProductKind = "recipe" | "print";

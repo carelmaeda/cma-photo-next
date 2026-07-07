@@ -24,15 +24,14 @@ export const siteConfig = {
     gaId: "G-EQRSTMDRHZ",
   },
   /**
-   * Stripe — digital checkout (SPEC §5). Publishable key is client-safe.
-   * The SECRET key lives only in Netlify env (STRIPE_SECRET_KEY), never here.
-   * Per-product price IDs + delivery publicIds live in src/content/products.ts;
-   * paid items stay TODO_ (and hidden via isLive) until the owner creates them in
-   * the Stripe dashboard.
+   * Stripe — digital checkout (SPEC §5). Checkout is a redirect to a
+   * server-created hosted session, so no publishable key is needed client-side
+   * (add one back only if Stripe.js ever gets embedded). The SECRET key lives
+   * only in Netlify env (STRIPE_SECRET_KEY), never here. Per-product price IDs
+   * live in src/content/products.ts; paid items stay TODO_ (and hidden via
+   * isLive) until the owner creates them in the Stripe dashboard.
    */
   stripe: {
-    publishableKey:
-      "pk_live_51T3bajANgGBn4EAZXBVaR4kzGT9FN2FwHVf7EWirLd5PBtA0hLMYv0pUlXhBt9lqQSfTWYtyVDKzIeMhy1lBVVL500Jo24noaO",
     createCheckoutSession: "/.netlify/functions/create-checkout-session",
     verifySession: "/.netlify/functions/verify-session",
     /** Display + charge currency. Stripe prices must be created in this currency. */

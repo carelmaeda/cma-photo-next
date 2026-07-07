@@ -4,11 +4,15 @@ import { CldImage } from "@/components/cld-image";
 import { ProductCard } from "@/components/product-card";
 import { storeProducts } from "@/content/products";
 import { getAllGuides, categoryLabels } from "@/lib/guides";
+import { social } from "@/lib/seo";
+
+const description =
+  "Digital downloads from a Fujifilm shooter — recipes and prints, delivered as instant files after checkout.";
 
 export const metadata: Metadata = {
   title: "Digital Downloads",
-  description:
-    "Digital downloads from a Fujifilm shooter — recipes and prints, delivered as instant files after checkout.",
+  description,
+  ...social("Digital Downloads", description),
 };
 
 export default function DownloadsPage() {

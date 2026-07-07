@@ -23,7 +23,7 @@ export const recipeProducts: Product[] = [
     kind: "recipe",
     name: "Vanilla Summer — Recipe Card",
     description:
-      "A digital recipe card for vanilla summer cookies. Instant PDF download after checkout.",
+      "The in-camera Fujifilm settings behind most of my recent frames — warm shadows, soft highlights. A recipe card PDF for X-Trans IV and V bodies, delivered right after checkout.",
     image: sampleFrames[0], // reuse an existing frame until a real cover exists
     free: false,
     price: 300, // 300 = $3.00 CAD (smallest unit)
@@ -47,8 +47,6 @@ export const printProducts: Product[] = prints.map((print) => ({
 /* Paid prints follow the same shape as the recipe EXAMPLE above, with
    kind: "print", a real `price` + `stripePriceId`, and a high-res
    `downloadPublicId`. They appear in /shop automatically once configured. */
-
-export const allProducts: Product[] = [...recipeProducts, ...printProducts];
 
 /**
  * A paid product is live once it has a real (non-"TODO_") Stripe price id.

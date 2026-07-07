@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingBagIcon, MinusIcon, PlusIcon, XIcon } from "lucide-react";
+import { ShoppingBagIcon, XIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -19,9 +19,10 @@ import { track } from "@/lib/analytics";
 import { EVENTS } from "@/lib/analytics-events";
 
 export function CartWidget() {
-  const { lines, count, subtotal, setQuantity, remove } = useCart();
+  const { lines, count, subtotal, remove } = useCart();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   return (
     <Sheet
@@ -87,36 +88,16 @@ export function CartWidget() {
                     {formatMoney(line.price, line.currency)}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      aria-label="Decrease quantity"
-                      onClick={() => setQuantity(line.slug, line.quantity - 1)}
-                      className="size-6 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
-                    >
-                      <MinusIcon className="size-3" />
-                    </Button>
-                    <span className="w-6 text-center font-mono text-cap">
-                      {line.quantity}
+                    <span className="font-mono text-micro tracking-eyebrow uppercase text-warm">
+                      Digital download
                     </span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      aria-label="Increase quantity"
-                      onClick={() => setQuantity(line.slug, line.quantity + 1)}
-                      className="size-6 rounded-none border-line-2 hover:border-indigo hover:bg-transparent"
-                    >
-                      <PlusIcon className="size-3" />
-                    </Button>
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon-sm"
                       aria-label="Remove"
                       onClick={() => remove(line.slug)}
-                      className="ml-auto size-6 rounded-none text-warm hover:bg-transparent hover:text-brick"
+                      className="ml-auto size-6 rounded-none text-warm hover:bg-transparent hover:text-brick-700"
                     >
                       <XIcon className="size-3.5" />
                     </Button>
@@ -142,6 +123,7 @@ export function CartWidget() {
               disabled={busy}
               onClick={async () => {
                 setBusy(true);
+                setFailed(false);
                 try {
                   await startCheckout(
                     lines.map((l) => ({
@@ -149,6 +131,8 @@ export function CartWidget() {
                       quantity: l.quantity,
                     }))
                   );
+                } catch {
+                  setFailed(true);
                 } finally {
                   setBusy(false);
                 }
@@ -156,6 +140,12 @@ export function CartWidget() {
             >
               {busy ? "Redirecting…" : "Checkout"}
             </Button>
+            {failed && (
+              <p aria-live="polite" className="text-sm text-danger">
+                Checkout didn&apos;t go through — nothing was charged. Try
+                again in a minute.
+              </p>
+            )}
             <p className="text-center font-mono text-micro text-warm">
               Secure checkout by Stripe · digital download
             </p>

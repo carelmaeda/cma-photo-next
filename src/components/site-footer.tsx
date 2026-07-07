@@ -35,6 +35,22 @@ export function SiteFooter() {
                 Contact
               </Link>
             </li>
+            <li>
+              <Link
+                href="/privacy"
+                className="text-cap font-mono tracking-frame uppercase hover:text-indigo"
+              >
+                Privacy
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/terms"
+                className="text-cap font-mono tracking-frame uppercase hover:text-indigo"
+              >
+                Terms
+              </Link>
+            </li>
           </ul>
           <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
             © {new Date().getFullYear()} {siteConfig.name} · Built by me

@@ -6,6 +6,16 @@
 [functions]
   node_bundler = "esbuild"
 
+# Security headers (Netlify already adds HSTS + X-Content-Type-Options).
+# A full CSP is deferred — it needs a dedicated pass with GA, Cloudinary,
+# and inline JSON-LD tested on a deploy preview.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
 # Old → new IA 301s (SPEC §2). Pre-launch, but kept for any shared links.
 # Gallery (was /albums)
 [[redirects]]
@@ -30,6 +40,14 @@
 [[redirects]]
   from = "/guides/*"
   to = "/blog/:splat"
+  status = 301
+  force = true
+
+# The old free-recipe route was live briefly before the store rework — anyone
+# who saved or indexed it lands on the product instead of a 404.
+[[redirects]]
+  from = "/downloads/vanilla-summer"
+  to = "/downloads/vanilla-summer-recipe-card"
   status = 301
   force = true
 
