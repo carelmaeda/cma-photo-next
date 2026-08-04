@@ -17,7 +17,7 @@ export function CartView() {
     return (
       <p className="max-w-prose text-ink-soft">
         Your cart is empty. Browse the{" "}
-        <Link href="/downloads" className="underline hover:text-indigo">
+        <Link href="/recipes" className="underline hover:text-indigo">
           recipes
         </Link>
         .

@@ -17,6 +17,10 @@ import { sampleFrames } from "@/content/recipes";
  */
 
 // — Recipes —
+// PARKED by siteConfig.features.store (SPEC §10) — do not delete. The Stripe
+// price is real; every consumer (downloads pages, sitemap, cart) is flag-gated.
+// While parked, the Vanilla Summer settings are published free at /recipes.
+// If this paid card returns, give it a fresh slug — the old one 301s to /recipes.
 export const recipeProducts: Product[] = [
   {
     slug: "vanilla-summer-recipe-card",

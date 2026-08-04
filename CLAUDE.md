@@ -4,7 +4,7 @@
 
 ## What this is
 
-Photography platform for Carel Maeda (@carel011) at photo.carelmaeda.com — converts Instagram visitors into email subscribers and Google searchers into readers, and sells digital products. Generosity-first: free Vanilla Summer recipe + free prints (Netlify Forms gated) sit beside **paid** recipes/prints in a Stripe-backed digital store; MDX blog for SEO; gear list on About. **Rebranded June 13, 2026** to the Carel brand kit + design system + a new English four-job IA (see SPEC §2/§3 — the old "Contact Sheet Editorial" / free-first / no-store model is superseded).
+Photography platform for Carel Maeda (@carel011) at photo.carelmaeda.com — converts Instagram visitors into email subscribers and Google searchers into readers. **Rebranded June 13, 2026** to the Carel brand kit + design system + a new English four-job IA (see SPEC §2/§3). **Launch-light since August 4, 2026 (SPEC §10):** the shipped site is traffic-first — free Fujifilm recipes with full settings open at `/recipes` + free Lightroom presets (`public/presets/`), blog, about. The Stripe store, gallery nav, and prints are parked behind `siteConfig.features` flags (code kept, not deleted); nav is Home · Recipes · Blog · About until they flip back on.
 
 ## Stack
 
@@ -29,7 +29,8 @@ npm run lint
 - **Stripe = digital-only, one server touchpoint.** Checkout + delivery run through `netlify/functions/*` (create Checkout Session; verify paid session for download). No DB, no accounts, no stored orders — entitlement is `session_id`-verified at `/checkout/success`. Secret key in env only, never committed.
 - **Every page exports unique `metadata`**; new routes go into `sitemap.ts`. Cart/checkout pages are `noindex`.
 - **No new npm dependencies** without flagging first (Stripe SDKs `stripe` + `@stripe/stripe-js` are pre-approved by SPEC §5). No new third-party services/accounts without owner sign-off.
-- **Out of scope** (SPEC §9): no CMS, database, auth, i18n, presets, physical-print fulfillment, design-system §04 admin/upload UI. Don't build these even if a task seems to imply them.
+- **Out of scope** (SPEC §9): no CMS, database, auth, i18n, physical-print fulfillment, design-system §04 admin/upload UI. Don't build these even if a task seems to imply them. (Free Lightroom presets became in-scope August 4, 2026 — SPEC §10.)
+- **Launch-light flags (SPEC §10):** `siteConfig.features.{store,gallery,prints}` gate nav, cart icon, sitemap, and the `/downloads` redirects. Don't remove parked store/gallery code; gate it.
 - `carel011_*.md` files are personal strategy docs — gitignored, never commit, never quote in site copy.
 
 ## Copy voice (any user-facing text)

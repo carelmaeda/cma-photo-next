@@ -36,4 +36,15 @@ export const siteConfig = {
     /** Display + charge currency. Stripe prices must be created in this currency. */
     currency: "cad",
   },
+  /**
+   * Launch-light mode (SPEC §10). The store, gallery, and prints code stays in
+   * the repo; these flags remove them from nav/sitemap and redirect or hide
+   * their entry points. Flip a flag back to true to restore that section
+   * (for the store, also reinstate the /downloads redirects in netlify.toml).
+   */
+  features: {
+    store: false, // /downloads catalog + product pages + cart widget + nav item
+    gallery: false, // Gallery nav item + homepage latest-work strip
+    prints: false, // Prints nav item (page itself is already noindex)
+  } as { store: boolean; gallery: boolean; prints: boolean },
 } as const;

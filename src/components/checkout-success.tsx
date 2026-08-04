@@ -138,7 +138,7 @@ export function CheckoutSuccess() {
 
       <p className="mt-10 text-sm text-ink-soft">
         Browse more in the{" "}
-        <Link href="/downloads" className="underline hover:text-indigo">
+        <Link href="/recipes" className="underline hover:text-indigo">
           recipes
         </Link>
         .

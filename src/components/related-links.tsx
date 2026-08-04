@@ -32,7 +32,7 @@ export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
         ))}
         <li>
           <Link
-            href="/downloads"
+            href="/recipes/vanilla-summer"
             className="underline underline-offset-2 hover:text-indigo"
           >
             Vanilla Summer — the recipe

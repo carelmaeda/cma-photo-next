@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { realAlbums } from "@/content/albums";
 import { paidProducts } from "@/content/products";
+import { recipes } from "@/content/recipes";
 import { getAllGuides } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
 
@@ -10,6 +11,9 @@ import { siteConfig } from "@/lib/siteConfig";
  * Deliberately excluded (verified against the routes):
  *  - /cart, /checkout/success  → noindex (transactional)
  *  - /prints, /prints/[slug]   → robots:index:false, hidden until launch
+ *  - /downloads, /downloads/[slug] → parked by features.store (SPEC §10),
+ *    301s to /recipes while the store is off
+ *  - draft blog posts          → filtered out by getAllGuides()
  *  - placeholder-image albums  → noindex (realAlbums already filters them out)
  *
  * Priority (3 tiers): primary page 1.0 · hubs + standalone pages 0.8 ·
@@ -34,9 +38,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const hubs: MetadataRoute.Sitemap = [
+    "/recipes",
     "/gallery",
     "/blog",
-    "/downloads",
+    ...(siteConfig.features.store ? ["/downloads"] : []),
   ].map((path) => ({
     url: `${url}${path}`,
     changeFrequency: "monthly",
@@ -53,13 +58,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const productRoutes: MetadataRoute.Sitemap = paidProducts("recipe").map(
-    (product) => ({
-      url: `${url}/downloads/${product.slug}`,
-      changeFrequency: "yearly",
-      priority: 0.6,
-    })
-  );
+  // Free recipes are the launch flagship — hub-tier priority on purpose.
+  const recipeRoutes: MetadataRoute.Sitemap = recipes.map((recipe) => ({
+    url: `${url}/recipes/${recipe.slug}`,
+    changeFrequency: "yearly",
+    priority: 0.8,
+  }));
+
+  const productRoutes: MetadataRoute.Sitemap = siteConfig.features.store
+    ? paidProducts("recipe").map((product) => ({
+        url: `${url}/downloads/${product.slug}`,
+        changeFrequency: "yearly",
+        priority: 0.6,
+      }))
+    : [];
 
   const albumRoutes: MetadataRoute.Sitemap = realAlbums.map((album) => ({
     url: `${url}/gallery/${album.slug}`,
@@ -78,6 +90,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...home,
     ...hubs,
     ...standalonePages,
+    ...recipeRoutes,
     ...productRoutes,
     ...albumRoutes,
     ...blogRoutes,

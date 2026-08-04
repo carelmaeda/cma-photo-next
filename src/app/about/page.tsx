@@ -44,7 +44,7 @@ export default function AboutPage() {
           <p>
             Everything digital is JPG, straight out of camera. No Lightroom,
             no editing. I build the look in-camera with recipes —{" "}
-            <Link href="/downloads" className="underline hover:text-indigo">
+            <Link href="/recipes/vanilla-summer" className="underline hover:text-indigo">
               Vanilla Summer
             </Link>{" "}
             is the one I keep coming back to. Limitation makes me more
@@ -63,14 +63,7 @@ export default function AboutPage() {
           <h2 className="text-h2">What I carry</h2>
           <p className="mt-3 max-w-prose text-ink-soft">
             A short list on purpose. Every item earned its place by being the
-            thing I actually reach for —{" "}
-            <Link
-              href="/blog/one-camera-one-lens"
-              className="underline hover:text-indigo"
-            >
-              usually one at a time
-            </Link>
-            .
+            thing I actually reach for — usually one at a time.
           </p>
 
           <div className="mt-8">

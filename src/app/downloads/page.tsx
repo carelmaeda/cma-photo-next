@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CldImage } from "@/components/cld-image";
 import { ProductCard } from "@/components/product-card";
 import { storeProducts } from "@/content/products";
 import { getAllGuides, categoryLabels } from "@/lib/guides";
+import { siteConfig } from "@/lib/siteConfig";
 import { social } from "@/lib/seo";
 
 const description =
@@ -16,6 +18,9 @@ export const metadata: Metadata = {
 };
 
 export default function DownloadsPage() {
+  // Store is parked in launch-light mode (SPEC §10); netlify.toml mirrors this 301.
+  if (!siteConfig.features.store) redirect("/recipes");
+
   const products = storeProducts("recipe");
   const reading = getAllGuides().slice(0, 2);
 

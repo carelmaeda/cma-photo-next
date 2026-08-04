@@ -1,34 +1,18 @@
 import Link from "next/link";
 import { realAlbums } from "@/content/albums";
+import { recipes, presets } from "@/content/recipes";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { getAllGuides } from "@/lib/guides";
+import { siteConfig } from "@/lib/siteConfig";
 import { Reveal } from "@/components/reveal";
 
 // Derived from album order so a future re-curation can never break the home page
 const hero = realAlbums[0].cover;
 
-const paths = [
-  {
-    href: "/gallery",
-    title: "The photographs",
-    line: "Travel albums, city by city. Shot on Fujifilm, JPG straight out of camera.",
-    photo: realAlbums[1].cover,
-  },
-  {
-    href: "/downloads",
-    title: "The recipe",
-    line: "Vanilla Summer — the in-camera recipe behind most of these frames.",
-    photo: realAlbums[2].cover,
-  },
-  {
-    href: "/blog",
-    title: "The blog",
-    line: "What I've figured out about recipes, JPG, and shooting with one lens.",
-    photo: realAlbums[3].cover,
-  },
-];
+// The flagship free recipe fronting the launch-light homepage (SPEC §10).
+const featured = recipes[0];
 
 export default function HomePage() {
   return (
@@ -54,48 +38,66 @@ export default function HomePage() {
             Photographer. Travel. Fujifilm.
           </h1>
           <p className="mt-6 max-w-prose text-ink-soft">
-            São Paulo made. Toronto based. I shoot JPG straight out of camera —
-            in-camera recipes do the work. Recipes, prints, and the in-between.
+            São Paulo made. Toronto based. I shoot JPG straight out of camera.
+            In-camera recipes do the work, and you can have them for free.
           </p>
           <Link
-            href="/downloads/vanilla-summer-recipe-card"
+            href={`/recipes/${featured.slug}`}
             className="mt-8 inline-block border border-ink px-5 py-3 text-cap font-mono tracking-frame uppercase transition-colors hover:border-indigo hover:text-indigo"
           >
-            Get the Vanilla Summer recipe →
+            The {featured.name} recipe. Free, full settings →
           </Link>
         </section>
 
-        {/* Three paths */}
+        {/* The recipe — the launch-light front door */}
         <Reveal>
         <section className="mx-auto max-w-7xl pt-section">
-          <h2 className="sr-only">Where to start</h2>
-          <ul className="grid gap-x-5 gap-y-12 md:grid-cols-3">
-            {paths.map((path) => (
-              <li key={path.href}>
-                <Link href={path.href} className="group block">
+          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
+                The recipe
+              </p>
+              <h2 className="text-h2 mt-4">{featured.name}</h2>
+              <p className="mt-3 max-w-prose text-ink-soft">
+                {featured.tagline} A {featured.filmSimulation} look for{" "}
+                {featured.compatibility} bodies. This is the recipe behind most
+                of my recent frames, and the one people keep asking me about on
+                Instagram.
+              </p>
+              <p className="mt-3 max-w-prose text-ink-soft">
+                Every setting is on the page. No email, no checkout.
+                {presets.length > 0 &&
+                  " There is a free Lightroom preset version too, if you edit."}
+              </p>
+              <Link
+                href={`/recipes/${featured.slug}`}
+                className="mt-6 inline-block text-cap font-mono tracking-frame uppercase text-indigo hover:underline"
+              >
+                Get the settings →
+              </Link>
+            </div>
+            <ul className="grid grid-cols-2 gap-5">
+              {featured.sampleFrames.slice(0, 2).map((photo) => (
+                <li key={photo.publicId}>
                   <CldImage
-                    photo={path.photo}
+                    photo={photo}
                     width={800}
-                    height={600}
+                    height={1000}
                     crop="fill"
                     gravity="auto"
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                    className="w-full transition-opacity group-hover:opacity-90"
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="w-full border border-line"
                   />
-                  <h3 className="mt-5 font-display text-xl font-semibold group-hover:text-indigo">
-                    {path.title}
-                  </h3>
-                  <p className="mt-2 max-w-prose text-sm text-ink-soft">
-                    {path.line}
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  <FrameCaption city={photo.city} className="mt-3" />
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
         </Reveal>
 
-        {/* Latest work */}
+        {/* Latest work — returns with the gallery (SPEC §10) */}
+        {siteConfig.features.gallery && (
         <Reveal>
         <section className="mx-auto max-w-7xl pt-section">
           <h2 className="text-h2">Latest work</h2>
@@ -119,6 +121,7 @@ export default function HomePage() {
           </ul>
         </section>
         </Reveal>
+        )}
 
         {/* Latest guides */}
         <section className="mx-auto max-w-7xl pt-section">

@@ -43,24 +43,31 @@
   status = 301
   force = true
 
-# The old free-recipe route was live briefly before the store rework — anyone
-# who saved or indexed it lands on the product instead of a 404.
+# Launch-light (SPEC §10): the store is parked and recipes are free at
+# /recipes. The old paid product URL is indexed — 301 it into the free page.
+# Specific rules before the splat. Reverse these when features.store returns.
+[[redirects]]
+  from = "/downloads/vanilla-summer-recipe-card"
+  to = "/recipes/vanilla-summer"
+  status = 301
+  force = true
+
+# The pre-store free-recipe URL, possibly still bookmarked.
 [[redirects]]
   from = "/downloads/vanilla-summer"
-  to = "/downloads/vanilla-summer-recipe-card"
-  status = 301
-  force = true
-
-# Downloads (was /recipes)
-[[redirects]]
-  from = "/recipes"
-  to = "/downloads"
+  to = "/recipes/vanilla-summer"
   status = 301
   force = true
 
 [[redirects]]
-  from = "/recipes/*"
-  to = "/downloads/:splat"
+  from = "/downloads"
+  to = "/recipes"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/downloads/*"
+  to = "/recipes"
   status = 301
   force = true
 

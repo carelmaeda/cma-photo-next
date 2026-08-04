@@ -14,6 +14,8 @@ export interface Guide extends GuideFrontmatter {
  * Single source of truth for guides: powers the index page,
  * generateStaticParams, the sitemap, and JSON-LD.
  * Adding a guide = dropping one .mdx file in src/content/guides.
+ * Files with `draft: true` frontmatter stay in the repo but publish nowhere
+ * (their URLs 404 because generateStaticParams flows through here too).
  */
 export function getAllGuides(): Guide[] {
   if (!fs.existsSync(GUIDES_DIR)) return [];
@@ -27,6 +29,7 @@ export function getAllGuides(): Guide[] {
       const { data, content } = matter(raw);
       return { slug, content, ...(data as GuideFrontmatter) };
     })
+    .filter((guide) => !guide.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 

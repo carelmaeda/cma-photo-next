@@ -49,7 +49,7 @@ export function SiteHeader() {
           >
             <InstagramIcon className="size-5" />
           </InstagramLink>
-          <CartWidget />
+          {siteConfig.features.store && <CartWidget />}
           <NavSheet />
         </div>
       </div>

@@ -24,7 +24,7 @@
 | Free print downloads | Paid digital prints |
 | Honest gear list (on About) | Affiliate links (later) |
 
-> **Vanilla Summer is a paid recipe (always).** It is delivered as a digital recipe card (PDF) via Stripe — there is no free Vanilla Summer. The free recipe counterpart will be a separate intro/other recipe, added later. (Decided June 13, 2026; a homepage redesign to match is pending.)
+> ~~**Vanilla Summer is a paid recipe (always).**~~ **Superseded August 4, 2026 (see §10):** Vanilla Summer's full settings are published **free** at `/recipes/vanilla-summer` as the launch-light flagship. The paid recipe-card product is parked (not deleted) behind `siteConfig.features.store`; if it returns it gets a fresh slug.
 
 **The feel:** a warm personal storyteller — generosity first, the store quiet and tasteful. No countdowns, no fake scarcity, no exit popups, no "coming soon" teasers. A real "Buy" exists now, stated plainly.
 
@@ -57,6 +57,12 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 **Canonical routes (teardown's key lesson):** header, footer, and `sitemap.ts` use the **same** paths — no divergence. Labels match slugs (Gallery=/gallery, Prints=/prints, Downloads=/downloads).
 **Footer:** Instagram, Threads, Prints, Contact, © line.
 **Old → new 301s** (`netlify.toml`): `/albums/* → /gallery/*`, `/guides/* → /blog/*`, `/recipes/* → /downloads/*`, `/gear → /about`.
+
+> **Launch-light amendment (August 4, 2026 — see §10).** While `siteConfig.features` flags are off, the shipped IA is:
+> - **Nav:** Home · Recipes · Blog · About (built from the flags in `src/lib/nav.ts`; the cart icon renders only with `features.store`). Contact was removed earlier — Instagram is the contact channel.
+> - **New canonical section:** `/recipes` (hub) + `/recipes/[slug]` — free Fujifilm recipes with full settings, plus free Lightroom preset downloads from `public/presets/`.
+> - **301s while the store is parked:** `/downloads → /recipes`, `/downloads/vanilla-summer-recipe-card` and `/downloads/vanilla-summer` → `/recipes/vanilla-summer`, `/downloads/* → /recipes`. The old `/recipes/* → /downloads/*` rules are **removed** (they would hijack the new pages).
+> - `/gallery` stays live and indexed but out of nav; `/prints` unchanged (noindex, out of nav).
 
 ---
 
@@ -150,7 +156,8 @@ Handwritten mark only — never re-typed. Assets in `carel-brand-kit/assets/` (c
 
 - `src/content/albums.ts` is the migrated, typed album data. **Placeholder albums** — Innsbruck and Vaduz (Salzburg/repeated images), Brugge and Porto (Braga images) — are flagged `placeholderImages: true` with TODO comments. Never invent publicIds; the owner uploads real photos.
 - Guide library seeds with the **Fujifilm-recipes cluster** (highest search intent, funnels to the Vanilla Summer recipe): what-are-fujifilm-recipes, vanilla-summer-recipe-explained, why-i-shoot-jpeg-only, x100v-settings-i-actually-use. Claude drafts in the owner's voice; the owner edits before publish.
-- Vanilla Summer is a **paid** recipe card (digital PDF), delivered via Stripe (the file is set on the Stripe product's `downloadPublicId` metadata, read by `verify-session`). Its settings live in the deliverable, not on a public page — there is no free `/downloads/vanilla-summer` route.
+- ~~Vanilla Summer is a **paid** recipe card…~~ **Superseded August 4, 2026 (§10):** the full Vanilla Summer settings are public and free at `/recipes/vanilla-summer` (data in `src/content/recipes.ts`). The paid card product and its Stripe wiring are parked behind `features.store`.
+- Blog posts support `draft: true` frontmatter: the file stays in the repo but publishes nowhere (index, sitemap, static params, teasers all flow through `getAllGuides()`). `one-camera-one-lens` and `why-i-shoot-jpeg-only` are drafted until the owner rewrites them.
 
 ---
 
@@ -209,4 +216,27 @@ Supersedes the old design/IA/commerce model. See §2, §3, §5, §9.
 
 ## 9. Out of scope (do not build)
 
-No CMS, no database, no auth, no user accounts, no stored orders, no client-side content-unlock logic beyond the goodwill gate and `session_id`-verified download, no Lightroom presets (JPG shooter — off-brand), **no i18n** (English only), no comments/memberships/courses, no Reels-style video, **no physical-product fulfillment / shipping / inventory** (digital downloads only), no design-system §04 admin/upload UI. No new npm dependencies beyond what this spec names (Stripe SDKs are named) without flagging it first.
+No CMS, no database, no auth, no user accounts, no stored orders, no client-side content-unlock logic beyond the goodwill gate and `session_id`-verified download, ~~no Lightroom presets~~ (amended August 4, 2026: free Lightroom presets are **in scope** — see §10; the framing is "recipes for the camera, presets for the ones who edit"), **no i18n** (English only), no comments/memberships/courses, no Reels-style video, **no physical-product fulfillment / shipping / inventory** (digital downloads only), no design-system §04 admin/upload UI. No new npm dependencies beyond what this spec names (Stripe SDKs are named) without flagging it first.
+
+---
+
+## 10. Launch-light mode (August 4, 2026)
+
+**Why:** the owner needs traffic *now* — Instagram followers keep asking for the recipe and there was nothing free to send them. The full store/gallery platform stays in the repo but the shipped site is deliberately small: free recipes + presets, blog, about.
+
+**The switchboard:** `siteConfig.features` in `src/lib/siteConfig.ts` — `{ store, gallery, prints }`, all `false` at launch.
+
+| Flag | Off (launch) | What flipping it on restores |
+|---|---|---|
+| `store` | `/downloads*` 301s to `/recipes` (in-page + netlify.toml), no cart icon, no Downloads nav item, products out of sitemap | The Stripe store exactly as built — also **reinstate the store redirects in `netlify.toml`** (remove the `/downloads → /recipes` rules) |
+| `gallery` | Gallery out of nav, homepage "Latest work" strip hidden; `/gallery*` still renders and is indexed | Gallery nav item + homepage strip |
+| `prints` | Prints out of nav (page was already noindex) | Prints nav item |
+
+**Free content model:**
+- Recipes are **open on the page** — full settings, no email gate, no checkout. Data in `src/content/recipes.ts` (`recipes` array); pages at `/recipes` + `/recipes/[slug]`. Never invent settings; values come from the published recipe card.
+- **Lightroom presets** are free static downloads: files in `public/presets/` (the one deliberate exception to the Cloudinary-only rule — they're .xmp/.dng profile files, not photos), listed via the `presets` array in `src/content/recipes.ts`. Sections render only when the array is non-empty — no "coming soon".
+- The newsletter form sits below the free content as an optional CTA, never a gate.
+
+**Stable owner URL:** `photo.carelmaeda.com/recipes/vanilla-summer` (for the Instagram bio).
+
+**Restore procedure:** flip the flag(s), fix netlify.toml store redirects (store only), `npm run build`, verify redirects on a deploy preview.

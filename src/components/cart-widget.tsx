@@ -59,7 +59,7 @@ export function CartWidget() {
           <p className="px-4 text-sm text-ink-soft">
             Your cart is empty. Browse the{" "}
             <Link
-              href="/downloads"
+              href="/recipes"
               className="underline hover:text-indigo"
               onClick={() => setOpen(false)}
             >

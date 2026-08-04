@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
 import { AddToCart } from "@/components/add-to-cart";
@@ -33,6 +33,14 @@ export default async function RecipeProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  // Store is parked in launch-light mode (SPEC §10); netlify.toml mirrors these 301s.
+  if (!siteConfig.features.store) {
+    redirect(
+      slug === "vanilla-summer-recipe-card"
+        ? "/recipes/vanilla-summer"
+        : "/recipes",
+    );
+  }
   const product = getProduct("recipe", slug);
   // Only paid, configured recipes have a detail page; free lives at /recipes.
   if (!product || product.free || !isLive(product)) notFound();

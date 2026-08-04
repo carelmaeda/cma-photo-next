@@ -47,6 +47,37 @@ export interface Print {
   title: string;
 }
 
+/** One row in a recipe's settings table — values mirror the camera menus. */
+export interface RecipeSetting {
+  label: string;
+  /** The value to dial in (X-Trans IV / V bodies). */
+  value: string;
+}
+
+/** A free Fujifilm recipe, published open on /recipes (SPEC §10). */
+export interface Recipe {
+  slug: string;
+  name: string;
+  tagline: string;
+  /** The film simulation the recipe is built on. */
+  filmSimulation: string;
+  /** Bodies the recipe targets, e.g. "X-Trans IV / V". */
+  compatibility: string;
+  settings: RecipeSetting[];
+  sampleFrames: Photo[];
+  /** Slug of the blog post that explains the recipe, if one exists. */
+  guideSlug?: string;
+}
+
+/** A free Lightroom preset download, served from public/presets/ (SPEC §10). */
+export interface PresetFile {
+  name: string;
+  /** One line: what look it gives and where it came from. */
+  description: string;
+  /** Path under public/, e.g. "/presets/vanilla-summer.xmp". */
+  file: string;
+}
+
 export type ProductKind = "recipe" | "print";
 
 /**
@@ -93,6 +124,8 @@ export interface GuideFrontmatter {
   description: string;
   date: string;
   category: "recipe-guide" | "city-guide" | "craft";
+  /** True = keep the file but publish nowhere (index, sitemap, params, teasers). */
+  draft?: boolean;
   cover?: { publicId: string; alt: string };
   cameras?: Camera[];
   related?: {
