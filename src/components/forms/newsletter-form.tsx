@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { siteConfig } from "@/lib/siteConfig";
+import { InstagramLink } from "@/components/instagram-link";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -108,15 +109,7 @@ export function NewsletterForm({
       {status === "error" && (
         <p aria-live="polite" className="mt-3 text-sm text-ink-soft">
           That didn&apos;t go through. If it keeps happening, reach me on{" "}
-          <a
-            href={siteConfig.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-indigo"
-          >
-            Instagram
-          </a>
-          .
+          <InstagramLink />.
         </p>
       )}
     </form>

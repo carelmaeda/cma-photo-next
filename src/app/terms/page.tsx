@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { siteConfig } from "@/lib/siteConfig";
+import { InstagramLink } from "@/components/instagram-link";
 import { social } from "@/lib/seo";
 
 const description =
@@ -77,20 +77,7 @@ export default function TermsPage() {
               Reaching me
             </h2>
             <p className="mt-3">
-              The{" "}
-              <Link href="/contact" className="underline hover:text-indigo">
-                contact form
-              </Link>{" "}
-              or{" "}
-              <a
-                href={siteConfig.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-indigo"
-              >
-                Instagram
-              </a>
-              . I read everything.
+              A DM on <InstagramLink /> is the fastest way. I read everything.
             </p>
           </div>
 

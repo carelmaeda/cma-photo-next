@@ -16,7 +16,6 @@ export const siteConfig = {
   /** Netlify form names — must match public/__forms.html exactly */
   forms: {
     newsletter: "newsletter",
-    contact: "contact",
   },
   /** Google Analytics 4 — gtag.js is injected by <Analytics> (@next/third-parties). */
   analytics: {

@@ -4,6 +4,7 @@ import { navLinks } from "@/lib/nav";
 import { siteConfig } from "@/lib/siteConfig";
 import { NavSheet } from "./nav-sheet";
 import { CartWidget } from "./cart-widget";
+import { InstagramIcon, InstagramLink } from "./instagram-link";
 
 export function SiteHeader() {
   return (
@@ -41,6 +42,13 @@ export function SiteHeader() {
             </ul>
           </nav>
 
+          <InstagramLink
+            identity
+            aria-label="Instagram"
+            className="text-ink transition-colors hover:text-indigo"
+          >
+            <InstagramIcon className="size-5" />
+          </InstagramLink>
           <CartWidget />
           <NavSheet />
         </div>

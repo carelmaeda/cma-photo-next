@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
+import { InstagramLink } from "./instagram-link";
 
 export function SiteFooter() {
   return (
@@ -8,14 +9,10 @@ export function SiteFooter() {
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <ul data-ga-nav="footer" className="flex items-center gap-6">
             <li>
-              <a
-                href={siteConfig.instagram}
-                rel="me noopener"
-                target="_blank"
+              <InstagramLink
+                identity
                 className="text-cap font-mono tracking-frame uppercase hover:text-indigo"
-              >
-                Instagram
-              </a>
+              />
             </li>
             <li>
               <a
@@ -26,14 +23,6 @@ export function SiteFooter() {
               >
                 Threads
               </a>
-            </li>
-            <li>
-              <Link
-                href="/contact"
-                className="text-cap font-mono tracking-frame uppercase hover:text-indigo"
-              >
-                Contact
-              </Link>
             </li>
             <li>
               <Link

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { siteConfig } from "@/lib/siteConfig";
+import { InstagramLink } from "@/components/instagram-link";
 import { social } from "@/lib/seo";
 
 const description =
@@ -36,8 +35,7 @@ export default function PrivacyPage() {
             <ul className="mt-3 list-disc space-y-2 pl-5">
               <li>
                 <strong className="text-ink">Your email</strong>, if you sign up
-                for the newsletter or use the contact form. Forms run on
-                Netlify Forms.
+                for the newsletter. The form runs on Netlify Forms.
               </li>
               <li>
                 <strong className="text-ink">Purchase details</strong>, if you
@@ -71,20 +69,8 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3">
               Every newsletter has an unsubscribe link. If you want your email
-              or messages deleted entirely, tell me through the{" "}
-              <Link href="/contact" className="underline hover:text-indigo">
-                contact form
-              </Link>{" "}
-              or on{" "}
-              <a
-                href={siteConfig.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-indigo"
-              >
-                Instagram
-              </a>{" "}
-              and I&apos;ll do it.
+              or messages deleted entirely, send me a DM on{" "}
+              <InstagramLink /> and I&apos;ll do it.
             </p>
           </div>
 
@@ -100,11 +86,7 @@ export default function PrivacyPage() {
           </div>
 
           <p className="border-t border-line pt-6 text-sm">
-            Last updated July 2026. Questions —{" "}
-            <Link href="/contact" className="underline hover:text-indigo">
-              say hi
-            </Link>
-            .
+            Last updated July 2026. Questions — DM me on <InstagramLink />.
           </p>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { gear, gearCategories } from "@/content/gear";
+import { InstagramLink } from "@/components/instagram-link";
 import { social } from "@/lib/seo";
 
 const description =
@@ -108,11 +109,8 @@ export default function AboutPage() {
         <div className="max-w-2xl border-t border-line pt-8">
           <p className="text-ink-soft">
             Questions about a recipe, a place, a print — or press and
-            collaborations?{" "}
-            <Link href="/contact" className="underline hover:text-indigo">
-              Say hi
-            </Link>
-            .
+            collaborations? The fastest way to reach me is a DM on{" "}
+            <InstagramLink />. I read everything.
           </p>
         </div>
       </section>

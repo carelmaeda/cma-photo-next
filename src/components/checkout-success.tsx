@@ -6,6 +6,7 @@ import { DownloadIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { siteConfig } from "@/lib/siteConfig";
 import { useCart } from "@/lib/cart";
+import { InstagramLink } from "@/components/instagram-link";
 
 interface VerifiedItem {
   name: string;
@@ -87,16 +88,8 @@ export function CheckoutSuccess() {
       <div>
         <p className="text-ink-soft">{state.message}</p>
         <p className="mt-4 text-sm text-ink-soft">
-          If you were charged, message me on{" "}
-          <a
-            href={siteConfig.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-indigo"
-          >
-            Instagram
-          </a>{" "}
-          and I&apos;ll sort it out.
+          If you were charged, message me on <InstagramLink /> and I&apos;ll
+          sort it out.
         </p>
       </div>
     );

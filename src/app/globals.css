@@ -11,8 +11,8 @@
 --------------------------------------------------------------------------- */
 @theme {
     /* — Color · roles — */
-    --color-paper: #F4F1EA;        /* page background */
-    --color-paper-2: #ECE7DB;      /* raised surface / hover fill */
+    --color-paper: #FAFAF8;        /* page background */
+    --color-paper-2: #F5F5F3;      /* raised surface / hover fill */
     --color-ink: #1A1925;          /* primary text */
     --color-ink-soft: #3A3947;     /* secondary text on paper */
     --color-warm: #696660;         /* muted text, captions — darkened for WCAG AA (5.07:1 on paper, 4.64:1 on paper-2) */
