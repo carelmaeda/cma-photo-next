@@ -59,7 +59,8 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 **Old → new 301s** (`netlify.toml`): `/albums/* → /gallery/*`, `/guides/* → /blog/*`, `/recipes/* → /downloads/*`, `/gear → /about`.
 
 > **Launch-light amendment (August 4, 2026 — see §10).** While `siteConfig.features` flags are off, the shipped IA is:
-> - **Nav:** Home · Recipes · Blog · About (built from the flags in `src/lib/nav.ts`; the cart icon renders only with `features.store`). Contact was removed earlier — Instagram is the contact channel.
+> - **Nav:** Home · Recipes · Gallery · Blog · About (built from the flags in `src/lib/nav.ts`; the cart icon renders only with `features.store`). Contact was removed earlier — Instagram is the contact channel. *(Gallery returned to the nav on October 20, 2026; it was Home · Recipes · Blog · About before that.)*
+> - **`/links`** (added October 20, 2026) is the Instagram bio landing page: avatar, one-line bio, full-width buttons to each recipe, Gallery, Blog, Threads, plus the newsletter form (`source="links"`). `noindex, follow`; not in nav, footer, or `sitemap.ts`.
 > - **New canonical section:** `/recipes` (hub) + `/recipes/[slug]` — free Fujifilm recipes with full settings, plus free Lightroom preset downloads from `public/presets/`.
 > - **301s while the store is parked:** `/downloads → /recipes`, `/downloads/vanilla-summer-recipe-card` and `/downloads/vanilla-summer` → `/recipes/vanilla-summer`, `/downloads/* → /recipes`. The old `/recipes/* → /downloads/*` rules are **removed** (they would hijack the new pages).
 > - `/gallery` stays live and indexed but out of nav; `/prints` unchanged (noindex, out of nav).
@@ -209,6 +210,17 @@ Supersedes the old design/IA/commerce model. See §2, §3, §5, §9.
   - Test a paid checkout end-to-end on a deploy preview (Stripe **test mode**), confirm the success page reveals the download.
 - [ ] OWNER — content/launch: enable Netlify Forms + notification, fill Vanilla Summer settings (`src/content/recipes.ts`), edit the 4 blog drafts, replace placeholder album photos, DNS, Lighthouse ≥90, then flip GA on.
 
+### Phase 7 — Bio-link MVP ✅ (code complete October 20, 2026; owner steps remain)
+Goal: a site Carel can put in the Instagram bio this week. Scope deliberately tiny.
+- [x] **Gallery on:** `siteConfig.features.gallery = true` (nav item + homepage "Latest work" strip). Album order unchanged: Amsterdam, London, Rome, Como, Paraty, Cartagena lead.
+- [x] **Second recipe:** Midnight Espresso (Acros +Ye) in `src/content/recipes.ts`, settings verbatim from the card. Ships with `sampleFrames: []`: the `/recipes` card falls back to a typographic tile, the recipe page hides "Shot on", OG falls back to the site image.
+- [x] **`/links`** bio landing page (see §2 amendment).
+- [x] **Polish:** input matches button height/radius, blurred sticky header, dash cleanup in form copy, site description no longer mentions prints, gallery description lists the curated cities.
+- [ ] OWNER — upload 2 or 3 frames shot on Midnight Espresso to Cloudinary and add their publicIds to the recipe's `sampleFrames`.
+- [ ] OWNER — enable Netlify Forms + notification (still open from Phase 3/6); submit the `/links` form on the deploy preview and confirm `source = links`.
+- [ ] OWNER — confirm DNS for photo.carelmaeda.com, then set the Instagram bio link to `photo.carelmaeda.com/links`.
+- [ ] OWNER — rotate the live Stripe secret key that sits in plain text in the OneDrive Photographer folder (`STRIPE.txt`) and delete that file.
+
 ### Future
 - Affiliate links on the About gear list · ESP when the list outgrows Netlify Forms · physical prints (would add a print-on-demand partner — out of scope today).
 
@@ -229,7 +241,7 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 | Flag | Off (launch) | What flipping it on restores |
 |---|---|---|
 | `store` | `/downloads*` 301s to `/recipes` (in-page + netlify.toml), no cart icon, no Downloads nav item, products out of sitemap | The Stripe store exactly as built — also **reinstate the store redirects in `netlify.toml`** (remove the `/downloads → /recipes` rules) |
-| `gallery` | Gallery out of nav, homepage "Latest work" strip hidden; `/gallery*` still renders and is indexed | Gallery nav item + homepage strip |
+| `gallery` | Gallery out of nav, homepage "Latest work" strip hidden; `/gallery*` still renders and is indexed | Gallery nav item + homepage strip. **On since October 20, 2026** (Phase 7) |
 | `prints` | Prints out of nav (page was already noindex) | Prints nav item |
 
 **Free content model:**
@@ -237,6 +249,6 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 - **Lightroom presets** are free static downloads: files in `public/presets/` (the one deliberate exception to the Cloudinary-only rule — they're .xmp/.dng profile files, not photos), listed via the `presets` array in `src/content/recipes.ts`. Sections render only when the array is non-empty — no "coming soon".
 - The newsletter form sits below the free content as an optional CTA, never a gate.
 
-**Stable owner URL:** `photo.carelmaeda.com/recipes/vanilla-summer` (for the Instagram bio).
+**Stable owner URLs:** `photo.carelmaeda.com/links` is the Instagram bio link (since October 20, 2026); `photo.carelmaeda.com/recipes/vanilla-summer` stays the direct recipe URL for replies and captions.
 
 **Restore procedure:** flip the flag(s), fix netlify.toml store redirects (store only), `npm run build`, verify redirects on a deploy preview.

@@ -75,6 +75,12 @@ export default function HomePage() {
               >
                 Get the settings →
               </Link>
+              <Link
+                href="/recipes"
+                className="mt-3 block text-cap font-mono tracking-frame uppercase text-ink-soft hover:text-indigo"
+              >
+                All recipes →
+              </Link>
             </div>
             <ul className="grid grid-cols-2 gap-5">
               {featured.sampleFrames.slice(0, 2).map((photo) => (

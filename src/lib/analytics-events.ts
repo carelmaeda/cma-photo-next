@@ -60,7 +60,7 @@ export const eventCatalog: EventDoc[] = [
     name: EVENTS.navigationClick,
     category: "Navigation",
     trigger: "Click on a navigation link",
-    where: "Header nav, logo, footer links, mobile menu sheet",
+    where: "Header nav, logo, footer links, mobile menu sheet, /links buttons",
     status: "active",
     params: [
       { key: "link_text", example: "Gallery", note: "Visible label, trimmed to 100 chars" },

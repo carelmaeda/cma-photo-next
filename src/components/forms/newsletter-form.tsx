@@ -11,7 +11,7 @@ import { InstagramLink } from "@/components/instagram-link";
 type Status = "idle" | "submitting" | "success" | "error";
 
 interface NewsletterFormProps {
-  /** Records which page captured the signup: "home" | "recipes" | "prints" */
+  /** Records which page captured the signup: "home" | "recipes" | "prints" | "links" */
   source: string;
   buttonLabel?: string;
   successTitle?: string;
@@ -31,7 +31,7 @@ interface NewsletterFormProps {
 export function NewsletterForm({
   source,
   buttonLabel = "Sign me up",
-  successTitle = "Thanks — you're in.",
+  successTitle = "Thanks, you're in.",
   successBody = "I send one email a month, mostly photos. Unsubscribe anytime.",
   successHref,
   successLinkLabel,

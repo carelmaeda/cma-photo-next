@@ -8,7 +8,7 @@ import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { recipes, getRecipe, presets } from "@/content/recipes";
 import { getGuide } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
-import { social, ogImageUrl } from "@/lib/seo";
+import { social, ogImageUrl, defaultOgImage } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -31,7 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ...social(
       `${recipe.name} — the settings`,
       description,
-      ogImageUrl(recipe.sampleFrames[0].publicId),
+      recipe.sampleFrames[0]
+        ? ogImageUrl(recipe.sampleFrames[0].publicId)
+        : defaultOgImage,
     ),
   };
 }
@@ -118,6 +120,7 @@ export default async function RecipePage({ params }: Props) {
         </div>
       </section>
 
+      {recipe.sampleFrames.length > 0 && (
       <section className="mx-auto max-w-7xl pt-section">
         <h2 className="text-h2">Shot on {recipe.name}</h2>
         <ul className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">
@@ -137,6 +140,7 @@ export default async function RecipePage({ params }: Props) {
           ))}
         </ul>
       </section>
+      )}
 
       {presets.length > 0 && (
         <section className="mx-auto max-w-7xl pt-section">

@@ -6,7 +6,7 @@ import { FrameCaption } from "@/components/frame-caption";
 import { social } from "@/lib/seo";
 
 const description =
-  "Travel photography gallery — Amsterdam, London, Salzburg, Vienna, Braga and more. Shot on Fujifilm, JPG straight out of camera.";
+  "Travel photography gallery. Amsterdam, London, Rome, Como, Paraty, Cartagena and more. Shot on Fujifilm, JPG straight out of camera.";
 
 export const metadata: Metadata = {
   title: "Gallery",

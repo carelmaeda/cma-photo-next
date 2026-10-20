@@ -30,20 +30,35 @@ export default function RecipesPage() {
       </header>
 
       <section className="mx-auto max-w-7xl">
-        <ul className="grid gap-x-5 gap-y-12 sm:grid-cols-2 md:grid-cols-3">
+        <ul className="grid gap-x-5 gap-y-12 sm:grid-cols-2">
           {recipes.map((recipe) => (
             <li key={recipe.slug}>
               <Link href={`/recipes/${recipe.slug}`} className="group block">
-                <CldImage
-                  photo={recipe.sampleFrames[0]}
-                  width={1200}
-                  height={1500}
-                  crop="fill"
-                  gravity="auto"
-                  sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="w-full border border-line transition-opacity group-hover:opacity-90"
-                />
-                <FrameCaption city={recipe.sampleFrames[0].city} className="mt-3" />
+                {recipe.sampleFrames[0] ? (
+                  <>
+                    <CldImage
+                      photo={recipe.sampleFrames[0]}
+                      width={1200}
+                      height={1500}
+                      crop="fill"
+                      gravity="auto"
+                      sizes="(min-width: 640px) 50vw, 100vw"
+                      className="w-full border border-line transition-opacity group-hover:opacity-90"
+                    />
+                    <FrameCaption city={recipe.sampleFrames[0].city} className="mt-3" />
+                  </>
+                ) : (
+                  /* No frames yet: a typographic card in the same 4:5 box, so
+                     the grid stays even and nothing pretends to be the look. */
+                  <div className="flex aspect-[4/5] w-full flex-col justify-end border border-line bg-paper-2 p-6 transition-colors group-hover:border-indigo">
+                    <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
+                      {recipe.filmSimulation}
+                    </p>
+                    <p className="font-display mt-3 text-2xl font-semibold leading-tight">
+                      {recipe.name}
+                    </p>
+                  </div>
+                )}
                 <h2 className="mt-3 font-display text-xl font-semibold group-hover:text-indigo">
                   {recipe.name}
                 </h2>

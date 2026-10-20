@@ -8,7 +8,7 @@ import { InstagramIcon, InstagramLink } from "./instagram-link";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 bg-paper/90 px-gutter">
+    <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-sm px-gutter">
       <div className="mx-auto flex h-header max-w-7xl items-center justify-between">
         <Link
           href="/"

@@ -6,7 +6,7 @@ export const siteConfig = {
   name: "Carel Maeda",
   title: "Carel Maeda — Travel & Fujifilm Photography",
   description:
-    "Travel photography from a Fujifilm shooter. São Paulo made, Toronto based. The Vanilla Summer recipe, prints, and guides on shooting JPG straight out of camera.",
+    "Travel photography from a Fujifilm shooter. São Paulo made, Toronto based. Free Fujifilm recipes, city galleries, and notes on shooting JPG straight out of camera.",
   url: "https://photo.carelmaeda.com",
   instagram: "https://instagram.com/carel011",
   threads: "https://threads.net/@carel011",
@@ -44,7 +44,7 @@ export const siteConfig = {
    */
   features: {
     store: false, // /downloads catalog + product pages + cart widget + nav item
-    gallery: false, // Gallery nav item + homepage latest-work strip
+    gallery: true, // Gallery nav item + homepage latest-work strip (on since October 20, 2026)
     prints: false, // Prints nav item (page itself is already noindex)
   } as { store: boolean; gallery: boolean; prints: boolean },
 } as const;

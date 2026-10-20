@@ -71,6 +71,33 @@ export const recipes: Recipe[] = [
     sampleFrames,
     guideSlug: "vanilla-summer-recipe-explained",
   },
+  {
+    slug: "midnight-espresso",
+    name: "Midnight Espresso",
+    tagline: "Wet pavement, deep blacks and silver grain. My Ilford HP5 look in Acros.",
+    filmSimulation: "Acros +Ye",
+    compatibility: "X-Trans IV / V",
+    // Values are taken straight from the Midnight Espresso recipe card.
+    settings: [
+      { label: "Film Simulation", value: "Acros +Ye" },
+      { label: "White Balance", value: "5500K" },
+      { label: "WB Shift", value: "R +2 · B −2" },
+      { label: "Dynamic Range", value: "DR400" },
+      { label: "Highlight", value: "+1" },
+      { label: "Shadow", value: "+2" },
+      { label: "Grain Effect", value: "Strong · Large" },
+      { label: "Noise Reduction", value: "−4" },
+      { label: "Monochromatic Color", value: "WC +2" },
+      { label: "Sharpening", value: "−1" },
+      { label: "Clarity", value: "+2" },
+      { label: "ISO", value: "Auto · max 6400" },
+      { label: "Exposure Compensation", value: "+1/3 to +2/3" },
+    ],
+    // TODO (owner): add 2-3 Cloudinary publicIds of frames shot on Midnight
+    // Espresso (Acros). Every existing frame is colour, so the card and the
+    // "Shot on" section stay photo-less rather than showing the wrong look.
+    sampleFrames: [],
+  },
 ];
 
 export function getRecipe(slug: string): Recipe | undefined {

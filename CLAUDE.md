@@ -4,7 +4,7 @@
 
 ## What this is
 
-Photography platform for Carel Maeda (@carel011) at photo.carelmaeda.com — converts Instagram visitors into email subscribers and Google searchers into readers. **Rebranded June 13, 2026** to the Carel brand kit + design system + a new English four-job IA (see SPEC §2/§3). **Launch-light since August 4, 2026 (SPEC §10):** the shipped site is traffic-first — free Fujifilm recipes with full settings open at `/recipes` + free Lightroom presets (`public/presets/`), blog, about. The Stripe store, gallery nav, and prints are parked behind `siteConfig.features` flags (code kept, not deleted); nav is Home · Recipes · Blog · About until they flip back on.
+Photography platform for Carel Maeda (@carel011) at photo.carelmaeda.com — converts Instagram visitors into email subscribers and Google searchers into readers. **Rebranded June 13, 2026** to the Carel brand kit + design system + a new English four-job IA (see SPEC §2/§3). **Launch-light since August 4, 2026 (SPEC §10):** the shipped site is traffic-first — free Fujifilm recipes with full settings open at `/recipes` + free Lightroom presets (`public/presets/`), blog, about. The Stripe store, gallery nav, and prints are parked behind `siteConfig.features` flags (code kept, not deleted); nav is Home · Recipes · Gallery · Blog · About (gallery flipped back on October 20, 2026; store and prints still parked). `/links` is the Instagram bio landing page (noindex, not in nav or sitemap).
 
 ## Stack
 

@@ -10,7 +10,7 @@ Photography platform for [Carel Maeda](https://instagram.com/carel011) — trave
 - Tailwind CSS v4, CSS-first: all brand tokens in `@theme` in `src/app/globals.css` (no `tailwind.config.js`)
 - shadcn/ui, selectively, mapped to brand tokens
 - Cloudinary for all photos via the `CldImage` wrapper (`src/components/cld-image.tsx`) — a custom `next/image` loader, no `next-cloudinary` runtime
-- Netlify: hosting + Forms (newsletter, contact, prints gate) + two Functions for Stripe
+- Netlify: hosting + Forms (newsletter) + two Functions for Stripe
 - Stripe: digital-only checkout. No DB, no accounts — entitlement is the paid Checkout Session, verified at `/checkout/success`
 - MDX blog via `next-mdx-remote-client`
 
