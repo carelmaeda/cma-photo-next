@@ -13,11 +13,14 @@
 //   LIVE            nothing to do
 // Live albums are never rewritten, so hand-edited alt text survives. Photos in
 // albums.ts that are gone from Cloudinary are reported, never removed.
+// Re-uploads are dropped twice over: byte-identical files, and look-alikes
+// (same photo, different export) by a perceptual hash of a tiny thumbnail.
 //
 // Reads CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET (or CLOUDINARY_URL) from
 // .env.local (gitignored). Never prints the secret.
 import fs from "node:fs";
 import path from "node:path";
+import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 
 const write = process.argv.includes("--write");
@@ -116,6 +119,64 @@ function ordered(resources) {
   return sorted.filter((r) => (seen.has(r.bytes) ? false : (seen.add(r.bytes), true)));
 }
 
+// Look-alikes: the same photo exported twice has different bytes, so the
+// check above keeps both (Paris got five Paris frames again as casablanca-1..5).
+// dHash a 9x8 grayscale PNG from the CDN (no Admin API rate limit). Measured on
+// the live albums: re-exports differ by 0 bits, distinct photos by 12 or more.
+const LOOKALIKE_BITS = 6;
+
+function grayPng(buf) {
+  let i = 8, w, h, idat = [];
+  while (i < buf.length) {
+    const len = buf.readUInt32BE(i), kind = buf.toString("ascii", i + 4, i + 8), data = buf.subarray(i + 8, i + 8 + len);
+    if (kind === "IHDR") {
+      [w, h] = [data.readUInt32BE(0), data.readUInt32BE(4)];
+      if (data[8] !== 8 || data[9] !== 0) throw new Error(`expected 8-bit grayscale PNG, got depth ${data[8]} type ${data[9]}`);
+    }
+    if (kind === "IDAT") idat.push(data);
+    i += 12 + len;
+  }
+  // Undo the per-row PNG filters (one byte per pixel).
+  const raw = zlib.inflateSync(Buffer.concat(idat)), px = Buffer.alloc(w * h);
+  for (let y = 0; y < h; y++) {
+    const filter = raw[y * (w + 1)];
+    for (let x = 0; x < w; x++) {
+      const o = y * w + x, a = x ? px[o - 1] : 0, b = y ? px[o - w] : 0, c = x && y ? px[o - w - 1] : 0;
+      const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+      const pred = [0, a, b, (a + b) >> 1, pa <= pb && pa <= pc ? a : pb <= pc ? b : c][filter];
+      px[o] = (raw[y * (w + 1) + 1 + x] + pred) & 255;
+    }
+  }
+  return (x, y) => px[y * w + x];
+}
+
+async function dhash(r) {
+  const url = `https://res.cloudinary.com/${CLOUD}/image/upload/c_scale,w_9,h_8,e_grayscale,f_png/${encodeURI(r.public_id)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${res.status} ${url}`);
+  const at = grayPng(Buffer.from(await res.arrayBuffer()));
+  let bits = 0n;
+  for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) bits = (bits << 1n) | (at(x, y) > at(x + 1, y) ? 1n : 0n);
+  return bits;
+}
+
+const popcount = (x) => { let n = 0; for (; x; x >>= 1n) n += Number(x & 1n); return n; };
+
+// Keeps the first of each look-alike set, preferring a frame albums.ts already
+// uses, then one named after its folder ("paris-1" over "casablanca-1").
+async function dropLookalikes(photos, prefix, inUse = new Set()) {
+  const queue = [...photos];
+  await Promise.all(Array.from({ length: 8 }, async () => {
+    for (let r; (r = queue.shift()); ) r.dhash = await dhash(r);
+  }));
+  const rank = (r) => (inUse.has(r.public_id) ? 0 : r.public_id.split("/").pop().startsWith(prefix) ? 1 : 2);
+  const kept = [];
+  for (const r of [...photos].sort((a, b) => rank(a) - rank(b))) {
+    if (!kept.some((k) => popcount(k.dhash ^ r.dhash) <= LOOKALIKE_BITS)) kept.push(r);
+  }
+  return photos.filter((r) => kept.includes(r));
+}
+
 // --- albums.ts: locate each album block --------------------------------
 let src = fs.readFileSync(file, "utf8");
 const eol = src.includes("\r\n") ? "\r\n" : "\n";
@@ -161,14 +222,17 @@ for (const [folder, resources] of [...folders].sort(([a], [b]) => a.localeCompar
   const name = folder.split("/").pop();
   const target = Object.entries(TARGETS).find(([k]) => k.toLowerCase() === name.toLowerCase())?.[1];
   const slug = target?.slug ?? slugify(name);
-  const photos = ordered(resources);
-  const dupes = resources.length - photos.length;
+  let photos = ordered(resources);
   const block = blocks.get(slug);
   if (claimed.has(slug)) {
-    plan.push({ folder, slug, status: "DUPLICATE FOLDER", photos, dupes, note: "another folder already maps to this slug" });
+    plan.push({ folder, slug, status: "DUPLICATE FOLDER", photos, dupes: resources.length - photos.length, note: "another folder already maps to this slug" });
     continue;
   }
   claimed.add(slug);
+  // Only folders about to change pay for the look-alike pass.
+  const changing = block ? block.parked || photos.some((r) => !block.ids.has(r.public_id)) : Boolean(target);
+  if (changing) photos = await dropLookalikes(photos, slugify(name), block?.ids);
+  const dupes = resources.length - photos.length;
   if (!block) {
     plan.push({ folder, slug, status: target ? "NEW" : "NEEDS METADATA", photos, dupes, target });
   } else if (block.parked) {
