@@ -1,17 +1,28 @@
-// Import new Cloudinary folders into src/content/albums.ts.
-// Usage:  node import-albums.mjs <repoRoot> [--write]
-// Reads CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET / CLOUDINARY_CLOUD_NAME
-// from <repoRoot>/.env.local (gitignored). Never prints the secret.
+// Sync src/content/albums.ts with the image folders on Cloudinary.
+//
+//   node scripts/import-albums.mjs          # dry run: prints a status table
+//   node scripts/import-albums.mjs --write  # applies the changes below
+//
+// Every Cloudinary folder that holds images maps to an album slug (the folder
+// name slugified, or TARGETS[name].slug). Each one gets a status:
+//   NEW             not in albums.ts and has TARGETS metadata -> inserted
+//   NEEDS METADATA  not in albums.ts, no TARGETS entry        -> skipped
+//   PARKED          in albums.ts with placeholderImages       -> photos replaced,
+//                   flag dropped, title/country/description kept
+//   LIVE +N         live album, N new uploads in the folder   -> appended
+//   LIVE            nothing to do
+// Live albums are never rewritten, so hand-edited alt text survives. Photos in
+// albums.ts that are gone from Cloudinary are reported, never removed.
+//
+// Reads CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET (or CLOUDINARY_URL) from
+// .env.local (gitignored). Never prints the secret.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repo = process.argv[2];
 const write = process.argv.includes("--write");
-if (!repo) {
-  console.error("usage: node import-albums.mjs <repoRoot> [--write]");
-  process.exit(1);
-}
+const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const file = path.join(repo, "src/content/albums.ts");
 
 // --- env ---------------------------------------------------------------
 const env = { ...process.env };
@@ -48,8 +59,10 @@ async function api(pathname, init = {}) {
   return body;
 }
 
-// --- targets -----------------------------------------------------------
-// folder name in Cloudinary -> album metadata (voice: first person, no dashes)
+// --- metadata for new albums -------------------------------------------
+// Cloudinary folder name -> album metadata (voice: first person, no dashes).
+// Only needed for folders that are not in albums.ts yet; parked albums keep
+// the metadata they already have.
 const TARGETS = {
   "Casablanca": { slug: "casablanca", title: "Casablanca", country: "Morocco", description: "White walls, Atlantic haze, and the Hassan II mosque at the edge of the water." },
   "Iceland": { slug: "iceland", title: "Iceland", country: "Iceland", description: "Black sand, moss, and weather that changes faster than I can change lenses." },
@@ -62,124 +75,174 @@ const TARGETS = {
   "Strasbourg": { slug: "strasbourg", title: "Strasbourg", country: "France", description: "Half-timbered houses and canals in the Petite France quarter." },
   "Vienna": { slug: "vienna", title: "Vienna", country: "Austria", description: "Imperial stone, coffee houses, and the Ringstrasse in winter light." },
 };
+const slugify = (s) =>
+  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-// --- discover folder paths --------------------------------------------
-async function listSubfolders(p) {
-  const r = p
-    ? await api(`/folders/${encodeURI(p)}?max_results=500`)
-    : await api(`/folders?max_results=500`);
-  return (r.folders || []).map((f) => f.path);
-}
-async function walk(p, acc) {
-  let subs = [];
-  try {
-    subs = await listSubfolders(p);
-  } catch (e) {
-    console.warn("folders:", e.message);
-  }
-  for (const s of subs) {
-    acc.push(s);
-    await walk(s, acc);
-  }
-  return acc;
-}
-const allFolders = await walk("", []);
-console.log(`Found ${allFolders.length} folders in cloud ${CLOUD}`);
-for (const f of allFolders) console.log("  " + f);
-
-const resolved = {};
-for (const name of Object.keys(TARGETS)) {
-  const hits = allFolders.filter((f) => f.split("/").pop().toLowerCase() === name.toLowerCase());
-  if (hits.length === 0) console.warn(`!! no folder named "${name}"`);
-  if (hits.length > 1) console.warn(`!! several folders named "${name}": ${hits.join(" | ")} (using first)`);
-  if (hits.length) resolved[name] = hits[0];
-}
-
-// --- fetch resources per folder ---------------------------------------
-async function searchFolder(folderPath) {
-  const out = [];
-  let next_cursor;
-  do {
-    const body = {
-      expression: `resource_type:image AND (folder="${folderPath}" OR asset_folder="${folderPath}")`,
+// --- cloud: every image, grouped by folder -----------------------------
+const images = [];
+let next_cursor;
+do {
+  const r = await api("/resources/search", {
+    method: "POST",
+    body: JSON.stringify({
+      expression: "resource_type:image",
       sort_by: [{ public_id: "asc" }],
       max_results: 500,
       ...(next_cursor ? { next_cursor } : {}),
-    };
-    const r = await api("/resources/search", { method: "POST", body: JSON.stringify(body) });
-    out.push(...(r.resources || []));
-    next_cursor = r.next_cursor;
-  } while (next_cursor);
-  return out;
-}
+    }),
+  });
+  images.push(...(r.resources || []));
+  next_cursor = r.next_cursor;
+} while (next_cursor);
 
-const manifest = {};
-for (const [name, folderPath] of Object.entries(resolved)) {
-  const res = await searchFolder(folderPath);
-  manifest[name] = {
-    folderPath,
-    resources: res.map((r) => ({
-      public_id: r.public_id,
-      width: r.width,
-      height: r.height,
-      format: r.format,
-      bytes: r.bytes,
-    })),
-  };
-  console.log(`${name.padEnd(15)} ${folderPath.padEnd(40)} ${res.length} images`);
-}
-const outDir = path.dirname(fileURLToPath(import.meta.url));
-fs.writeFileSync(path.join(outDir, "cloudinary-manifest.json"), JSON.stringify(manifest, null, 2));
-
-// --- generate album entries -------------------------------------------
-const q = (s) => JSON.stringify(s);
-const entries = [];
-for (const [name, meta] of Object.entries(TARGETS)) {
-  const m = manifest[name];
-  if (!m || m.resources.length === 0) continue;
-  const alt = `Travel photograph from ${meta.title}, ${meta.country}`;
-  // width/height let grids render each frame at its natural aspect ratio.
-  const photo = (r) => `      { publicId: ${q(r.public_id)}, alt: ${q(alt)}, city: ${q(meta.title)}, width: ${r.width}, height: ${r.height} },`;
-  // Order by the number in the filename ("lisbon-2" before "lisbon-10"), then
-  // drop byte-identical re-uploads (Lisbon was uploaded twice with shifted numbers).
-  const num = (r) => Number((r.public_id.split("/").pop().match(/-(\d+)_[a-z0-9]+$/) || [])[1] ?? 1e9);
-  const sorted = [...m.resources].sort((a, b) => num(a) - num(b) || a.public_id.localeCompare(b.public_id));
-  const seenBytes = new Set();
-  const unique = sorted.filter((r) => (seenBytes.has(r.bytes) ? false : (seenBytes.add(r.bytes), true)));
-  if (unique.length !== sorted.length) console.log(`${name}: dropped ${sorted.length - unique.length} duplicate uploads`);
-  entries.push(
-    [
-      "  {",
-      `    slug: ${q(meta.slug)},`,
-      `    title: ${q(meta.title)},`,
-      `    country: ${q(meta.country)},`,
-      `    description: ${q(meta.description)},`,
-      photo(unique[0]).replace(/^      {/, "    cover: {"),
-      "    photos: [",
-      ...unique.map(photo),
-      "    ],",
-      "  },",
-    ].join("\n"),
-  );
-}
-const block = entries.join("\n");
-fs.writeFileSync(path.join(outDir, "new-albums.ts.txt"), block + "\n");
-console.log(`\nGenerated ${entries.length} album entries -> new-albums.ts.txt`);
-
-if (write && entries.length) {
-  const file = path.join(repo, "src/content/albums.ts");
-  let src = fs.readFileSync(file, "utf8");
-  const existing = new Set([...src.matchAll(/slug: "([^"]+)"/g)].map((m) => m[1]));
-  const fresh = entries.filter((e) => !existing.has(e.match(/slug: "([^"]+)"/)[1]));
-  if (!fresh.length) {
-    console.log("All albums already present; nothing written.");
-    process.exit(0);
+const folders = new Map(); // folder path -> resources
+for (const r of images) {
+  const folder = r.asset_folder ?? r.folder ?? path.posix.dirname(r.public_id);
+  if (!folder || folder === ".") {
+    console.warn(`!! ${r.public_id} sits at the root, not in a folder (skipped)`);
+    continue;
   }
-  const eol = src.includes("\r\n") ? "\r\n" : "\n";
-  const marker = `${eol}];${eol}${eol}export const getAlbum`;
-  if (!src.includes(marker)) throw new Error("albums.ts: closing marker not found");
-  const insert = fresh.join("\n").replace(/\n/g, eol);
-  src = src.replace(marker, `${eol}${insert}${eol}];${eol}${eol}export const getAlbum`);
-  fs.writeFileSync(file, src);
-  console.log(`Wrote ${fresh.length} albums into src/content/albums.ts`);
+  if (!folders.has(folder)) folders.set(folder, []);
+  folders.get(folder).push(r);
+}
+console.log(`Cloud ${CLOUD}: ${images.length} images in ${folders.size} folders\n`);
+
+// Order by the number in the filename ("lisbon-2" before "lisbon-10"), then
+// drop byte-identical re-uploads (Lisbon was uploaded twice with shifted numbers).
+const num = (r) => Number((r.public_id.split("/").pop().match(/-(\d+)(?:_[a-z0-9]+)?$/) || [])[1] ?? 1e9);
+function ordered(resources) {
+  const sorted = [...resources].sort((a, b) => num(a) - num(b) || a.public_id.localeCompare(b.public_id));
+  const seen = new Set();
+  return sorted.filter((r) => (seen.has(r.bytes) ? false : (seen.add(r.bytes), true)));
+}
+
+// --- albums.ts: locate each album block --------------------------------
+let src = fs.readFileSync(file, "utf8");
+const eol = src.includes("\r\n") ? "\r\n" : "\n";
+let lines = src.split(eol);
+
+function parseBlocks() {
+  const blocks = new Map(); // slug -> { start, end, parked, title, country, ids }
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^  \{\s*$/.test(lines[i])) start = i;
+    if (start >= 0 && /^  \},\s*$/.test(lines[i])) {
+      const body = lines.slice(start, i + 1);
+      const field = (k) => body.map((l) => l.match(new RegExp(`^    ${k}: "([^"]*)"`))).find(Boolean)?.[1];
+      const slug = field("slug");
+      if (slug) {
+        blocks.set(slug, {
+          start,
+          end: i,
+          parked: body.some((l) => /^\s+placeholderImages: true/.test(l)),
+          title: field("title"),
+          country: field("country"),
+          ids: new Set(body.map((l) => l.match(/^      \{ publicId: "([^"]+)"/)?.[1]).filter(Boolean)),
+        });
+      }
+      start = -1;
+    }
+  }
+  return blocks;
+}
+const blocks = parseBlocks();
+
+const q = (s) => JSON.stringify(s);
+const alt = (title, country) => `Travel photograph from ${title}, ${country}`;
+// width/height let grids render each frame at its natural aspect ratio.
+const photoLine = (r, title, country) =>
+  `      { publicId: ${q(r.public_id)}, alt: ${q(alt(title, country))}, city: ${q(title)}, width: ${r.width}, height: ${r.height} },`;
+const coverLine = (r, title, country) => photoLine(r, title, country).replace(/^      \{/, "    cover: {");
+
+// --- plan --------------------------------------------------------------
+const plan = [];
+const claimed = new Set();
+for (const [folder, resources] of [...folders].sort(([a], [b]) => a.localeCompare(b))) {
+  const name = folder.split("/").pop();
+  const target = Object.entries(TARGETS).find(([k]) => k.toLowerCase() === name.toLowerCase())?.[1];
+  const slug = target?.slug ?? slugify(name);
+  const photos = ordered(resources);
+  const dupes = resources.length - photos.length;
+  const block = blocks.get(slug);
+  if (claimed.has(slug)) {
+    plan.push({ folder, slug, status: "DUPLICATE FOLDER", photos, dupes, note: "another folder already maps to this slug" });
+    continue;
+  }
+  claimed.add(slug);
+  if (!block) {
+    plan.push({ folder, slug, status: target ? "NEW" : "NEEDS METADATA", photos, dupes, target });
+  } else if (block.parked) {
+    plan.push({ folder, slug, status: "PARKED", photos, dupes, block });
+  } else {
+    const cloudIds = new Set(photos.map((r) => r.public_id));
+    const fresh = photos.filter((r) => !block.ids.has(r.public_id));
+    const gone = [...block.ids].filter((id) => !cloudIds.has(id));
+    plan.push({ folder, slug, status: fresh.length ? `LIVE +${fresh.length}` : "LIVE", photos, dupes, block, fresh, gone });
+  }
+}
+// Live albums whose folder vanished from Cloudinary entirely.
+for (const [slug, b] of blocks) {
+  if (!b.parked && !claimed.has(slug)) plan.push({ folder: "(none)", slug, status: "LIVE, NO FOLDER", photos: [], dupes: 0, block: b });
+}
+
+for (const p of plan) {
+  const extra = [
+    p.dupes ? `${p.dupes} duplicate uploads dropped` : "",
+    p.gone?.length ? `${p.gone.length} photos in albums.ts missing from Cloudinary` : "",
+    p.note ?? "",
+  ].filter(Boolean).join("; ");
+  console.log(`${p.status.padEnd(17)} ${p.slug.padEnd(18)} ${String(p.photos.length).padStart(3)} imgs  ${p.folder}${extra ? `  (${extra})` : ""}`);
+  for (const id of p.gone ?? []) console.log(`${" ".repeat(20)}missing: ${id}`);
+}
+const needs = plan.filter((p) => p.status === "NEEDS METADATA");
+if (needs.length) {
+  console.log(`\nAdd TARGETS entries for: ${needs.map((p) => q(p.folder.split("/").pop())).join(", ")}`);
+}
+
+// --- apply -------------------------------------------------------------
+// Bottom-up by line number so earlier indices stay valid; new albums go last.
+const edits = plan
+  .filter((p) => p.status === "PARKED" || p.status.startsWith("LIVE +"))
+  .sort((a, b) => b.block.start - a.block.start);
+for (const p of edits) {
+  const { start, end } = p.block;
+  const { title, country } = p.block;
+  if (p.status === "PARKED") {
+    // Keep the header fields (slug, title, country, year, description), swap the photos.
+    const header = lines.slice(start, end + 1).filter((l, i) => i > 0 && /^    (?!cover:|photos:|placeholderImages:)\w+:/.test(l));
+    lines.splice(start, end - start + 1,
+      "  {", ...header,
+      coverLine(p.photos[0], title, country),
+      "    photos: [", ...p.photos.map((r) => photoLine(r, title, country)), "    ],",
+      "  },");
+  } else {
+    const close = lines.slice(start, end + 1).findLastIndex((l) => /^    \],\s*$/.test(l));
+    if (close < 0) throw new Error(`${p.slug}: photos array close not found`);
+    lines.splice(start + close, 0, ...p.fresh.map((r) => photoLine(r, title, country)));
+  }
+}
+const inserts = plan.filter((p) => p.status === "NEW" && p.photos.length);
+if (inserts.length) {
+  const close = lines.findIndex((l, i) => /^\];\s*$/.test(l) && /^export const getAlbum/.test(lines[i + 2] ?? ""));
+  if (close < 0) throw new Error("albums.ts: closing marker not found");
+  lines.splice(close, 0, ...inserts.flatMap(({ slug, photos, target: t }) => [
+    "  {",
+    `    slug: ${q(slug)},`,
+    `    title: ${q(t.title)},`,
+    `    country: ${q(t.country)},`,
+    `    description: ${q(t.description)},`,
+    coverLine(photos[0], t.title, t.country),
+    "    photos: [", ...photos.map((r) => photoLine(r, t.title, t.country)), "    ],",
+    "  },",
+  ]));
+}
+
+const changes = edits.length + inserts.length;
+if (!changes) {
+  console.log("\nNothing to change.");
+} else if (!write) {
+  console.log(`\nDry run: ${changes} albums would change. Re-run with --write.`);
+} else {
+  fs.writeFileSync(file, lines.join(eol));
+  console.log(`\nWrote ${changes} albums into src/content/albums.ts`);
 }

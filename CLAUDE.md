@@ -42,3 +42,5 @@ First person, photographer's voice. "I found that…" never "You should…". Spe
 1. Work one SPEC.md §8 phase at a time, in order.
 2. After completing a phase: `npm run build` zero errors, check off the phase boxes in SPEC.md, report anything incomplete with a reason.
 3. After content/page phases: audit against SPEC §6 (SEO contract) item by item.
+
+**"Refresh the albums"** = follow `.claude/skills/refresh-albums/SKILL.md` end to end: detect new/parked/grown Cloudinary folders with `scripts/import-albums.mjs`, write `src/content/albums.ts`, build, commit, push `main` (Netlify deploys). Push to `main` is pre-authorized for that flow only.

@@ -1,9 +1,10 @@
 import type { Album } from "@/lib/types";
 
 /**
- * Typed album data — the source of truth for the gallery. Originally migrated
- * from Cloudinary (publicIds verified live at migration time); now maintained
- * by hand here. Add or edit albums directly in this file.
+ * Typed album data — the source of truth for the gallery. Synced from
+ * Cloudinary by scripts/import-albums.mjs (runbook: .claude/skills/refresh-albums),
+ * which inserts new albums and appends new uploads but never rewrites a live
+ * album, so hand edits here (alt text, order, cover) are safe.
  *
  * TODO (owner): alt texts are city-level defaults — refine per photo when
  * you can (better for accessibility and Google Images).
