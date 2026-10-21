@@ -14,34 +14,34 @@ import type { Photo, PresetFile, Recipe } from "@/lib/types";
  */
 export const sampleFrames: Photo[] = [
   {
-    publicId: "Europe/Portugal/Braga/_DSF5843_fjmaju",
-    alt: "Warm afternoon light in Braga, Portugal",
-    city: "Braga",
+    publicId: "Europe/Portugal/Lisbon/lisbon-5_j77t5t",
+    alt: "Afternoon sun on the yellow arcades of Praça do Comércio, Lisbon, Portugal",
+    city: "Lisbon",
   },
   {
-    publicId: "Europe/Portugal/Braga/_DSF5631_thcn3s",
-    alt: "Quiet street in Braga, Portugal",
-    city: "Braga",
+    publicId: "Europe/Portugal/Lisbon/lisbon-3_lr79bv",
+    alt: "The Tagus and the 25 de Abril bridge from the Lisbon waterfront",
+    city: "Lisbon",
   },
   {
-    publicId: "Europe/Netherlands/Amsterdam/DSCF5199_mnuy5h",
-    alt: "Canal houses in Amsterdam, Netherlands",
-    city: "Amsterdam",
+    publicId: "Europe/Portugal/Lisbon/lisbon-1_tchctr",
+    alt: "Pale facade with iron balconies in Lisbon, Portugal",
+    city: "Lisbon",
   },
   {
-    publicId: "Europe/Netherlands/Amsterdam/_DSF4918_edr9qv",
-    alt: "Morning light in Amsterdam, Netherlands",
-    city: "Amsterdam",
+    publicId: "Europe/France/Paris/paris-1_vglmfg",
+    alt: "The Eiffel Tower from the Trocadéro, Paris, in morning light",
+    city: "Paris",
   },
   {
-    publicId: "Europe/Austria/Vienna/we18qdnfbdcfbbvsnqv1",
-    alt: "City view in Vienna, Austria",
-    city: "Vienna",
+    publicId: "Africa/Casablanca/casablanca-1_ebrapt",
+    alt: "Zellige tilework on a carved doorway in Casablanca, Morocco",
+    city: "Casablanca",
   },
   {
-    publicId: "Europe/England/London/_DSF3975_oqi79t",
-    alt: "Street scene in London, United Kingdom",
-    city: "London",
+    publicId: "Central America/Punta Cana/punta-cana-1_q6pkgn",
+    alt: "Palm trees against a blue sky in Punta Cana, Dominican Republic",
+    city: "Punta Cana",
   },
 ];
 

@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { realAlbums } from "@/content/albums";
-import { CldImage } from "@/components/cld-image";
-import { FrameCaption } from "@/components/frame-caption";
+import { AlbumWall } from "@/components/album-wall";
 import { social } from "@/lib/seo";
 
 const description =
-  "Travel photography gallery. Amsterdam, London, Rome, Como, Paraty, Cartagena and more. Shot on Fujifilm, JPG straight out of camera.";
+  "Travel photography gallery. Paris, Lisbon, Vienna, Iceland, Lima and more. Shot on Fujifilm, JPG straight out of camera.";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -24,29 +22,11 @@ export default function GalleryPage() {
         </p>
       </header>
 
-      <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-3">
-        {/* realAlbums: a future placeholder-image album must stay hidden here
-            too, matching the home page and sitemap (it'd be noindex anyway). */}
-        {realAlbums.map((album) => (
-          <li key={album.slug}>
-            <Link href={`/gallery/${album.slug}`} className="group block">
-              <CldImage
-                photo={album.cover}
-                width={800}
-                height={1000}
-                crop="fill"
-                gravity="auto"
-                sizes="(min-width: 768px) 33vw, 50vw"
-                className="w-full transition-opacity group-hover:opacity-90"
-              />
-              <FrameCaption
-                city={`${album.title} · ${album.country}`}
-                className="mt-3"
-              />
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="mx-auto max-w-7xl">
+        {/* realAlbums: a placeholder-image album stays hidden here too,
+            matching the home page and sitemap. */}
+        <AlbumWall albums={realAlbums} eager={0} />
+      </div>
     </div>
   );
 }

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CldImage } from "@/components/cld-image";
-import { FrameCaption } from "@/components/frame-caption";
 import type { Photo } from "@/lib/types";
 
 interface AlbumGalleryProps {
@@ -61,13 +60,6 @@ export function AlbumGallery({ title, photos }: AlbumGalleryProps) {
                 sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
                 className="w-full border border-line transition-opacity group-hover:opacity-90"
               />
-              <FrameCaption
-                frame={`FR-${String(i + 1).padStart(3, "0")}`}
-                city={photo.city}
-                camera={photo.camera}
-                recipe={photo.recipe}
-                className="mt-2 mb-1 px-0.5"
-              />
             </button>
           </li>
         ))}
@@ -106,13 +98,6 @@ export function AlbumGallery({ title, photos }: AlbumGalleryProps) {
                 crop="limit"
                 sizes="92vw"
                 className="max-h-[78svh] w-auto max-w-full object-contain"
-              />
-              <FrameCaption
-                frame={`FR-${String(index + 1).padStart(3, "0")}`}
-                city={current?.city}
-                camera={current?.camera}
-                recipe={current?.recipe}
-                className="mt-3"
               />
             </figure>
 
