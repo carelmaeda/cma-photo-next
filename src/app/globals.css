@@ -91,6 +91,7 @@
 
     --cols: 2;
     --photo-gap: 4px;
+    --tile-gap: 1rem;   /* album wall (home + /gallery): airier than in-album masonry */
 
     --z-header: 100;
     --z-dropdown: 200;
@@ -202,23 +203,10 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Motion (SPEC §3) — the one orchestrated moment + a shared scroll reveal.
+   Motion (SPEC §3) — a shared scroll reveal + the album-wall hover label.
    The prefers-reduced-motion guard above disables all of it.
 --------------------------------------------------------------------------- */
 @layer components {
-    @keyframes hero-fade {
-        from { opacity: 0; transform: scale(1.05); }
-        to   { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes title-rise {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-fade  { animation: hero-fade 0.9s var(--ease-out-brand) both; }
-    .title-rise { animation: title-rise 0.9s var(--ease-out-brand) 0.15s both; }
-
     /* Scroll reveal — toggled by the <Reveal> client wrapper */
     .reveal {
         opacity: 0;
@@ -240,6 +228,34 @@
     .masonry > * {
         break-inside: avoid;
         margin-bottom: var(--photo-gap);
+    }
+
+    /* Album wall — one cover per album at its natural aspect ratio */
+    .masonry--wall {
+        column-gap: var(--tile-gap);
+    }
+
+    .masonry--wall > * {
+        margin-bottom: var(--tile-gap);
+    }
+
+    /* City label: fades in on hover/focus; always shown on touch screens */
+    .tile-label {
+        position: absolute;
+        left: 0.75rem;
+        bottom: 0.75rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--dur-base) var(--ease-brand);
+    }
+
+    a:hover > .tile-label,
+    a:focus-visible > .tile-label {
+        opacity: 1;
+    }
+
+    @media (hover: none) {
+        .tile-label { opacity: 1; }
     }
 
     @media (prefers-reduced-motion: reduce) {

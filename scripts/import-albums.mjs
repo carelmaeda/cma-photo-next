@@ -138,7 +138,8 @@ for (const [name, meta] of Object.entries(TARGETS)) {
   const m = manifest[name];
   if (!m || m.resources.length === 0) continue;
   const alt = `Travel photograph from ${meta.title}, ${meta.country}`;
-  const photo = (pid) => `      { publicId: ${q(pid)}, alt: ${q(alt)}, city: ${q(meta.title)} },`;
+  // width/height let grids render each frame at its natural aspect ratio.
+  const photo = (r) => `      { publicId: ${q(r.public_id)}, alt: ${q(alt)}, city: ${q(meta.title)}, width: ${r.width}, height: ${r.height} },`;
   // Order by the number in the filename ("lisbon-2" before "lisbon-10"), then
   // drop byte-identical re-uploads (Lisbon was uploaded twice with shifted numbers).
   const num = (r) => Number((r.public_id.split("/").pop().match(/-(\d+)_[a-z0-9]+$/) || [])[1] ?? 1e9);
@@ -146,7 +147,6 @@ for (const [name, meta] of Object.entries(TARGETS)) {
   const seenBytes = new Set();
   const unique = sorted.filter((r) => (seenBytes.has(r.bytes) ? false : (seenBytes.add(r.bytes), true)));
   if (unique.length !== sorted.length) console.log(`${name}: dropped ${sorted.length - unique.length} duplicate uploads`);
-  const ids = unique.map((r) => r.public_id);
   entries.push(
     [
       "  {",
@@ -154,9 +154,9 @@ for (const [name, meta] of Object.entries(TARGETS)) {
       `    title: ${q(meta.title)},`,
       `    country: ${q(meta.country)},`,
       `    description: ${q(meta.description)},`,
-      `    cover: { publicId: ${q(ids[0])}, alt: ${q(alt)}, city: ${q(meta.title)} },`,
+      photo(unique[0]).replace(/^      {/, "    cover: {"),
       "    photos: [",
-      ...ids.map(photo),
+      ...unique.map(photo),
       "    ],",
       "  },",
     ].join("\n"),

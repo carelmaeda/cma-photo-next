@@ -11,6 +11,9 @@ export interface Photo {
   camera?: Camera;
   /** e.g. "Vanilla Summer" */
   recipe?: string;
+  /** Intrinsic pixel size from Cloudinary (scripts/photo-dimensions.mjs). Lets grids render the natural aspect ratio. */
+  width?: number;
+  height?: number;
 }
 
 export interface Album {

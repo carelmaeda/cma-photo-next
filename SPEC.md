@@ -38,7 +38,7 @@ Adopted from the Studio Roldan IA teardown (now applied — this section is the 
 Store / Content / Convert), retuned for Carel and kept **fully in English**.
 
 ```
-/                  Home — hero galleries, latest posts, recipe/print highlight, newsletter band
+/                  Home — album wall: one cover per live album, natural aspect, nothing else  [since Oct 21, 2026; was hero + posts + recipe + newsletter]
 /about             São Paulo → Toronto story, JPG philosophy, gear list  [absorbs /gear]
 /gallery           Album index (travel galleries, by trip/location)      [was /albums]
 /gallery/[slug]    City gallery — masonry + lightbox + frame captions
@@ -55,7 +55,7 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 
 **Nav (flat, no dropdowns), in order:** Home · About · Gallery · Prints · Downloads · Blog · Contact, then the cart icon. The logo also links Home.
 **Canonical routes (teardown's key lesson):** header, footer, and `sitemap.ts` use the **same** paths — no divergence. Labels match slugs (Gallery=/gallery, Prints=/prints, Downloads=/downloads).
-**Footer:** Instagram, Threads, Prints, Contact, © line.
+**Footer:** Instagram, Threads, Prints, Contact, © line. *(Since October 21, 2026: centered Instagram + Threads icons, then Privacy · Terms · © on one small mono line.)*
 **Old → new 301s** (`netlify.toml`): `/albums/* → /gallery/*`, `/guides/* → /blog/*`, `/recipes/* → /downloads/*`, `/gear → /about`.
 
 > **Launch-light amendment (August 4, 2026 — see §10).** While `siteConfig.features` flags are off, the shipped IA is:
@@ -106,6 +106,7 @@ Light-only, photo-first, warm personal storyteller. **Authority:** the codified 
 
 - Frame photos on paper with a `--color-line` (`#E0DACD`) hairline so images stay the hero.
 - **Galleries are masonry**, square, edge-to-edge: CSS columns driven by `--cols` (2 → 3 @768 → 4 @1280) and `--photo-gap 4px`. Never card chrome around photos.
+- **Album wall** (home + `/gallery` index, `AlbumWall` in `src/components/album-wall.tsx`): same `.masonry` columns with the wider `--tile-gap 1rem` (`.masonry--wall`), one cover per album rendered `crop="limit"` at its stored `width`/`height` so each frame keeps its real proportions (covers without dimensions fall back to a 4:5 fill). No caption row: the city name sits in a `.tile-label` ink chip that fades in on hover/focus and stays visible on touch screens. Column order follows `albums.ts` order (columns fill top to bottom).
 - **Caption / EXIF row** = Space Mono, `--fs-cap`, `--color-warm` (the `FrameCaption` component, restyled). Format e.g. `FR-014 · PARIS · GFX100RF · VANILLA SUMMER`.
 
 ### Components
@@ -158,6 +159,7 @@ Handwritten mark only — never re-typed. Assets in `carel-brand-kit/assets/` (c
 - `src/content/albums.ts` is the migrated, typed album data. **Placeholder albums** — Innsbruck and Vaduz (Salzburg/repeated images), Brugge and Porto (Braga images) — are flagged `placeholderImages: true` with TODO comments. Never invent publicIds; the owner uploads real photos.
 - Guide library seeds with the **Fujifilm-recipes cluster** (highest search intent, funnels to the Vanilla Summer recipe): what-are-fujifilm-recipes, vanilla-summer-recipe-explained, why-i-shoot-jpeg-only, x100v-settings-i-actually-use. Claude drafts in the owner's voice; the owner edits before publish.
 - ~~Vanilla Summer is a **paid** recipe card…~~ **Superseded August 4, 2026 (§10):** the full Vanilla Summer settings are public and free at `/recipes/vanilla-summer` (data in `src/content/recipes.ts`). The paid card product and its Stripe wiring are parked behind `features.store`.
+- `Photo` carries optional `width`/`height` (intrinsic pixels). `scripts/photo-dimensions.mjs` fills them for live albums from Cloudinary `fl_getinfo` (no API key; dry run by default, `--write` to save), and `scripts/import-albums.mjs` now emits them for newly imported folders.
 - Blog posts support `draft: true` frontmatter: the file stays in the repo but publishes nowhere (index, sitemap, static params, teasers all flow through `getAllGuides()`). `one-camera-one-lens` and `why-i-shoot-jpeg-only` are drafted until the owner rewrites them.
 
 ---
@@ -221,6 +223,16 @@ Goal: a site Carel can put in the Instagram bio this week. Scope deliberately ti
 - [ ] OWNER — confirm DNS for photo.carelmaeda.com, then set the Instagram bio link to `photo.carelmaeda.com/links`.
 - [ ] OWNER — rotate the live Stripe secret key that sits in plain text in the OneDrive Photographer folder (`STRIPE.txt`) and delete that file.
 
+### Phase 8 — Album-wall home (October 21, 2026)
+Goal: the home page looks like a photographer's wall (Roman Fox reference): header, masonry of album covers, footer. Nothing else.
+- [x] `Photo.width/height` recorded for all 128 live photos (`scripts/photo-dimensions.mjs --write`); import script emits them going forward.
+- [x] `AlbumWall` component: natural-aspect covers, hover/focus city label, first four covers preloaded.
+- [x] Home is the wall only (sr-only h1). Recipe CTA, blog teasers, and newsletter band left the home page; they live on `/recipes`, `/blog`, `/links`. Unused `hero-fade`/`title-rise` motion removed.
+- [x] `/gallery` index uses the same wall under its heading; its meta description now names live cities.
+- [x] Footer: centered Instagram + Threads icons (Threads glyph from Simple Icons, CC0), Privacy · Terms · © underneath.
+- [ ] OWNER — reorder `albums.ts` if you want a different lead image (column one, top left).
+- [ ] OWNER — run Lighthouse on `/` after deploy (SPEC §6.5, target ≥ 90).
+
 ### Future
 - Affiliate links on the About gear list · ESP when the list outgrows Netlify Forms · physical prints (would add a print-on-demand partner — out of scope today).
 
@@ -241,7 +253,7 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 | Flag | Off (launch) | What flipping it on restores |
 |---|---|---|
 | `store` | `/downloads*` 301s to `/recipes` (in-page + netlify.toml), no cart icon, no Downloads nav item, products out of sitemap | The Stripe store exactly as built — also **reinstate the store redirects in `netlify.toml`** (remove the `/downloads → /recipes` rules) |
-| `gallery` | Gallery out of nav, homepage "Latest work" strip hidden; `/gallery*` still renders and is indexed | Gallery nav item + homepage strip. **On since October 20, 2026** (Phase 7) |
+| `gallery` | Gallery out of nav; `/gallery*` still renders and is indexed | Gallery nav item. **On since October 20, 2026** (Phase 7). Since Phase 8 the home album wall renders regardless of this flag. |
 | `prints` | Prints out of nav (page was already noindex) | Prints nav item |
 
 **Free content model:**
