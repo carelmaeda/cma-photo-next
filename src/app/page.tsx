@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <div className="px-gutter">
       <h1 className="sr-only">Carel Maeda. Travel photography on Fujifilm.</h1>
-      <div className="mx-auto max-w-7xl py-10">
+      <div className="mx-auto max-w-7xl pt-4 md:pt-6">
         <AlbumWall albums={realAlbums} />
       </div>
     </div>

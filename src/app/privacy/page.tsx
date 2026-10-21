@@ -18,9 +18,9 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
-        <h1 className="text-h2">Privacy</h1>
-        <p className="mt-3 max-w-prose text-ink-soft">
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
+        <h1 className="text-h3">Privacy</h1>
+        <p className="mt-1 max-w-prose text-sm text-ink-soft">
           The short version: I collect as little as possible, I don&apos;t sell
           any of it, and you can ask me to delete it anytime.
         </p>

@@ -91,9 +91,9 @@ export default function AnalyticsEventsPage() {
 
   return (
     <div className="px-gutter">
-      <div className="mx-auto max-w-3xl py-12 md:py-16">
+      <div className="mx-auto max-w-3xl pt-3 pb-4 md:pt-4 md:pb-5">
         <p className="eyebrow">Internal reference</p>
-        <h1 className="text-h2 mt-2">GA4 Event Tracking</h1>
+        <h1 className="text-h3 mt-1">GA4 Event Tracking</h1>
         <div className="mt-4 max-w-prose space-y-4 text-ink-soft">
           <p>
             Every custom event the site sends, generated from the registry in{" "}

@@ -87,7 +87,7 @@ export default async function GuidePage({ params }: Props) {
         }}
       />
 
-      <article className="mx-auto max-w-3xl py-12 md:py-16">
+      <article className="mx-auto max-w-3xl pt-3 pb-4 md:pt-4 md:pb-5">
         <header>
           <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
             {categoryLabels[guide.category]} ·{" "}
@@ -97,8 +97,8 @@ export default async function GuidePage({ params }: Props) {
               day: "numeric",
             })}
           </p>
-          <h1 className="text-h2 mt-4">{guide.title}</h1>
-          <p className="mt-4 max-w-prose text-ink-soft">{guide.description}</p>
+          <h1 className="text-h3 mt-1">{guide.title}</h1>
+          <p className="mt-1 max-w-prose text-sm text-ink-soft">{guide.description}</p>
         </header>
 
         {guide.cover && (

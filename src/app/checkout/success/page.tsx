@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 export default function CheckoutSuccessPage() {
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
-        <h1 className="text-h2">Order confirmed</h1>
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
+        <h1 className="text-h3">Order confirmed</h1>
       </header>
       <section className="mx-auto max-w-7xl pb-8">
         <Suspense

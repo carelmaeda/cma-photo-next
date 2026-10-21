@@ -59,12 +59,12 @@ export default async function RecipePage({ params }: Props) {
         }}
       />
 
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
         <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
           The recipe
         </p>
-        <h1 className="text-h2 mt-4">{recipe.name} — the settings</h1>
-        <p className="mt-3 max-w-prose text-ink-soft">
+        <h1 className="text-h3 mt-1">{recipe.name} — the settings</h1>
+        <p className="mt-1 max-w-prose text-sm text-ink-soft">
           {recipe.tagline} A {recipe.filmSimulation} look for{" "}
           {recipe.compatibility} bodies. Free, nothing to sign up for. Set it
           once, then forget the menus and go shoot.

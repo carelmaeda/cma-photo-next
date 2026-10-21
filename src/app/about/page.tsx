@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
-        <h1 className="text-h2">About</h1>
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
+        <h1 className="text-h3">About</h1>
       </header>
 
       <section className="mx-auto max-w-7xl">

@@ -44,9 +44,9 @@ export default async function AlbumPage({ params }: Props) {
 
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
-        <h1 className="text-h2">{album.title}</h1>
-        <p className="mt-3 max-w-prose text-ink-soft">{album.description}</p>
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
+        <h1 className="text-h3">{album.title}</h1>
+        <p className="mt-1 max-w-prose text-sm text-ink-soft">{album.description}</p>
       </header>
 
       <div className="mx-auto max-w-7xl">
@@ -73,7 +73,7 @@ export default async function AlbumPage({ params }: Props) {
         </aside>
       )}
 
-      <div className="mx-auto max-w-7xl py-12">
+      <div className="mx-auto max-w-7xl py-8">
         <Link
           href="/gallery"
           className="text-cap font-mono tracking-frame uppercase hover:text-indigo"

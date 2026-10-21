@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
-import { FrameCaption } from "@/components/frame-caption";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { recipes, presets } from "@/content/recipes";
 import { social } from "@/lib/seo";
@@ -18,39 +17,36 @@ export const metadata: Metadata = {
 export default function RecipesPage() {
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
         <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
           Free, full settings
         </p>
-        <h1 className="text-display mt-4 leading-[1.05]">Recipes</h1>
-        <p className="mt-6 max-w-prose text-ink-soft">
+        <h1 className="text-h3 mt-1">Recipes</h1>
+        <p className="mt-1 max-w-prose text-sm text-ink-soft">
           The in-camera looks behind my photos. Every setting is on the page,
           free. Dial it in, save it to a custom slot, go shoot.
         </p>
       </header>
 
       <section className="mx-auto max-w-7xl">
-        <ul className="grid gap-x-5 gap-y-12 sm:grid-cols-2">
+        <ul className="grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {recipes.map((recipe) => (
             <li key={recipe.slug}>
               <Link href={`/recipes/${recipe.slug}`} className="group block">
                 {recipe.sampleFrames[0] ? (
-                  <>
-                    <CldImage
-                      photo={recipe.sampleFrames[0]}
-                      width={1200}
-                      height={1500}
-                      crop="fill"
-                      gravity="auto"
-                      sizes="(min-width: 640px) 50vw, 100vw"
-                      className="w-full border border-line transition-opacity group-hover:opacity-90"
-                    />
-                    <FrameCaption city={recipe.sampleFrames[0].city} className="mt-3" />
-                  </>
+                  <CldImage
+                    photo={recipe.sampleFrames[0]}
+                    width={800}
+                    height={1000}
+                    crop="fill"
+                    gravity="auto"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="w-full border border-line transition-opacity group-hover:opacity-90"
+                  />
                 ) : (
                   /* No frames yet: a typographic card in the same 4:5 box, so
                      the grid stays even and nothing pretends to be the look. */
-                  <div className="flex aspect-[4/5] w-full flex-col justify-end border border-line bg-paper-2 p-6 transition-colors group-hover:border-indigo">
+                  <div className="flex aspect-4/5 w-full flex-col justify-end border border-line bg-paper-2 p-6 transition-colors group-hover:border-indigo">
                     <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
                       {recipe.filmSimulation}
                     </p>

@@ -17,9 +17,9 @@ export default function GuidesPage() {
 
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
-        <h1 className="text-h2">Blog</h1>
-        <p className="mt-3 max-w-prose text-ink-soft">
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
+        <h1 className="text-h3">Blog</h1>
+        <p className="mt-1 max-w-prose text-sm text-ink-soft">
           Things I&apos;ve figured out, written down properly. No filler.
         </p>
       </header>

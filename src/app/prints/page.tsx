@@ -23,8 +23,8 @@ export default function PrintsPage() {
 
   return (
     <div className="px-gutter">
-      <header className="mx-auto max-w-7xl py-12 md:py-16">
-        <h1 className="text-h2">Prints</h1>
+      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
+        <h1 className="text-h3">Prints</h1>
         <div className="mt-3 max-w-prose space-y-4 text-ink-soft">
           <p>
             Frames I&apos;d hang myself, as full-resolution digital files. Print

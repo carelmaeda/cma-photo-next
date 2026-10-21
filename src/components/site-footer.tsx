@@ -7,7 +7,7 @@ const small = "text-cap font-mono tracking-frame uppercase text-ink-soft";
 export function SiteFooter() {
   return (
     <footer className="px-gutter mt-section">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 py-12">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 py-8">
         <ul data-ga-nav="footer" className="flex items-center gap-8">
           <li>
             <InstagramLink
