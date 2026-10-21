@@ -43,26 +43,32 @@ export function AlbumGallery({ title, photos }: AlbumGalleryProps) {
   return (
     <>
       <ul className="masonry">
-        {photos.map((photo, i) => (
-          <li key={photo.publicId + i}>
-            <button
-              type="button"
-              onClick={() => show(i)}
-              aria-label={`Open photo: ${photo.alt}`}
-              className="group block w-full cursor-zoom-in text-left"
-            >
-              <CldImage
-                photo={photo}
-                width={800}
-                height={1000}
-                crop="fill"
-                gravity="auto"
-                sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
-                className="w-full border border-line transition-opacity group-hover:opacity-90"
-              />
-            </button>
-          </li>
-        ))}
+        {photos.map((photo, i) => {
+          // Reserve each photo's real aspect so the CSS columns don't reflow as
+          // images arrive. Photos imported before dimensions were recorded fall
+          // back to a 4:5 crop.
+          const natural = Boolean(photo.width && photo.height);
+
+          return (
+            <li key={photo.publicId + i}>
+              <button
+                type="button"
+                onClick={() => show(i)}
+                aria-label={`Open photo: ${photo.alt}`}
+                className="group block w-full cursor-zoom-in text-left"
+              >
+                <CldImage
+                  photo={photo}
+                  crop={natural ? "limit" : "fill"}
+                  width={natural ? photo.width : 800}
+                  height={natural ? photo.height : 1000}
+                  sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
+                  className="h-auto w-full border border-line transition-opacity group-hover:opacity-90"
+                />
+              </button>
+            </li>
+          );
+        })}
       </ul>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -96,6 +102,7 @@ export function AlbumGallery({ title, photos }: AlbumGalleryProps) {
                 width={1800}
                 height={1800}
                 crop="limit"
+                quality="good"
                 sizes="92vw"
                 className="max-h-[78svh] w-auto max-w-full object-contain"
               />
