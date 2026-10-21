@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { albums, getAlbum } from "@/content/albums";
+import { realAlbums, getAlbum } from "@/content/albums";
 import { AlbumGallery } from "@/components/album-gallery";
 import { getAllGuides } from "@/lib/guides";
 import { social, ogImageUrl } from "@/lib/seo";
@@ -11,19 +11,17 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  return albums.map((album) => ({ slug: album.slug }));
+  return realAlbums.map((album) => ({ slug: album.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const album = getAlbum(slug);
-  if (!album) return {};
+  if (!album || album.placeholderImages) return {};
 
   return {
     title: `${album.title}, ${album.country}`,
     description: album.description,
-    // Albums still showing placeholder images stay out of Google (SPEC.md §6)
-    robots: album.placeholderImages ? { index: false } : undefined,
     ...social(
       `${album.title}, ${album.country}`,
       album.description,
@@ -34,8 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function AlbumPage({ params }: Props) {
   const { slug } = await params;
+  // Albums awaiting re-upload (placeholderImages) are not served at all.
   const album = getAlbum(slug);
-  if (!album) notFound();
+  if (!album || album.placeholderImages) notFound();
 
   // Reverse side of the internal-link lattice (SPEC §6): surface any blog post
   // that links to this album, derived from guide frontmatter `related.albums`.

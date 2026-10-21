@@ -12,7 +12,7 @@ interface RelatedLinksProps {
 export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
   const albumLinks = albums
     .map((slug) => ({ slug, album: getAlbum(slug) }))
-    .filter((entry) => entry.album);
+    .filter((entry) => entry.album && !entry.album.placeholderImages);
 
   return (
     <aside className="mt-14 border-t border-line pt-8">

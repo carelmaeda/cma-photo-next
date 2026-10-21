@@ -22,7 +22,7 @@ export interface Album {
   description: string;
   cover: Photo;
   photos: Photo[];
-  /** True while an album still shows another city's images — page gets noindex */
+  /** True while the album's photos are not live on Cloudinary (placeholder or awaiting re-upload). Hidden everywhere; its page 404s. */
   placeholderImages?: boolean;
 }
 
