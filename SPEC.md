@@ -59,7 +59,7 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 **Old → new 301s** (`netlify.toml`): `/albums/* → /gallery/*`, `/guides/* → /blog/*`, `/recipes/* → /downloads/*`, `/gear → /about`.
 
 > **Launch-light amendment (August 4, 2026 — see §10).** While `siteConfig.features` flags are off, the shipped IA is:
-> - **Nav:** Home · Recipes · Gallery · Blog · About (built from the flags in `src/lib/nav.ts`; the cart icon renders only with `features.store`). Contact was removed earlier — Instagram is the contact channel. *(Gallery returned to the nav on October 20, 2026; it was Home · Recipes · Blog · About before that.)*
+> - **Nav:** Home · Recipes · Blog · About (built from the flags in `src/lib/nav.ts`; the cart icon renders only with `features.store`). Contact was removed earlier — Instagram is the contact channel. *(Gallery returned to the nav on October 20, 2026 and left it again on October 21, 2026: the home page is now the album wall, so /gallery and album pages stay live without a nav item.)*
 > - **`/links`** (added October 20, 2026) is the Instagram bio landing page: avatar, one-line bio, full-width buttons to each recipe, Gallery, Blog, Threads, plus the newsletter form (`source="links"`). `noindex, follow`; not in nav, footer, or `sitemap.ts`.
 > - **New canonical section:** `/recipes` (hub) + `/recipes/[slug]` — free Fujifilm recipes with full settings, plus free Lightroom preset downloads from `public/presets/`.
 > - **301s while the store is parked:** `/downloads → /recipes`, `/downloads/vanilla-summer-recipe-card` and `/downloads/vanilla-summer` → `/recipes/vanilla-summer`, `/downloads/* → /recipes`. The old `/recipes/* → /downloads/*` rules are **removed** (they would hijack the new pages).

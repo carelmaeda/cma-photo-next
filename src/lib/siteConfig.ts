@@ -44,7 +44,7 @@ export const siteConfig = {
    */
   features: {
     store: false, // /downloads catalog + product pages + cart widget + nav item
-    gallery: true, // Gallery nav item + homepage latest-work strip (on since October 20, 2026)
+    gallery: false, // Gallery nav item only; /gallery and album pages stay live (off since October 21, 2026, the home page is the album wall)
     prints: false, // Prints nav item (page itself is already noindex)
   } as { store: boolean; gallery: boolean; prints: boolean },
 } as const;
