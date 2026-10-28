@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { InstagramLink } from "@/components/instagram-link";
-import { social } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
 const description =
   "What this site collects, why, and how to get your data removed. Short version: your email if you give it, purchase details via Stripe, and anonymous analytics.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy",
   description,
-  ...social("Privacy", description),
-};
+  path: "/privacy",
+});
 
 /*
  * TODO (owner): read this before launch and make sure every claim matches how

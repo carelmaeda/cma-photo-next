@@ -4,9 +4,9 @@
  */
 export const siteConfig = {
   name: "Carel Maeda",
-  title: "Carel Maeda — Travel & Fujifilm Photography",
+  title: "Carel Maeda: Fujifilm Recipes and Travel Photography",
   description:
-    "Travel photography from a Fujifilm shooter. São Paulo made, Toronto based. Free Fujifilm recipes, city galleries, and notes on shooting JPG straight out of camera.",
+    "Free Fujifilm recipes with every setting listed, travel photography city by city, and notes on shooting JPG straight out of camera. São Paulo made, Toronto based.",
   url: "https://photo.carelmaeda.com",
   instagram: "https://instagram.com/carel011",
   threads: "https://threads.net/@carel011",
@@ -17,7 +17,7 @@ export const siteConfig = {
   forms: {
     newsletter: "newsletter",
   },
-  /** Google Analytics 4 — gtag.js is injected by <Analytics> (@next/third-parties). */
+  /** Google Analytics 4 — <Analytics> inlines the gtag stub and loads gtag.js after window load. */
   analytics: {
     enabled: true,
     gaId: "G-EQRSTMDRHZ",

@@ -3,12 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
-import { JsonLd } from "@/components/json-ld";
+import { JsonLd, breadcrumbList, personRef } from "@/components/json-ld";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { recipes, getRecipe, presets } from "@/content/recipes";
 import { getGuide } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
-import { social, ogImageUrl, defaultOgImage } from "@/lib/seo";
+import { pageMetadata, ogImageUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -23,19 +23,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const recipe = getRecipe(slug);
   if (!recipe) return {};
 
-  const description = `The full ${recipe.name} Fujifilm recipe, free. A ${recipe.filmSimulation} look for ${recipe.compatibility} bodies, every setting listed.`;
-
-  return {
-    title: `${recipe.name} — the settings`,
-    description,
-    ...social(
-      `${recipe.name} — the settings`,
-      description,
-      recipe.sampleFrames[0]
-        ? ogImageUrl(recipe.sampleFrames[0].publicId)
-        : defaultOgImage,
-    ),
-  };
+  return pageMetadata({
+    title: `${recipe.name}: ${recipe.filmSimulation} Fujifilm Recipe`,
+    description: `Free Fujifilm recipe: ${recipe.name}, a ${recipe.filmSimulation} look for ${recipe.compatibility} bodies. Every setting listed. ${recipe.tagline}`,
+    path: `/recipes/${recipe.slug}`,
+    image: recipe.sampleFrames[0]
+      ? ogImageUrl(recipe.sampleFrames[0].publicId)
+      : undefined,
+    keywords: [
+      `${recipe.name} Fujifilm recipe`,
+      `${recipe.filmSimulation} recipe`,
+      `Fujifilm ${recipe.filmSimulation} recipe`,
+      "X-Trans IV recipes",
+      "X-Trans V recipes",
+      "X100V recipes",
+      "Fujifilm JPEG settings",
+    ],
+  });
 }
 
 export default async function RecipePage({ params }: Props) {
@@ -44,26 +48,35 @@ export default async function RecipePage({ params }: Props) {
   if (!recipe) notFound();
 
   const guide = recipe.guideSlug ? getGuide(recipe.guideSlug) : undefined;
+  const others = recipes.filter((entry) => entry.slug !== recipe.slug);
 
   return (
     <div className="px-gutter">
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
-            { "@type": "ListItem", position: 2, name: "Recipes", item: `${siteConfig.url}/recipes` },
-            { "@type": "ListItem", position: 3, name: recipe.name },
-          ],
+          "@type": "TechArticle",
+          headline: `${recipe.name}: a ${recipe.filmSimulation} Fujifilm recipe`,
+          description: recipe.tagline,
+          url: `${siteConfig.url}/recipes/${recipe.slug}`,
+          author: personRef,
+          about: { "@type": "Thing", name: "Fujifilm film simulation recipes" },
+          keywords: `${recipe.name}, ${recipe.filmSimulation}, ${recipe.compatibility}, Fujifilm recipe`,
         }}
+      />
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Recipes", path: "/recipes" },
+          { name: recipe.name },
+        ])}
       />
 
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
         <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-          The recipe
+          Free, full settings
         </p>
-        <h1 className="text-h3 mt-1">{recipe.name} — the settings</h1>
+        <h1 className="text-h3 mt-1">{recipe.name} Fujifilm recipe</h1>
         <p className="mt-1 max-w-prose text-sm text-ink-soft">
           {recipe.tagline} A {recipe.filmSimulation} look for{" "}
           {recipe.compatibility} bodies. Free, nothing to sign up for. Set it
@@ -115,6 +128,24 @@ export default async function RecipePage({ params }: Props) {
                 {guide.title}
               </Link>
               .
+            </p>
+          )}
+          {others.length > 0 && (
+            <p>
+              I also publish{" "}
+              {others.map((other, i) => (
+                <span key={other.slug}>
+                  {i > 0 && ", "}
+                  <Link
+                    href={`/recipes/${other.slug}`}
+                    className="underline hover:text-indigo"
+                  >
+                    {other.name}
+                  </Link>{" "}
+                  ({other.filmSimulation})
+                </span>
+              ))}
+              . Same deal: free, every setting on the page.
             </p>
           )}
         </div>

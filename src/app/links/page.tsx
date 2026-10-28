@@ -3,12 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
+import { RecipeCover } from "@/components/recipe-cover";
 import { realAlbums } from "@/content/albums";
 import { recipes } from "@/content/recipes";
 import { getAllGuides } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
-import { social } from "@/lib/seo";
-import type { Photo } from "@/lib/types";
+import { pageMetadata } from "@/lib/seo";
+import type { Photo, Recipe } from "@/lib/types";
 
 /**
  * Link-in-bio landing page — the URL in the Instagram profile. One column of
@@ -19,12 +20,12 @@ import type { Photo } from "@/lib/types";
 const description =
   "Where to find my free Fujifilm recipes, the gallery, and the blog.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Links",
   description,
-  robots: { index: false, follow: true },
-  ...social("Links", description),
-};
+  path: "/links",
+  noindex: true,
+});
 
 interface LinkRow {
   href: string;
@@ -32,22 +33,22 @@ interface LinkRow {
   /** Mono caption under the label. */
   note: string;
   external: boolean;
-  /** Cloudinary thumb; without one the row shows a typographic tile. */
+  /** Cloudinary thumb; a recipe without one shows its RecipeCover. */
   photo?: Photo;
-  /** Letters for the typographic tile when there's no photo. */
-  tile?: string;
+  recipe?: Recipe;
 }
 
 const latestGuide = getAllGuides()[0];
 
 const links: LinkRow[] = [
-  ...recipes.map((recipe) => ({
+  // Midnight Espresso stays on /recipes but off the bio page.
+  ...recipes.filter((recipe) => recipe.slug !== "midnight-espresso").map((recipe) => ({
     href: `/recipes/${recipe.slug}`,
     label: `${recipe.name} recipe`,
     note: `Free · ${recipe.filmSimulation}`,
     external: false,
     photo: recipe.sampleFrames[0],
-    tile: recipe.filmSimulation,
+    recipe,
   })),
   {
     href: "/gallery",
@@ -87,24 +88,21 @@ function Thumb({ link }: { link: LinkRow }) {
       />
     );
   }
+  if (link.recipe) {
+    return <RecipeCover recipe={link.recipe} variant="thumb" />;
+  }
   if (link.external) {
     return (
       <Image
-        src="/avatar-circle.png"
+        src="/carel-logo-ink.svg"
         alt=""
-        width={64}
-        height={64}
-        className="size-16 shrink-0 rounded-full"
+        width={1869}
+        height={1059}
+        className="size-16 shrink-0 object-contain"
       />
     );
   }
-  // No frames yet (Midnight Espresso): a typographic tile, so nothing
-  // pretends to be the look.
-  return (
-    <span className="flex size-16 shrink-0 items-end bg-ink p-2 font-mono text-micro leading-tight tracking-frame text-paper uppercase">
-      {link.tile}
-    </span>
-  );
+  return null;
 }
 
 function RowBody({ link }: { link: LinkRow }) {
@@ -131,16 +129,16 @@ export default function LinksPage() {
     <div className="px-gutter">
       <section className="mx-auto flex max-w-md flex-col items-center py-10 text-center md:py-16">
         <Image
-          src="/avatar-circle.png"
+          src="/carel-logo-ink.svg"
           alt={siteConfig.name}
-          width={96}
-          height={96}
+          width={1869}
+          height={1059}
           priority
-          className="size-24 rounded-full"
+          className="h-auto w-32"
         />
-        <h1 className="text-h2 mt-5">{siteConfig.name}</h1>
+        <h1 className="text-h2 mt-5 hidden">{siteConfig.name}</h1>
         <p className="mt-2 text-ink-soft">
-          Travel and street photographer. Toronto, from São Paulo.
+          Travel photographer. Toronto, from São Paulo.
         </p>
 
         <ul data-ga-nav="links" className="mt-8 w-full space-y-3">

@@ -2,26 +2,46 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
+import { JsonLd, itemList } from "@/components/json-ld";
+import { RecipeCover } from "@/components/recipe-cover";
 import { recipes, presets } from "@/content/recipes";
-import { social } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
-const description =
-  "My Fujifilm recipes, free with every setting listed. The in-camera looks behind my photos, plus Lightroom presets for people who edit.";
+const description = `Free Fujifilm film simulation recipes for X-Trans IV and V bodies: ${recipes
+  .map((recipe) => `${recipe.name} on ${recipe.filmSimulation}`)
+  .join(", ")}. Every setting listed, nothing gated.`;
 
-export const metadata: Metadata = {
-  title: "Fujifilm Recipes",
+export const metadata: Metadata = pageMetadata({
+  title: "Free Fujifilm Recipes, Full Settings",
   description,
-  ...social("Fujifilm Recipes", description),
-};
+  path: "/recipes",
+  keywords: [
+    "free Fujifilm recipes",
+    "Fujifilm X-Trans IV recipes",
+    "Fujifilm X-Trans V recipes",
+    "X100V film simulation recipes",
+    "Fujifilm JPEG settings",
+    "Fujifilm Lightroom presets",
+  ],
+});
 
 export default function RecipesPage() {
   return (
     <div className="px-gutter">
+      <JsonLd
+        data={itemList(
+          "Fujifilm recipes",
+          recipes.map((recipe) => ({
+            name: recipe.name,
+            path: `/recipes/${recipe.slug}`,
+          }))
+        )}
+      />
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
         <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
           Free, full settings
         </p>
-        <h1 className="text-h3 mt-1">Recipes</h1>
+        <h1 className="text-h3 mt-1">Fujifilm recipes</h1>
         <p className="mt-1 max-w-prose text-sm text-ink-soft">
           The in-camera looks behind my photos. Every setting is on the page,
           free. Dial it in, save it to a custom slot, go shoot.
@@ -44,16 +64,12 @@ export default function RecipesPage() {
                     className="w-full border border-line transition-opacity group-hover:opacity-90"
                   />
                 ) : (
-                  /* No frames yet: a typographic card in the same 4:5 box, so
+                  /* No frames yet: a typographic cover in the same 4:5 box, so
                      the grid stays even and nothing pretends to be the look. */
-                  <div className="flex aspect-4/5 w-full flex-col justify-end border border-line bg-paper-2 p-6 transition-colors group-hover:border-indigo">
-                    <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-                      {recipe.filmSimulation}
-                    </p>
-                    <p className="font-display mt-3 text-2xl font-semibold leading-tight">
-                      {recipe.name}
-                    </p>
-                  </div>
+                  <RecipeCover
+                    recipe={recipe}
+                    className="transition-opacity group-hover:opacity-90"
+                  />
                 )}
                 <h2 className="mt-3 font-display text-xl font-semibold group-hover:text-indigo">
                   {recipe.name}

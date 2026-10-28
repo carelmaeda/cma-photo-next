@@ -146,11 +146,12 @@ Handwritten mark only — never re-typed. Assets in `carel-brand-kit/assets/` (c
 
 1. Every page exports unique `metadata` — title (`<Page> — Carel Maeda`), description, OpenGraph + Twitter card with a real image.
 2. `sitemap.ts` + `robots.ts` generated from routes + portfolio/blog/product slugs. New routes must be added.
-3. JSON-LD: `Person` site-wide; `Article` + `BreadcrumbList` on blog posts; `Product` + `Offer` on paid recipe/print detail pages.
+3. JSON-LD: `Person` + `WebSite` site-wide (one `@id` each, referenced by every page); `Article` + `BreadcrumbList` on blog posts; `TechArticle` + `BreadcrumbList` on recipe pages; `ImageGallery` with per-photo `ImageObject` (creator/credit) + `BreadcrumbList` on albums; `ProfilePage` on /about; `CollectionPage`/`ItemList` on hubs; `Product` + `Offer` on paid recipe/print detail pages.
 4. Meaningful `alt` on every image (type-enforced).
 5. Lighthouse ≥ 90 Performance and SEO on `/`, one `/portfolio/[slug]`, one `/blog/[slug]`.
 6. Internal-link lattice: every blog post links ≥1 portfolio album + `/recipes` + `/about`; albums link back to related posts.
 7. Placeholder-image albums (see §7) get `noindex` until real photos are uploaded. Checkout/success and cart pages are `noindex`.
+8. Every page declares its metadata through `pageMetadata()` in `src/lib/seo.ts`: it sets the canonical URL (`alternates.canonical`), keywords, and OpenGraph/Twitter with `siteName` + `url`. No page builds these by hand. The default share image must be a publicId that exists on Cloudinary.
 
 ---
 
@@ -252,7 +253,7 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 
 | Flag | Off (launch) | What flipping it on restores |
 |---|---|---|
-| `store` | `/downloads*` 301s to `/recipes` (in-page + netlify.toml), no cart icon, no Downloads nav item, products out of sitemap | The Stripe store exactly as built — also **reinstate the store redirects in `netlify.toml`** (remove the `/downloads → /recipes` rules) |
+| `store` | `/downloads*` 301s to `/recipes` (in-page + netlify.toml), no cart icon, no Downloads nav item, products out of sitemap, no CartProvider mounted, `/cart` + `/checkout/success` redirect to `/recipes` | The Stripe store exactly as built — also **reinstate the store redirects in `netlify.toml`** (remove the `/downloads → /recipes` rules) |
 | `gallery` | Gallery out of nav; `/gallery*` still renders and is indexed | Gallery nav item. **On since October 20, 2026** (Phase 7). Since Phase 8 the home album wall renders regardless of this flag. |
 | `prints` | Prints out of nav (page was already noindex) | Prints nav item |
 

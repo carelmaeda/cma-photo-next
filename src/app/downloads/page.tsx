@@ -6,16 +6,16 @@ import { ProductCard } from "@/components/product-card";
 import { storeProducts } from "@/content/products";
 import { getAllGuides, categoryLabels } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
-import { social } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
 const description =
   "Digital downloads from a Fujifilm shooter — recipes and prints, delivered as instant files after checkout.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Digital Downloads",
   description,
-  ...social("Digital Downloads", description),
-};
+  path: "/downloads",
+});
 
 export default function DownloadsPage() {
   // Store is parked in launch-light mode (SPEC §10); netlify.toml mirrors this 301.

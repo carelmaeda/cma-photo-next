@@ -34,7 +34,7 @@ export const albums: Album[] = [
     title: "London",
     country: "United Kingdom",
     placeholderImages: true,
-    description: "Grey light and good contrast. London street photography on Fujifilm.",
+    description: "Grey light and good contrast. London travel photography on Fujifilm.",
     cover: { publicId: "Europe/England/London/DSCF4067_u2jdmv", alt: "Travel photograph from London, United Kingdom", city: "London" },
     photos: [
       { publicId: "Europe/England/London/DSCF2923_ldbbel", alt: "Travel photograph from London, United Kingdom", city: "London" },

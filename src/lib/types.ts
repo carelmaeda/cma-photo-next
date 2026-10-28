@@ -67,6 +67,8 @@ export interface Recipe {
   /** Bodies the recipe targets, e.g. "X-Trans IV / V". */
   compatibility: string;
   settings: RecipeSetting[];
+  /** Background of the typographic RecipeCover. */
+  coverTone: "brick" | "ink";
   sampleFrames: Photo[];
   /** Slug of the blog post that explains the recipe, if one exists. */
   guideSlug?: string;
@@ -126,6 +128,10 @@ export interface GuideFrontmatter {
   title: string;
   description: string;
   date: string;
+  /** ISO date of the last real revision. Feeds dateModified + the sitemap. */
+  updated?: string;
+  /** Search phrases this post targets; prepended to the site-wide list. */
+  keywords?: string[];
   category: "recipe-guide" | "city-guide" | "craft";
   /** True = keep the file but publish nowhere (index, sitemap, params, teasers). */
   draft?: boolean;

@@ -6,7 +6,7 @@ import { AddToCart } from "@/components/add-to-cart";
 import { JsonLd } from "@/components/json-ld";
 import { getProduct, paidProducts, priceLabel, isLive } from "@/content/products";
 import { siteConfig } from "@/lib/siteConfig";
-import { social, ogImageUrl } from "@/lib/seo";
+import { pageMetadata, ogImageUrl } from "@/lib/seo";
 
 export function generateStaticParams() {
   return paidProducts("print").map((p) => ({ slug: p.slug }));
@@ -20,11 +20,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = getProduct("print", slug);
   if (!product) return {};
-  return {
+  return pageMetadata({
     title: `${product.name} — digital print`,
     description: product.description,
-    ...social(product.name, product.description, ogImageUrl(product.image.publicId)),
-  };
+    path: `/prints/${product.slug}`,
+    image: ogImageUrl(product.image.publicId),
+  });
 }
 
 export default async function PrintProductPage({

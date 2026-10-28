@@ -2,16 +2,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { gear, gearCategories } from "@/content/gear";
 import { InstagramLink } from "@/components/instagram-link";
-import { social } from "@/lib/seo";
+import { JsonLd, personId } from "@/components/json-ld";
+import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/siteConfig";
 
 const description =
-  "São Paulo made, Toronto based. Why I shoot Fujifilm, why JPG only, why one prime lens is enough — and the short list of gear I actually carry.";
+  "São Paulo made, Toronto based. Why I shoot Fujifilm JPG only with no editing, why one prime is enough, and the gear I carry: GFX100RF, X100V, X-Pro3, Leica M5.";
 
-export const metadata: Metadata = {
-  title: "About",
+export const metadata: Metadata = pageMetadata({
+  title: "About: Fujifilm Travel Photographer in Toronto",
   description,
-  ...social("About", description),
-};
+  path: "/about",
+  keywords: [
+    "Carel Maeda photographer",
+    "travel photographer Toronto",
+    "Fujifilm photographer",
+    "GFX100RF",
+    "X100V",
+  ],
+});
 
 /*
  * TODO (owner): this story is a first draft in your voice — read it, correct
@@ -21,6 +30,23 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="px-gutter">
+      {/* ProfilePage: tells Google this URL is the photographer's own page. */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          url: `${siteConfig.url}/about`,
+          mainEntity: {
+            "@type": "Person",
+            "@id": personId,
+            name: siteConfig.name,
+            url: siteConfig.url,
+            jobTitle: "Travel photographer",
+            description,
+            sameAs: [siteConfig.instagram, siteConfig.threads],
+          },
+        }}
+      />
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
         <h1 className="text-h3">About</h1>
       </header>

@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InstagramLink } from "@/components/instagram-link";
-import { social } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
 const description =
   "The plain-language terms for buying digital downloads here: what you get, what you can do with it, and how refunds work.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms & refunds",
   description,
-  ...social("Terms & refunds", description),
-};
+  path: "/terms",
+});
 
 /*
  * TODO (owner): confirm the refund window and license wording match what

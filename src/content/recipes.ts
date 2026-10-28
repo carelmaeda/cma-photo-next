@@ -7,10 +7,11 @@ import type { Photo, PresetFile, Recipe } from "@/lib/types";
  */
 
 /**
- * Sample frames from the Vanilla Summer look. Also used as store product
- * imagery while the store is parked.
- * TODO (owner): replace with frames actually shot on Vanilla Summer and add
- * recipe: "Vanilla Summer" to each — captions stay honest until then.
+ * Placeholder frames, kept only as store product imagery while the store is
+ * parked. Not shot on the recipe, so Vanilla Summer itself shows its
+ * typographic RecipeCover instead.
+ * TODO (owner): when there are frames actually shot on Vanilla Summer, put
+ * them in the recipe's sampleFrames with recipe: "Vanilla Summer" on each.
  */
 export const sampleFrames: Photo[] = [
   {
@@ -72,7 +73,8 @@ export const recipes: Recipe[] = [
       { label: "ISO", value: "Auto · 640 to 6400" },
       { label: "Exposure Compensation", value: "+1/3 to +2/3" },
     ],
-    sampleFrames,
+    coverTone: "brick",
+    sampleFrames: [],
     guideSlug: "vanilla-summer-recipe-explained",
   },
   {
@@ -97,6 +99,7 @@ export const recipes: Recipe[] = [
       { label: "ISO", value: "Auto · max 6400" },
       { label: "Exposure Compensation", value: "+1/3 to +2/3" },
     ],
+    coverTone: "ink",
     // TODO (owner): add 2-3 Cloudinary publicIds of frames shot on Midnight
     // Espresso (Acros). Every existing frame is colour, so the card and the
     // "Shot on" section stay photo-less rather than showing the wrong look.

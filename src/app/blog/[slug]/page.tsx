@@ -6,11 +6,13 @@ import remarkGfm from "remark-gfm";
 import { getAllGuides, getGuide, categoryLabels } from "@/lib/guides";
 import { mdxComponents } from "@/components/mdx-components";
 import { RelatedLinks } from "@/components/related-links";
-import { JsonLd } from "@/components/json-ld";
+import { JsonLd, breadcrumbList, personRef } from "@/components/json-ld";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
+import { RecipeCover } from "@/components/recipe-cover";
+import { recipes } from "@/content/recipes";
 import { siteConfig } from "@/lib/siteConfig";
-import { ogImageUrl, defaultOgImage } from "@/lib/seo";
+import { pageMetadata, ogImageUrl, defaultOgImage } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -25,27 +27,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const guide = getGuide(slug);
   if (!guide) return {};
 
-  const ogImage = guide.cover ? ogImageUrl(guide.cover.publicId) : defaultOgImage;
-
-  return {
+  return pageMetadata({
     title: guide.title,
     description: guide.description,
-    openGraph: {
-      title: `${guide.title} — ${siteConfig.name}`,
-      description: guide.description,
-      type: "article",
+    path: `/blog/${guide.slug}`,
+    image: guide.cover ? ogImageUrl(guide.cover.publicId) : undefined,
+    keywords: guide.keywords,
+    article: {
       publishedTime: guide.date,
-      images: [{ url: ogImage, width: 1200, height: 630 }],
+      modifiedTime: guide.updated,
+      section: categoryLabels[guide.category],
+      tags: guide.keywords,
     },
-    // Without this, the twitter block inherits the root layout's — generic
-    // site title + default image on an article share.
-    twitter: {
-      card: "summary_large_image",
-      title: `${guide.title} — ${siteConfig.name}`,
-      description: guide.description,
-      images: [ogImage],
-    },
-  };
+  });
 }
 
 export default async function GuidePage({ params }: Props) {
@@ -55,6 +49,8 @@ export default async function GuidePage({ params }: Props) {
 
   const guides = getAllGuides();
   const index = guides.findIndex((entry) => entry.slug === guide.slug);
+  // A recipe explainer without its own photo leads with the recipe's cover.
+  const recipe = recipes.find((entry) => entry.guideSlug === guide.slug);
   const prev = guides[index + 1];
   const next = guides[index - 1];
 
@@ -67,24 +63,21 @@ export default async function GuidePage({ params }: Props) {
           headline: guide.title,
           description: guide.description,
           datePublished: guide.date,
-          author: {
-            "@type": "Person",
-            name: siteConfig.name,
-            url: siteConfig.url,
-          },
-          ...(guide.cover && { image: ogImageUrl(guide.cover.publicId) }),
+          dateModified: guide.updated ?? guide.date,
+          author: personRef,
+          publisher: personRef,
+          mainEntityOfPage: `${siteConfig.url}/blog/${guide.slug}`,
+          articleSection: categoryLabels[guide.category],
+          ...(guide.keywords && { keywords: guide.keywords.join(", ") }),
+          image: guide.cover ? ogImageUrl(guide.cover.publicId) : defaultOgImage,
         }}
       />
       <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
-            { "@type": "ListItem", position: 2, name: "Blog", item: `${siteConfig.url}/blog` },
-            { "@type": "ListItem", position: 3, name: guide.title },
-          ],
-        }}
+        data={breadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: guide.title },
+        ])}
       />
 
       <article className="mx-auto max-w-3xl pt-3 pb-4 md:pt-4 md:pb-5">
@@ -101,6 +94,9 @@ export default async function GuidePage({ params }: Props) {
           <p className="mt-1 max-w-prose text-sm text-ink-soft">{guide.description}</p>
         </header>
 
+        {!guide.cover && recipe && (
+          <RecipeCover recipe={recipe} variant="wide" className="mt-10" />
+        )}
         {guide.cover && (
           <figure className="mt-10">
             <CldImage
