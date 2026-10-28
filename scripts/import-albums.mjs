@@ -67,10 +67,12 @@ async function api(pathname, init = {}) {
 // Only needed for folders that are not in albums.ts yet; parked albums keep
 // the metadata they already have.
 const TARGETS = {
+  "Belem": { slug: "belem", title: "Belém", country: "Portugal", description: "The Monument to the Discoveries, the Jerónimos towers, and the Tagus in flat summer light." },
   "Casablanca": { slug: "casablanca", title: "Casablanca", country: "Morocco", description: "White walls, Atlantic haze, and the Hassan II mosque at the edge of the water." },
   "Iceland": { slug: "iceland", title: "Iceland", country: "Iceland", description: "Black sand, moss, and weather that changes faster than I can change lenses." },
   "Lima": { slug: "lima", title: "Lima", country: "Peru", description: "Cliffs over the Pacific and colonial balconies in the centro." },
   "Lisbon": { slug: "lisbon", title: "Lisbon", country: "Portugal", description: "Azulejos, trams, and the kind of light that makes every hill worth it." },
+  "Milan": { slug: "milan", title: "Milan", country: "Italy", description: "Trams past the Duomo, the glass roof of the Galleria, and espresso at a marble counter." },
   "Montreal": { slug: "montreal", title: "Montreal", country: "Canada", description: "Spiral staircases, old port stone, and long winters I keep going back to." },
   "Paris": { slug: "paris", title: "Paris", country: "France", description: "Grey rooftops and the Seine. Paris photographed the way it actually looks." },
   "Punta Cana": { slug: "punta-cana", title: "Punta Cana", country: "Dominican Republic", description: "Palms, white sand, and Caribbean light that needs no help from a recipe." },
