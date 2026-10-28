@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { CheckoutSuccess } from "@/components/checkout-success";
+import { siteConfig } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
   title: "Order confirmed",
@@ -8,6 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function CheckoutSuccessPage() {
+  // Store parked (SPEC §10): no CartProvider is mounted, so this page can't
+  // render. Nothing can have been bought while the store is off.
+  if (!siteConfig.features.store) redirect("/recipes");
+
   return (
     <div className="px-gutter">
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">

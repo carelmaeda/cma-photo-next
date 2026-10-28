@@ -3,11 +3,10 @@ import { Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
 import { siteConfig } from "@/lib/siteConfig";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { PersonJsonLd } from "@/components/json-ld";
+import { PersonJsonLd, WebSiteJsonLd } from "@/components/json-ld";
 import { Analytics } from "@/components/analytics";
 import { AnalyticsTracking } from "@/components/analytics-tracking";
-import { CartProvider } from "@/lib/cart";
-import { defaultOgImage } from "@/lib/seo";
+import { defaultOgImage, siteKeywords } from "@/lib/seo";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -31,6 +30,10 @@ export const metadata: Metadata = {
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  keywords: siteKeywords,
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -54,11 +57,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Store on: the cart context wraps the tree. Store off (SPEC §10): the
+  // module is never imported, so none of it (context, two localStorage
+  // effects) reaches the client. A static import or next/dynamic here would
+  // ship it to every page regardless, because the flag is a runtime value
+  // the bundler can't fold away.
+  const CartProvider = siteConfig.features.store
+    ? (await import("@/lib/cart")).CartProvider
+    : null;
+
   return (
     // suppressHydrationWarning: browser extensions (Grammarly, Scribe…) inject
     // attributes into <html>/<body> before React hydrates — harmless, but noisy.
@@ -82,11 +94,22 @@ export default function RootLayout({
           Skip to content
         </a>
         <PersonJsonLd />
-        <CartProvider>
-          <SiteHeader />
-          <main id="main" className="flex-1">{children}</main>
-          <SiteFooter />
-        </CartProvider>
+        <WebSiteJsonLd />
+        {/* /cart and /checkout/success redirect to /recipes while the store
+            is parked, so no page can call useCart() without a provider. */}
+        {CartProvider ? (
+          <CartProvider>
+            <SiteHeader />
+            <main id="main" className="flex-1">{children}</main>
+            <SiteFooter />
+          </CartProvider>
+        ) : (
+          <>
+            <SiteHeader />
+            <main id="main" className="flex-1">{children}</main>
+            <SiteFooter />
+          </>
+        )}
         <Analytics />
         <AnalyticsTracking />
       </body>

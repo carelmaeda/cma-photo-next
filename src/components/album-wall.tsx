@@ -4,7 +4,11 @@ import type { Album } from "@/lib/types";
 
 interface AlbumWallProps {
   albums: Album[];
-  /** How many leading covers load eagerly (above the fold on the home page). */
+  /**
+   * How many leading covers get `priority` (preload + fetchpriority=high).
+   * Two is enough: the first cover is the LCP candidate on every viewport,
+   * and each extra preload competes with it for bandwidth.
+   */
   eager?: number;
 }
 
@@ -14,8 +18,14 @@ interface AlbumWallProps {
  *
  * CSS columns fill top to bottom, so albums.ts order decides placement: the
  * first albums run down column one. Reorder albums.ts to curate the wall.
+ *
+ * Only the first `eager` covers get `priority`. Not more: next/image turns any
+ * non-lazy image into a <link rel=preload>, and every extra preload competes
+ * with the first cover (the LCP element) for bandwidth. The rest use native
+ * lazy loading, whose distance threshold (~1250px in Chrome) still fetches
+ * the top of column two on a phone as soon as layout is done.
  */
-export function AlbumWall({ albums, eager = 4 }: AlbumWallProps) {
+export function AlbumWall({ albums, eager = 2 }: AlbumWallProps) {
   return (
     <ul className="masonry masonry--wall">
       {albums.map((album, i) => {

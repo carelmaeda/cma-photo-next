@@ -3,7 +3,7 @@ import Image from "next/image";
 import { navLinks } from "@/lib/nav";
 import { siteConfig } from "@/lib/siteConfig";
 import { NavSheet } from "./nav-sheet";
-import { CartWidget } from "./cart-widget";
+import { CartWidgetSlot } from "./cart-widget-slot";
 import { InstagramIcon, InstagramLink } from "./instagram-link";
 
 export function SiteHeader() {
@@ -49,7 +49,7 @@ export function SiteHeader() {
           >
             <InstagramIcon className="size-5" />
           </InstagramLink>
-          {siteConfig.features.store && <CartWidget />}
+          <CartWidgetSlot />
           <NavSheet />
         </div>
       </div>

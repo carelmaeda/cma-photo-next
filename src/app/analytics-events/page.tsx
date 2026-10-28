@@ -104,7 +104,7 @@ export default function AnalyticsEventsPage() {
             through{" "}
             <code className="font-mono text-sm text-ink">track()</code> (
             <code className="font-mono text-sm text-ink">src/lib/analytics.ts</code>
-            ), a safe wrapper over <code className="font-mono text-sm text-ink">@next/third-parties</code>.
+            ), a safe wrapper over <code className="font-mono text-sm text-ink">window.gtag</code>.
           </p>
           <p>
             All names and parameters follow GA4 conventions: snake_case, ≤ 40
