@@ -24,6 +24,11 @@
     --color-line-2: #CFC8B8;       /* stronger border (inputs, focus base) */
     --color-danger: #A32D2D;       /* destructive (admin delete) */
     --color-success: #3B6D11;      /* confirmations */
+    /* Recipe-art only (RecipeCover thumb scenes). Never UI, text or borders. */
+    --color-summer-sky: #CFE7EC;   /* pale morning sky */
+    --color-summer-sun: #F5C451;   /* butter yellow sun */
+    --color-summer-sea: #6FB3C4;   /* shallow water */
+    --color-summer-sand: #F3E2BF;  /* warm sand */
 
     /* — Type scale — */
     --text-display: 2.75rem;       /* 44 */
@@ -175,6 +180,12 @@
 
     a {
         @apply transition-colors;
+    }
+
+    /* /links mimics Instagram's Links sheet: no site header or footer there. */
+    body:has([data-bare-page]) > header,
+    body:has([data-bare-page]) > footer {
+        display: none;
     }
 
     ::selection {

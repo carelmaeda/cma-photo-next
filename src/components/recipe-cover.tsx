@@ -27,6 +27,37 @@ const tones = {
 
 const H = 500;
 
+export type SummerTone = "sky" | "sun" | "sea" | "sand" | "paper";
+
+const summerFill: Record<SummerTone, string> = {
+  sky: "fill-summer-sky",
+  sun: "fill-summer-sun",
+  sea: "fill-summer-sea",
+  sand: "fill-summer-sand",
+  paper: "fill-paper",
+};
+
+/**
+ * Low sun over shallow water and sand: the 4pm light Vanilla Summer is for.
+ * 100x100 viewBox. Plain data so the page (token classes) and the PNG card
+ * (svg string, hex fills) draw the same scene.
+ */
+export const summerScene: {
+  tag: "rect" | "circle" | "path";
+  tone: SummerTone;
+  attrs: Record<string, string>;
+}[] = [
+  { tag: "rect", tone: "sky", attrs: { width: "100", height: "100" } },
+  { tag: "circle", tone: "sun", attrs: { cx: "62", cy: "54", r: "20" } },
+  { tag: "rect", tone: "sea", attrs: { y: "56", width: "100", height: "44" } },
+  // Sun glints on the water
+  { tag: "rect", tone: "sun", attrs: { x: "48", y: "61", width: "28", height: "2.5", rx: "1.25" } },
+  { tag: "rect", tone: "sun", attrs: { x: "53", y: "67", width: "18", height: "2.5", rx: "1.25" } },
+  { tag: "rect", tone: "sun", attrs: { x: "57", y: "73", width: "10", height: "2.5", rx: "1.25" } },
+  { tag: "rect", tone: "paper", attrs: { x: "14", y: "66", width: "16", height: "2", rx: "1" } },
+  { tag: "path", tone: "sand", attrs: { d: "M0 84 Q 30 76 60 82 T 100 80 V 100 H 0 Z" } },
+];
+
 const setting = (recipe: Recipe, label: string) =>
   recipe.settings.find((s) => s.label === label)?.value;
 
@@ -51,6 +82,16 @@ function barcode(name: string) {
  */
 export function RecipeCover({ recipe, variant = "card", className }: RecipeCoverProps) {
   const t = tones[recipe.coverTone];
+
+  if (variant === "thumb" && recipe.thumbScene === "summer") {
+    return (
+      <svg aria-hidden viewBox="0 0 100 100" className={cn("size-16 shrink-0", className)}>
+        {summerScene.map(({ tag: Tag, tone, attrs }, i) => (
+          <Tag key={i} {...attrs} className={summerFill[tone]} />
+        ))}
+      </svg>
+    );
+  }
 
   if (variant === "thumb") {
     const initials = recipe.name

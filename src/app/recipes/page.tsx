@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
+import { siteConfig } from "@/lib/siteConfig";
 import { JsonLd, itemList } from "@/components/json-ld";
 import { RecipeCover } from "@/components/recipe-cover";
 import { recipes, presets } from "@/content/recipes";
@@ -115,18 +116,20 @@ export default function RecipesPage() {
         </section>
       )}
 
-      <section className="mx-auto max-w-7xl py-section">
-        <div className="border-t border-line pt-12">
-          <h2 className="text-h2">When the next recipe lands</h2>
-          <p className="mt-3 max-w-prose text-ink-soft">
-            I send one email a month, mostly photos, plus new recipes when they
-            are ready. Unsubscribe anytime.
-          </p>
-          <div className="mt-6">
-            <NewsletterForm source="recipes" />
+      {siteConfig.features.newsletter && (
+        <section className="mx-auto max-w-7xl py-section">
+          <div className="border-t border-line pt-12">
+            <h2 className="text-h2">When the next recipe lands</h2>
+            <p className="mt-3 max-w-prose text-ink-soft">
+              I send one email a month, mostly photos, plus new recipes when they
+              are ready. Unsubscribe anytime.
+            </p>
+            <div className="mt-6">
+              <NewsletterForm source="recipes" />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

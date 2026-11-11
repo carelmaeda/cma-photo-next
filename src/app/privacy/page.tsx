@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { InstagramLink } from "@/components/instagram-link";
 import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/siteConfig";
 
 const description =
   "What this site collects, why, and how to get your data removed. Short version: your email if you give it, purchase details via Stripe, and anonymous analytics.";
@@ -33,10 +34,12 @@ export default function PrivacyPage() {
               What I collect
             </h2>
             <ul className="mt-3 list-disc space-y-2 pl-5">
-              <li>
-                <strong className="text-ink">Your email</strong>, if you sign up
-                for the newsletter. The form runs on Netlify Forms.
-              </li>
+              {siteConfig.features.newsletter && (
+                <li>
+                  <strong className="text-ink">Your email</strong>, if you sign up
+                  for the newsletter. The form runs on Netlify Forms.
+                </li>
+              )}
               <li>
                 <strong className="text-ink">Purchase details</strong>, if you
                 buy something. Payment is handled entirely by Stripe — card
@@ -56,7 +59,9 @@ export default function PrivacyPage() {
               What I do with it
             </h2>
             <p className="mt-3">
-              Send the newsletter (about once a month), reply when you write to
+              {siteConfig.features.newsletter &&
+                "Send the newsletter (about once a month), "}
+              {siteConfig.features.newsletter ? "reply" : "Reply"} when you write to
               me, deliver files you bought, and see which posts are worth
               writing more of. That&apos;s the whole list. I don&apos;t sell or
               share your data with anyone beyond the services named above.
@@ -68,8 +73,9 @@ export default function PrivacyPage() {
               Leaving
             </h2>
             <p className="mt-3">
-              Every newsletter has an unsubscribe link. If you want your email
-              or messages deleted entirely, send me a DM on{" "}
+              {siteConfig.features.newsletter &&
+                "Every newsletter has an unsubscribe link. "}
+              If you want your email or messages deleted entirely, send me a DM on{" "}
               <InstagramLink /> and I&apos;ll do it.
             </p>
           </div>

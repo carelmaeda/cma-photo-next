@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
 import { JsonLd, breadcrumbList, personRef } from "@/components/json-ld";
+import { Download } from "lucide-react";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
+import { RecipeCover } from "@/components/recipe-cover";
 import { recipes, getRecipe, presets } from "@/content/recipes";
 import { getGuide } from "@/lib/guides";
 import { siteConfig } from "@/lib/siteConfig";
@@ -72,15 +74,31 @@ export default async function RecipePage({ params }: Props) {
         ])}
       />
 
-      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
-        <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-          Free, full settings
-        </p>
-        <h1 className="text-h3 mt-1">{recipe.name} Fujifilm recipe</h1>
-        <p className="mt-1 max-w-prose text-sm text-ink-soft">
-          {recipe.tagline} A {recipe.filmSimulation} look for{" "}
-          {recipe.compatibility} bodies. Free, nothing to sign up for. Set it
-          once, then forget the menus and go shoot.
+      <header className="mx-auto max-w-3xl pt-3 pb-6 md:pt-4">
+        <div className="flex items-center gap-4">
+          <span className="size-20 shrink-0 overflow-hidden rounded-md">
+            <RecipeCover recipe={recipe} variant="thumb" className="size-20" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
+              Free, full settings
+            </p>
+            <h1 className="text-h3 mt-1">{recipe.name} Fujifilm recipe</h1>
+            <p className="mt-0.5 text-sm">
+              by{" "}
+              <a
+                href={siteConfig.instagram}
+                target="_blank"
+                rel="me noopener noreferrer"
+                className="font-semibold text-indigo hover:underline"
+              >
+                @carel011
+              </a>
+            </p>
+          </div>
+        </div>
+        <p className="mt-4 max-w-prose text-sm text-ink-soft">
+          {recipe.tagline} {recipe.filmSimulation}, {recipe.compatibility}.
         </p>
       </header>
 
@@ -105,6 +123,15 @@ export default async function RecipePage({ params }: Props) {
             ))}
           </tbody>
         </table>
+
+        <a
+          href={`/recipes/${recipe.slug}/card.png`}
+          download={`${recipe.slug}-fujifilm-recipe.png`}
+          className="mt-6 inline-flex h-10 items-center gap-2 rounded-md bg-indigo px-4 text-sm font-semibold text-paper transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
+        >
+          <Download className="size-4" aria-hidden />
+          Download as PNG
+        </a>
 
         <div className="mt-10 max-w-prose space-y-4 text-ink-soft">
           <h2 className="font-display text-xl font-semibold text-ink">
@@ -202,18 +229,20 @@ export default async function RecipePage({ params }: Props) {
         </section>
       )}
 
-      <section className="mx-auto max-w-7xl py-section">
-        <div className="border-t border-line pt-12">
-          <h2 className="text-h2">If you want the next one</h2>
-          <p className="mt-3 max-w-prose text-ink-soft">
-            I send one email a month, mostly photos, plus new recipes when they
-            are ready. Unsubscribe anytime.
-          </p>
-          <div className="mt-6">
-            <NewsletterForm source="recipes" />
+      {siteConfig.features.newsletter && (
+        <section className="mx-auto max-w-7xl py-section">
+          <div className="border-t border-line pt-12">
+            <h2 className="text-h2">If you want the next one</h2>
+            <p className="mt-3 max-w-prose text-ink-soft">
+              I send one email a month, mostly photos, plus new recipes when they
+              are ready. Unsubscribe anytime.
+            </p>
+            <div className="mt-6">
+              <NewsletterForm source="recipes" />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

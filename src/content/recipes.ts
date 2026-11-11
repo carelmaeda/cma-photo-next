@@ -74,6 +74,7 @@ export const recipes: Recipe[] = [
       { label: "Exposure Compensation", value: "+1/3 to +2/3" },
     ],
     coverTone: "brick",
+    thumbScene: "summer",
     sampleFrames: [],
     guideSlug: "vanilla-summer-recipe-explained",
   },

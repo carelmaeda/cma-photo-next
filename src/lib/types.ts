@@ -69,6 +69,8 @@ export interface Recipe {
   settings: RecipeSetting[];
   /** Background of the typographic RecipeCover. */
   coverTone: "brick" | "ink";
+  /** Optional illustrated scene for the 64px thumb instead of the film-box initials. */
+  thumbScene?: "summer";
   sampleFrames: Photo[];
   /** Slug of the blog post that explains the recipe, if one exists. */
   guideSlug?: string;
