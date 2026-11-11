@@ -26,7 +26,11 @@ const warm = () => {
   void loadPanel();
 };
 
-/** lucide's "menu" geometry, drawn inline (same approach as InstagramIcon). */
+/**
+ * Two-line menu glyph, the lower line shorter and right-aligned so it hangs
+ * off the page edge like a caption rule. Drawn inline (same approach as
+ * InstagramIcon); stroke matches the header's Instagram mark.
+ */
 function MenuGlyph() {
   return (
     <svg
@@ -34,14 +38,12 @@ function MenuGlyph() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={1.75}
       strokeLinecap="round"
-      strokeLinejoin="round"
       aria-hidden="true"
     >
-      <path d="M4 12h16" />
-      <path d="M4 18h16" />
-      <path d="M4 6h16" />
+      <path d="M3 9h18" />
+      <path d="M10 15h11" />
     </svg>
   );
 }
@@ -62,7 +64,7 @@ export function NavSheet() {
         aria-label="Open menu"
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="inline-flex size-9 items-center justify-center rounded-md text-ink transition-colors hover:text-indigo focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none md:hidden"
+        className="inline-flex size-7 items-center justify-center rounded-md text-ink transition-colors hover:text-indigo focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none md:hidden"
         onPointerEnter={warm}
         onFocus={warm}
         onTouchStart={warm}

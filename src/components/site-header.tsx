@@ -8,7 +8,7 @@ import { InstagramIcon, InstagramLink } from "./instagram-link";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-sm px-gutter">
+    <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/90 backdrop-blur-sm px-gutter">
       <div className="mx-auto flex h-header max-w-7xl items-center justify-between">
         <Link
           href="/"
@@ -26,8 +26,11 @@ export function SiteHeader() {
           />
         </Link>
 
-        <div className="flex items-center gap-5">
-          <nav aria-label="Main" data-ga-nav="header" className="hidden md:block">
+        {/* Controls are 48px tap targets (size-7 on this spacing scale) with
+            no gap; -mr-3 pulls the last glyph's edge onto the gutter line so
+            it aligns with the photo grid below. */}
+        <div className="-mr-3 flex items-center">
+          <nav aria-label="Main" data-ga-nav="header" className="mr-4 hidden md:block">
             <ul className="flex items-center gap-7">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -45,9 +48,9 @@ export function SiteHeader() {
           <InstagramLink
             identity
             aria-label="Instagram"
-            className="text-ink transition-colors hover:text-indigo"
+            className="inline-flex size-7 items-center justify-center rounded-md text-ink transition-colors hover:text-indigo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
           >
-            <InstagramIcon className="size-5" />
+            <InstagramIcon className="size-5 stroke-[1.75]" />
           </InstagramLink>
           <CartWidgetSlot />
           <NavSheet />
