@@ -239,14 +239,14 @@ Goal: the home page looks like a photographer's wall (Roman Fox reference): head
 
 ### Phase 9 — Brazilian Portuguese at `/pt-br` (November 12, 2026)
 Goal: Portuguese twins of the content pages for the Brazilian audience. English stays primary and byte-for-byte unchanged. Scope: `/`, `/about`, `/recipes`, `/recipes/[slug]`, `/blog`, `/blog/[slug]`. Gallery, `/links`, store: English only for now.
-- [ ] SPEC + CLAUDE.md amended (§1, §2, §5, §6.9, §9, §10).
-- [ ] `/privacy` and `/terms` deleted with their footer links and sitemap entries.
-- [ ] Route split: everything under `src/app/(en)/`, `global-not-found.tsx`, page bodies in `src/components/pages/`, `src/lib/i18n.ts` + English dictionary; English HTML verified unchanged.
-- [ ] `src/app/(pt)/pt-br/` tree, Portuguese dictionary, `taglinePt`, `blurbPt`.
-- [ ] Portuguese drafts of the two published posts in `src/content/guides/pt-br/` (marked `TODO (owner)` for review).
-- [ ] hreflang + `openGraph.locale` in `pageMetadata()`, both locales in `sitemap.ts`, JSON-LD per language.
-- [ ] Footer language switch.
-- [ ] `npm run build` + lint clean; §6 audited for both languages.
+- [x] SPEC + CLAUDE.md amended (§1, §2, §5, §6.9, §9, §10).
+- [x] `/privacy` and `/terms` deleted with their footer links and sitemap entries.
+- [x] Route split: everything under `src/app/(en)/`, `global-not-found.tsx`, page bodies in `src/components/pages/`, `src/lib/i18n.ts` + English dictionary; English HTML verified unchanged (29/30 prerendered documents identical after stripping build hashes; the 30th is the new bilingual 404).
+- [x] `src/app/(pt)/pt-br/` tree, Portuguese dictionary, `taglinePt`, `blurbPt`.
+- [x] Portuguese drafts of the two published posts in `src/content/guides/pt-br/` (marked `TODO (owner)` for review).
+- [x] hreflang + `openGraph.locale` in `pageMetadata()`, both locales in `sitemap.ts`, JSON-LD per language.
+- [x] Footer language switch.
+- [x] `npm run build` + lint clean; §6 audited for both languages (43 static pages; `next start` smoke test: every `/pt-br` route 200, draft post and unknown paths 404 in the right language, old legal URLs 404).
 - [ ] OWNER — read and correct the Portuguese (dictionary + the two posts) before pushing.
 - [ ] Later, not in this phase: Portuguese album descriptions and alt text for the gallery, `/pt-br/links`.
 
