@@ -37,13 +37,17 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             no gap; -mr-3 pulls the last glyph's edge onto the gutter line so
             it aligns with the photo grid below. */}
         <div className="-mr-3 flex items-center">
-          <nav aria-label={nav.main} data-ga-nav="header" className="mr-4 hidden md:block">
+          {/* Links are 48px flex boxes (size-7) like every other control, so
+              their text centres on the header's midline instead of riding the
+              baseline of a taller inline line box. The nav's right margin plus
+              the language trigger's left padding equals the gap-7 rhythm. */}
+          <nav aria-label={nav.main} data-ga-nav="header" className="mr-5 hidden md:block">
             <ul className="flex items-center gap-7">
               {links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="font-mono text-micro tracking-eyebrow uppercase text-ink-soft transition-colors hover:text-indigo"
+                    className="inline-flex h-7 items-center font-mono text-micro tracking-eyebrow uppercase text-ink-soft transition-colors hover:text-indigo"
                   >
                     {link.label}
                   </Link>
@@ -56,7 +60,6 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             locale={locale}
             labels={{ language: nav.language, codes: nav.codes, names: nav.names }}
             ptPostSlugs={ptPostSlugs}
-            className="mr-1"
           />
           <InstagramLink
             identity

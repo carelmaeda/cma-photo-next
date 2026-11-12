@@ -43,7 +43,11 @@ interface LanguageMenuProps {
  * client side of the tree, which is why the header in the root layout can
  * still know the page. Imports only locale-path, never the dictionaries.
  *
- * Spacing scale (globals.css): 1 = 4px, 2 = 8px, 3 = 12px, 5 = 24px, 7 = 48px.
+ * Spacing scale (globals.css): 1 = 4px, 2 = 8px, 3 = 12px, 5 = 24px, 6 = 32px,
+ * 7 = 48px. The trigger's pl-5 completes the nav's 48px gap after the last
+ * link (nav mr-5 + pl-5); its pr-6 leaves the chevron 46px from the
+ * Instagram glyph (32 + the icon's 14px inset). The card's right-6 lines its
+ * edge up with the chevron.
  */
 export function LanguageMenu({ locale, labels, ptPostSlugs, className }: LanguageMenuProps) {
   const pathname = usePathname();
@@ -103,7 +107,7 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-7 items-center gap-1 rounded-md px-2 font-mono text-micro tracking-eyebrow uppercase text-ink-soft transition-colors hover:text-indigo focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none aria-expanded:text-ink"
+        className="inline-flex h-7 items-center gap-1 rounded-md pl-5 pr-6 font-mono text-micro tracking-eyebrow uppercase text-ink-soft transition-colors hover:text-indigo focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none aria-expanded:text-ink"
       >
         {labels.codes[locale]}
         <svg
@@ -126,7 +130,7 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
           role="menu"
           aria-label={labels.language}
           onKeyDown={onMenuKeyDown}
-          className="absolute top-full right-2 z-50 -mt-px w-max min-w-[11rem] origin-top-right overflow-hidden rounded-b-md border border-line bg-paper shadow-pop animate-in fade-in-0 slide-in-from-top-1 duration-200"
+          className="absolute top-full right-6 z-50 -mt-px w-max min-w-[11rem] origin-top-right overflow-hidden rounded-b-md border border-line bg-paper shadow-pop animate-in fade-in-0 slide-in-from-top-1 duration-200"
         >
           <p className="border-b border-line px-3 pt-2 pb-1 font-mono text-micro tracking-eyebrow uppercase text-ink-soft">
             {labels.language}
