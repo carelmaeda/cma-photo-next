@@ -42,9 +42,10 @@ export const en: Dictionary = {
     mobile: "Mobile",
     menu: "Menu",
     openMenu: "Open menu",
+    language: "Language",
+    en: "EN",
+    pt: "PT",
   },
-
-  footer: { switchLabel: "Português (BR)" },
 
   breadcrumbs: { home: "Home", recipes: "Recipes", blog: "Blog" },
 

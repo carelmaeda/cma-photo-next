@@ -37,11 +37,10 @@ export interface Dictionary {
     menu: string;
     /** aria-label of the menu button. */
     openMenu: string;
-  };
-
-  footer: {
-    /** Name of the OTHER language, shown as the switch link. */
-    switchLabel: string;
+    /** Header language toggle: aria-label and the two short labels. */
+    language: string;
+    en: string;
+    pt: string;
   };
 
   breadcrumbs: { home: string; recipes: string; blog: string };

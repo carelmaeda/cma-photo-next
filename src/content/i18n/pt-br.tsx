@@ -44,9 +44,10 @@ export const ptBr: Dictionary = {
     mobile: "Celular",
     menu: "Menu",
     openMenu: "Abrir menu",
+    language: "Idioma",
+    en: "EN",
+    pt: "PT",
   },
-
-  footer: { switchLabel: "English" },
 
   breadcrumbs: { home: "Início", recipes: "Receitas", blog: "Blog" },
 

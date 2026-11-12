@@ -1,15 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { navLinks } from "@/lib/nav";
+import { getAllGuides } from "@/lib/guides";
 import { getDictionary, localePath, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 import { NavSheet } from "./nav-sheet";
 import { CartWidgetSlot } from "./cart-widget-slot";
 import { InstagramIcon, InstagramLink } from "./instagram-link";
+import { LanguageToggle } from "./language-toggle";
 
 export function SiteHeader({ locale }: { locale: Locale }) {
   const { nav } = getDictionary(locale);
   const links = navLinks(locale);
+  const ptPostSlugs = getAllGuides("pt-br").map((guide) => guide.slug);
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/90 backdrop-blur-sm px-gutter">
@@ -49,6 +52,12 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             </ul>
           </nav>
 
+          <LanguageToggle
+            locale={locale}
+            labels={{ language: nav.language, en: nav.en, pt: nav.pt }}
+            ptPostSlugs={ptPostSlugs}
+            className="mr-1"
+          />
           <InstagramLink
             identity
             aria-label="Instagram"
