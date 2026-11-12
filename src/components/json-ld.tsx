@@ -42,13 +42,17 @@ export function breadcrumbList(items: { name: string; path?: string }[]) {
   };
 }
 
-/** ItemList of links for hub pages (recipes, gallery, blog). */
-export function itemList(name: string, items: { name: string; path: string }[]) {
+/** ItemList of links for hub pages (recipes, gallery, blog). `path` is the hub's own, locale-prefixed path. */
+export function itemList(
+  name: string,
+  items: { name: string; path: string }[],
+  path = "/"
+) {
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name,
-    url: siteConfig.url,
+    url: path === "/" ? siteConfig.url : `${siteConfig.url}${path}`,
     isPartOf: { "@id": websiteId },
     mainEntity: {
       "@type": "ItemList",

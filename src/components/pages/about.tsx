@@ -13,6 +13,7 @@ export function aboutMetadata(locale: Locale): Metadata {
     description: dict.about.description,
     path: localePath(locale, "/about"),
     keywords: dict.about.keywords,
+    twin: true,
   });
 }
 

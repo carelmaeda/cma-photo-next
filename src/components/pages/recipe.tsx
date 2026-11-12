@@ -9,7 +9,7 @@ import { JsonLd, breadcrumbList, personRef } from "@/components/json-ld";
 import { RecipeCover } from "@/components/recipe-cover";
 import { recipes, getRecipe, presets } from "@/content/recipes";
 import { getGuide } from "@/lib/guides";
-import { getDictionary, localePath, recipeTagline, type Locale } from "@/lib/i18n";
+import { getDictionary, htmlLang, localePath, recipeTagline, type Locale } from "@/lib/i18n";
 import { pageMetadata, ogImageUrl } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
 
@@ -27,6 +27,7 @@ export function recipeMetadata(locale: Locale, slug: string): Metadata {
       ? ogImageUrl(recipe.sampleFrames[0].publicId)
       : undefined,
     keywords: t.keywords(recipe),
+    twin: true,
   });
 }
 
@@ -45,6 +46,7 @@ export function RecipePage({ locale, slug }: { locale: Locale; slug: string }) {
         data={{
           "@context": "https://schema.org",
           "@type": "TechArticle",
+          inLanguage: htmlLang[locale],
           headline: t.headline(recipe),
           description: recipeTagline(recipe, locale),
           url: `${siteConfig.url}${localePath(locale, `/recipes/${recipe.slug}`)}`,

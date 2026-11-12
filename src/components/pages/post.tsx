@@ -11,7 +11,7 @@ import { RecipeCover } from "@/components/recipe-cover";
 import { RelatedLinks } from "@/components/related-links";
 import { recipes } from "@/content/recipes";
 import { getAllGuides, getGuide } from "@/lib/guides";
-import { formatDate, getDictionary, localePath, type Locale } from "@/lib/i18n";
+import { formatDate, getDictionary, htmlLang, localePath, otherLocale, type Locale } from "@/lib/i18n";
 import { pageMetadata, ogImageUrl, defaultOgImage } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
 
@@ -27,6 +27,7 @@ export function postMetadata(locale: Locale, slug: string): Metadata {
     path: localePath(locale, `/blog/${guide.slug}`),
     image: guide.cover ? ogImageUrl(guide.cover.publicId) : undefined,
     keywords: guide.keywords,
+    twin: Boolean(getGuide(slug, otherLocale(locale))),
     article: {
       publishedTime: guide.date,
       modifiedTime: guide.updated,
@@ -54,6 +55,7 @@ export function PostPage({ locale, slug }: { locale: Locale; slug: string }) {
         data={{
           "@context": "https://schema.org",
           "@type": "Article",
+          inLanguage: htmlLang[locale],
           headline: guide.title,
           description: guide.description,
           datePublished: guide.date,

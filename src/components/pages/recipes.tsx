@@ -17,6 +17,7 @@ export function recipesMetadata(locale: Locale): Metadata {
     description: dict.recipes.description(recipes),
     path: localePath(locale, "/recipes"),
     keywords: dict.recipes.keywords,
+    twin: true,
   });
 }
 
@@ -31,7 +32,8 @@ export function RecipesPage({ locale }: { locale: Locale }) {
           recipes.map((recipe) => ({
             name: recipe.name,
             path: localePath(locale, `/recipes/${recipe.slug}`),
-          }))
+          })),
+          localePath(locale, "/recipes")
         )}
       />
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/siteConfig";
-import { getDictionary, type Locale } from "@/lib/i18n";
+import { getDictionary, localePath, ogLocale, otherLocale, type Locale } from "@/lib/i18n";
 
 const cloudinary = `https://res.cloudinary.com/${siteConfig.cloudinary.cloudName}/image/upload`;
 
@@ -69,8 +69,10 @@ export function rootMetadata(locale: Locale): Metadata {
 }
 
 interface PageMetaOptions {
-  /** Language of the page; decides the core keywords. Defaults to English. */
+  /** Language of the page; decides the core keywords and og:locale. Defaults to English. */
   locale?: Locale;
+  /** True when the same page exists in the other language: emits hreflang both ways (SPEC §6.9). */
+  twin?: boolean;
   title: string;
   description: string;
   /** Site-relative path, already locale-prefixed, e.g. "/pt-br/recipes/vanilla-summer". Becomes the canonical URL. */
@@ -100,6 +102,7 @@ interface PageMetaOptions {
  */
 export function pageMetadata({
   locale = "en",
+  twin = false,
   title,
   description,
   path,
@@ -111,12 +114,25 @@ export function pageMetadata({
 }: PageMetaOptions): Metadata {
   const { site } = getDictionary(locale);
   const fullTitle = absoluteTitle ? title : `${title} — ${siteConfig.name}`;
-  const url = path === "/" ? `${siteConfig.url}/` : `${siteConfig.url}${path}`;
+  const absolute = (p: string) => (p === "/" ? `${siteConfig.url}/` : `${siteConfig.url}${p}`);
+  const url = absolute(path);
+  // hreflang pair: the English path is the canonical shape, the Portuguese
+  // twin is the same path under /pt-br, and x-default points at English.
+  const enPath = locale === "en" ? path : path === "/pt-br" ? "/" : path.replace(/^\/pt-br/, "");
+  const languages = twin
+    ? {
+        en: absolute(enPath),
+        "pt-BR": absolute(localePath("pt-br", enPath)),
+        "x-default": absolute(enPath),
+      }
+    : undefined;
   const og = {
     title: fullTitle,
     description,
     url,
     siteName: siteConfig.name,
+    locale: ogLocale[locale],
+    ...(twin && { alternateLocale: [ogLocale[otherLocale(locale)]] }),
     images: [{ url: image, width: 1200, height: 630 }],
   };
 
@@ -124,7 +140,7 @@ export function pageMetadata({
     title: absoluteTitle ? { absolute: title } : title,
     description,
     keywords: [...new Set([...keywords, ...site.keywords])],
-    alternates: { canonical: path },
+    alternates: { canonical: path, ...(languages && { languages }) },
     ...(noindex && { robots: { index: false, follow: true } }),
     openGraph: article
       ? {

@@ -13,6 +13,7 @@ export function blogMetadata(locale: Locale): Metadata {
     description: dict.blog.description,
     path: localePath(locale, "/blog"),
     keywords: dict.blog.keywords,
+    twin: true,
   });
 }
 
@@ -28,7 +29,8 @@ export function BlogPage({ locale }: { locale: Locale }) {
           guides.map((guide) => ({
             name: guide.title,
             path: localePath(locale, `/blog/${guide.slug}`),
-          }))
+          })),
+          localePath(locale, "/blog")
         )}
       />
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">

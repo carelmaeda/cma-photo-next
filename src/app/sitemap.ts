@@ -3,11 +3,13 @@ import { realAlbums } from "@/content/albums";
 import { paidProducts } from "@/content/products";
 import { recipes } from "@/content/recipes";
 import { getAllGuides } from "@/lib/guides";
+import { localePath } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 
 /**
  * Sitemap — emitted at /sitemap.xml. Only indexable, live pages belong here.
- * Audited against the route tree on October 28, 2026.
+ * Audited against the route tree on October 28, 2026; Portuguese twins added
+ * November 12, 2026 (SPEC §5 Languages, §6.9).
  *
  * Deliberately excluded (verified against src/app):
  *  - /links                     → noindex (Instagram bio page, SPEC §10)
@@ -18,6 +20,11 @@ import { siteConfig } from "@/lib/siteConfig";
  *    301 to /recipes while the store is off
  *  - draft blog posts           → filtered out by getAllGuides()
  *  - placeholder-image albums   → 404 (realAlbums already filters them out)
+ *
+ * Languages: the mirrored pages (home, /about, /recipes, /recipes/[slug],
+ * /blog, and posts with a Portuguese file) appear once per language, each
+ * entry carrying both URLs as hreflang alternates. Gallery and album pages
+ * are English only.
  *
  * Priority, three tiers:
  *  1.0  home
@@ -38,47 +45,64 @@ import { siteConfig } from "@/lib/siteConfig";
  */
 const { url } = siteConfig;
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const home: MetadataRoute.Sitemap = [
-    { url, changeFrequency: "weekly", priority: 1.0 },
+type Entry = MetadataRoute.Sitemap[number];
+
+const absolute = (path: string) => (path === "/" ? url : `${url}${path}`);
+
+/** One entry per language for a mirrored page, both carrying the hreflang pair. */
+function mirrored(
+  path: string,
+  rest: Omit<Entry, "url" | "alternates">
+): Entry[] {
+  const languages = {
+    en: absolute(path),
+    "pt-BR": absolute(localePath("pt-br", path)),
+  };
+  return [
+    { url: languages.en, alternates: { languages }, ...rest },
+    { url: languages["pt-BR"], alternates: { languages }, ...rest },
   ];
+}
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const home = mirrored("/", { changeFrequency: "weekly", priority: 1.0 });
 
   const hubs: MetadataRoute.Sitemap = [
-    { path: "/recipes", changeFrequency: "monthly" as const },
-    { path: "/gallery", changeFrequency: "weekly" as const },
-    { path: "/blog", changeFrequency: "monthly" as const },
-    { path: "/about", changeFrequency: "yearly" as const },
+    ...mirrored("/recipes", { changeFrequency: "monthly", priority: 0.8 }),
+    { url: absolute("/gallery"), changeFrequency: "weekly", priority: 0.8 },
+    ...mirrored("/blog", { changeFrequency: "monthly", priority: 0.8 }),
+    ...mirrored("/about", { changeFrequency: "yearly", priority: 0.8 }),
     ...(siteConfig.features.store
-      ? [{ path: "/downloads", changeFrequency: "monthly" as const }]
+      ? [{ url: absolute("/downloads"), changeFrequency: "monthly" as const, priority: 0.8 }]
       : []),
-  ].map(({ path, changeFrequency }) => ({
-    url: `${url}${path}`,
-    changeFrequency,
-    priority: 0.8,
-  }));
+  ];
 
-  const recipeRoutes: MetadataRoute.Sitemap = recipes.map((recipe) => ({
-    url: `${url}/recipes/${recipe.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
+  const recipeRoutes: MetadataRoute.Sitemap = recipes.flatMap((recipe) =>
+    mirrored(`/recipes/${recipe.slug}`, { changeFrequency: "monthly", priority: 0.6 })
+  );
 
   const albumRoutes: MetadataRoute.Sitemap = realAlbums.map((album) => ({
-    url: `${url}/gallery/${album.slug}`,
+    url: absolute(`/gallery/${album.slug}`),
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
-  const blogRoutes: MetadataRoute.Sitemap = getAllGuides().map((guide) => ({
-    url: `${url}/blog/${guide.slug}`,
-    lastModified: new Date(guide.updated ?? guide.date),
-    changeFrequency: "yearly",
-    priority: 0.6,
-  }));
+  const ptSlugs = new Set(getAllGuides("pt-br").map((guide) => guide.slug));
+  const blogRoutes: MetadataRoute.Sitemap = getAllGuides("en").flatMap((guide) => {
+    const rest = {
+      lastModified: new Date(guide.updated ?? guide.date),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    };
+    const path = `/blog/${guide.slug}`;
+    return ptSlugs.has(guide.slug)
+      ? mirrored(path, rest)
+      : [{ url: absolute(path), ...rest }];
+  });
 
   const productRoutes: MetadataRoute.Sitemap = siteConfig.features.store
     ? paidProducts("recipe").map((product) => ({
-        url: `${url}/downloads/${product.slug}`,
+        url: absolute(`/downloads/${product.slug}`),
         changeFrequency: "yearly",
         priority: 0.6,
       }))
