@@ -12,7 +12,7 @@ import {
 } from "@/lib/locale-path";
 
 export interface LanguageMenuLabels {
-  /** aria-label of the control ("Language" / "Idioma"). */
+  /** aria-label of the control and the card's caption ("Language" / "Idioma"). */
   language: string;
   /** Short codes shown on the trigger and beside each name. */
   codes: Record<Locale, string>;
@@ -29,16 +29,21 @@ interface LanguageMenuProps {
 }
 
 /**
- * Header language menu (SPEC §2): a mono "EN ⌄" trigger that opens a small
- * paper card listing both languages, the current one marked in indigo. Each
- * entry links to the same page in that language, or to that language's home
- * when the page has no twin (gallery, /links, the parked store).
+ * Header language menu (SPEC §2). The trigger is a mono "EN ⌄" in the nav's
+ * own voice; the card hangs from the header's hairline like a tab (square
+ * top corners, its top border overlapping the header rule) and lists both
+ * languages on one left edge with their codes in a fixed right column. The
+ * current language carries a short brick rule, the one place the spark is
+ * used in the chrome. Each entry links to the same page in that language,
+ * or to that language's home when the page has no twin.
  *
  * Hand-rolled on purpose: the header is on every page's critical path and
  * the mobile sheet already keeps radix Dialog out of it; a two-item menu
  * does not justify pulling radix DropdownMenu in. Reads the pathname on the
  * client side of the tree, which is why the header in the root layout can
  * still know the page. Imports only locale-path, never the dictionaries.
+ *
+ * Spacing scale (globals.css): 1 = 4px, 2 = 8px, 3 = 12px, 5 = 24px, 7 = 48px.
  */
 export function LanguageMenu({ locale, labels, ptPostSlugs, className }: LanguageMenuProps) {
   const pathname = usePathname();
@@ -72,8 +77,7 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
   // Opening puts focus on the current language so arrow keys start from it.
   useEffect(() => {
     if (!open) return;
-    const current = locales.indexOf(locale);
-    itemRefs.current[current]?.focus();
+    itemRefs.current[locales.indexOf(locale)]?.focus();
   }, [open, locale]);
 
   function onMenuKeyDown(event: React.KeyboardEvent) {
@@ -85,12 +89,12 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
     items[(index + step + items.length) % items.length]?.focus();
   }
 
-  // Spacing scale (globals.css): 2 = 8px, 5 = 24px, 6 = 32px. Rows are 32px tall.
   const row =
-    "flex h-6 items-center justify-between gap-5 rounded-sm px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
+    "relative flex items-center justify-between gap-5 px-3 py-2 text-sm outline-none focus-visible:bg-paper-2";
+  const code = "w-5 text-right font-mono text-micro tracking-eyebrow uppercase";
 
   return (
-    <div ref={rootRef} className={`relative ${className ?? ""}`}>
+    <div ref={rootRef} className={`relative flex h-header items-center ${className ?? ""}`}>
       <button
         ref={triggerRef}
         type="button"
@@ -104,7 +108,7 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
         {labels.codes[locale]}
         <svg
           viewBox="0 0 12 12"
-          className={`size-3 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+          className={`size-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           strokeWidth={1.5}
@@ -122,24 +126,13 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
           role="menu"
           aria-label={labels.language}
           onKeyDown={onMenuKeyDown}
-          className="absolute top-full right-0 z-50 mt-1 min-w-[10.5rem] origin-top-right rounded-md border border-line bg-paper p-1 shadow-pop animate-in fade-in-0 zoom-in-95 slide-in-from-top-1 duration-150"
+          className="absolute top-full right-2 z-50 -mt-px w-max min-w-[11rem] origin-top-right overflow-hidden rounded-b-md border border-line bg-paper shadow-pop animate-in fade-in-0 slide-in-from-top-1 duration-200"
         >
+          <p className="border-b border-line px-3 pt-2 pb-1 font-mono text-micro tracking-eyebrow uppercase text-ink-soft">
+            {labels.language}
+          </p>
           {locales.map((entry, i) => {
             const current = entry === locale;
-            const code = (
-              <span className="font-mono text-micro tracking-eyebrow uppercase text-ink-soft">
-                {labels.codes[entry]}
-              </span>
-            );
-            const name = (
-              <span className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className={`size-[6px] rounded-full ${current ? "bg-indigo" : "bg-transparent"}`}
-                />
-                {labels.names[entry]}
-              </span>
-            );
             return current ? (
               <div
                 key={entry}
@@ -150,10 +143,10 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
                 aria-current="true"
                 tabIndex={0}
                 lang={htmlLang[entry]}
-                className={`${row} text-ink`}
+                className={`${row} font-semibold text-ink before:absolute before:inset-y-2 before:left-0 before:w-[2px] before:bg-brick`}
               >
-                {name}
-                {code}
+                <span>{labels.names[entry]}</span>
+                <span className={`${code} text-brick`}>{labels.codes[entry]}</span>
               </div>
             ) : (
               <Link
@@ -168,8 +161,8 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
                 onClick={() => setOpen(false)}
                 className={`${row} text-ink-soft transition-colors hover:bg-paper-2 hover:text-ink`}
               >
-                {name}
-                {code}
+                <span>{labels.names[entry]}</span>
+                <span className={`${code} text-ink-soft`}>{labels.codes[entry]}</span>
               </Link>
             );
           })}
