@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/siteConfig";
 import { NavSheet } from "./nav-sheet";
 import { CartWidgetSlot } from "./cart-widget-slot";
 import { InstagramIcon, InstagramLink } from "./instagram-link";
-import { LanguageToggle } from "./language-toggle";
+import { LanguageMenu } from "./language-menu";
 
 export function SiteHeader({ locale }: { locale: Locale }) {
   const { nav } = getDictionary(locale);
@@ -52,9 +52,9 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             </ul>
           </nav>
 
-          <LanguageToggle
+          <LanguageMenu
             locale={locale}
-            labels={{ language: nav.language, en: nav.en, pt: nav.pt }}
+            labels={{ language: nav.language, codes: nav.codes, names: nav.names }}
             ptPostSlugs={ptPostSlugs}
             className="mr-1"
           />

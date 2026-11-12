@@ -55,7 +55,7 @@ Store / Content / Convert), retuned for Carel. English is the primary language a
 
 **Nav (flat, no dropdowns), in order:** Home · About · Gallery · Prints · Downloads · Blog · Contact, then the cart icon. The logo also links Home.
 **Canonical routes (teardown's key lesson):** header, footer, and `sitemap.ts` use the **same** paths — no divergence. Labels match slugs (Gallery=/gallery, Prints=/prints, Downloads=/downloads).
-**Footer:** Instagram, Threads, Prints, Contact, © line. *(Since October 21, 2026: centered Instagram + Threads icons, then Privacy · Terms · © on one small mono line. Since November 12, 2026: Privacy and Terms pages removed; the mono line is just ©. The language control is an EN · PT toggle in the header, right of the nav links: the current language inert, the other a link to the same page in that language, or to that language's home when the page has no twin.)*
+**Footer:** Instagram, Threads, Prints, Contact, © line. *(Since October 21, 2026: centered Instagram + Threads icons, then Privacy · Terms · © on one small mono line. Since November 12, 2026: Privacy and Terms pages removed; the mono line is just ©. The language control is a small menu in the header, right of the nav links: a mono "EN ⌄" trigger opens a paper card (hairline border, `--shadow-pop`) listing English and Português with their codes, the current one marked in indigo; the other links to the same page in that language, or to that language's home when the page has no twin.)*
 **Old → new 301s** (`netlify.toml`): `/albums/* → /gallery/*`, `/guides/* → /blog/*`, `/recipes/* → /downloads/*`, `/gear → /about`.
 
 > **Launch-light amendment (August 4, 2026 — see §10).** While `siteConfig.features` flags are off, the shipped IA is:
@@ -64,7 +64,7 @@ Store / Content / Convert), retuned for Carel. English is the primary language a
 > - **New canonical section:** `/recipes` (hub) + `/recipes/[slug]` — free Fujifilm recipes with full settings, plus free Lightroom preset downloads from `public/presets/`.
 > - **301s while the store is parked:** `/downloads → /recipes`, `/downloads/vanilla-summer-recipe-card` and `/downloads/vanilla-summer` → `/recipes/vanilla-summer`, `/downloads/* → /recipes`. The old `/recipes/* → /downloads/*` rules are **removed** (they would hijack the new pages).
 > - `/gallery` stays live and indexed but out of nav; `/prints` unchanged (noindex, out of nav).
-> - **`/pt-br`** (November 12, 2026): Brazilian Portuguese twins of `/`, `/about`, `/recipes`, `/recipes/[slug]`, `/blog`, `/blog/[slug]`. Same shell in Portuguese, hreflang both ways, EN · PT toggle in the header. Gallery, album pages, `/links` and the parked store stay English only; the pt-BR home album wall links to the English album pages. Fujifilm setting labels and values stay in English in both languages, and the recipe card PNG is shared.
+> - **`/pt-br`** (November 12, 2026): Brazilian Portuguese twins of `/`, `/about`, `/recipes`, `/recipes/[slug]`, `/blog`, `/blog/[slug]`. Same shell in Portuguese, hreflang both ways, language menu in the header. Gallery, album pages, `/links` and the parked store stay English only; the pt-BR home album wall links to the English album pages. Fujifilm setting labels and values stay in English in both languages, and the recipe card PNG is shared.
 
 ---
 
@@ -245,7 +245,7 @@ Goal: Portuguese twins of the content pages for the Brazilian audience. English 
 - [x] `src/app/(pt)/pt-br/` tree, Portuguese dictionary, `taglinePt`, `blurbPt`.
 - [x] Portuguese drafts of the two published posts in `src/content/guides/pt-br/` (marked `TODO (owner)` for review).
 - [x] hreflang + `openGraph.locale` in `pageMetadata()`, both locales in `sitemap.ts`, JSON-LD per language.
-- [x] Language toggle (EN · PT) in the header; started as a footer link, moved the same day at the owner's request.
+- [x] Language menu in the header (`LanguageMenu`, hand-rolled, no radix on the critical path); started as a footer link, then an inline toggle, settled on the menu the same day at the owner's request.
 - [x] `npm run build` + lint clean; §6 audited for both languages (43 static pages; `next start` smoke test: every `/pt-br` route 200, draft post and unknown paths 404 in the right language, old legal URLs 404).
 - [ ] OWNER — read and correct the Portuguese (dictionary + the two posts) before pushing.
 - [ ] Later, not in this phase: Portuguese album descriptions and alt text for the gallery, `/pt-br/links`.

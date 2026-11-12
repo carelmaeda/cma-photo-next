@@ -45,8 +45,8 @@ export const ptBr: Dictionary = {
     menu: "Menu",
     openMenu: "Abrir menu",
     language: "Idioma",
-    en: "EN",
-    pt: "PT",
+    codes: { en: "EN", "pt-br": "PT" },
+    names: { en: "English", "pt-br": "Português" },
   },
 
   breadcrumbs: { home: "Início", recipes: "Receitas", blog: "Blog" },

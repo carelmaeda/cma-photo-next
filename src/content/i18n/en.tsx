@@ -43,8 +43,8 @@ export const en: Dictionary = {
     menu: "Menu",
     openMenu: "Open menu",
     language: "Language",
-    en: "EN",
-    pt: "PT",
+    codes: { en: "EN", "pt-br": "PT" },
+    names: { en: "English", "pt-br": "Português" },
   },
 
   breadcrumbs: { home: "Home", recipes: "Recipes", blog: "Blog" },
