@@ -5,12 +5,25 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { EVENTS } from "@/lib/analytics-events";
 
+export interface CodeBlockLabels {
+  copy: string;
+  copyAria: string;
+  copied: string;
+}
+
+const english: CodeBlockLabels = { copy: "Copy", copyAria: "Copy code", copied: "Copied" };
+
+type CodeBlockProps = ComponentPropsWithoutRef<"pre"> & {
+  /** Button strings in the page's language (dictionary.codeBlock). */
+  labels?: CodeBlockLabels;
+};
+
 /**
  * MDX <pre> renderer for fenced code / settings blocks. Adds a copy-to-clipboard
  * button and reports a GA4 `copy_code_sample` event. Used for any ``` block in a
  * guide (e.g. Fujifilm recipe settings a reader wants to copy into their camera).
  */
-export function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
+export function CodeBlock({ labels = english, ...props }: CodeBlockProps) {
   const ref = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
 
@@ -39,16 +52,16 @@ export function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
       <button
         type="button"
         onClick={copy}
-        aria-label={copied ? "Copied" : "Copy code"}
+        aria-label={copied ? labels.copied : labels.copyAria}
         className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-sm border border-line-2 bg-paper px-2 py-1 font-mono text-micro tracking-frame text-ink-soft uppercase opacity-0 transition-opacity hover:text-indigo focus-visible:opacity-100 group-hover:opacity-100"
       >
         {copied ? (
           <>
-            <CheckIcon className="size-3" /> Copied
+            <CheckIcon className="size-3" /> {labels.copied}
           </>
         ) : (
           <>
-            <CopyIcon className="size-3" /> Copy
+            <CopyIcon className="size-3" /> {labels.copy}
           </>
         )}
       </button>

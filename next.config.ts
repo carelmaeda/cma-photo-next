@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   // + mobile nav pull it onto every page via the header).
   experimental: {
     optimizePackageImports: ["radix-ui", "lucide-react"],
+    // Two root layouts (src/app/(en) and src/app/(pt), SPEC §5 Languages)
+    // leave no single root for a not-found page, so the site-wide 404 is
+    // src/app/global-not-found.tsx, which renders its own <html>.
+    globalNotFound: true,
   },
   // No images.remotePatterns: every Cloudinary image goes through CldImage's
   // custom loader, which bypasses the optimizer's remote allow-list entirely.

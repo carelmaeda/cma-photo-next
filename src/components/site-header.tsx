@@ -1,18 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { navLinks } from "@/lib/nav";
+import { getDictionary, localePath, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 import { NavSheet } from "./nav-sheet";
 import { CartWidgetSlot } from "./cart-widget-slot";
 import { InstagramIcon, InstagramLink } from "./instagram-link";
 
-export function SiteHeader() {
+export function SiteHeader({ locale }: { locale: Locale }) {
+  const { nav } = getDictionary(locale);
+  const links = navLinks(locale);
+
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/90 backdrop-blur-sm px-gutter">
       <div className="mx-auto flex h-header max-w-7xl items-center justify-between">
         <Link
-          href="/"
-          aria-label={`${siteConfig.name} — home`}
+          href={localePath(locale, "/")}
+          aria-label={nav.logoHome}
           data-ga-nav="logo"
           className="text-ink transition-opacity hover:opacity-70"
         >
@@ -30,9 +34,9 @@ export function SiteHeader() {
             no gap; -mr-3 pulls the last glyph's edge onto the gutter line so
             it aligns with the photo grid below. */}
         <div className="-mr-3 flex items-center">
-          <nav aria-label="Main" data-ga-nav="header" className="mr-4 hidden md:block">
+          <nav aria-label={nav.main} data-ga-nav="header" className="mr-4 hidden md:block">
             <ul className="flex items-center gap-7">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -53,7 +57,10 @@ export function SiteHeader() {
             <InstagramIcon className="size-5 stroke-[1.75]" />
           </InstagramLink>
           <CartWidgetSlot />
-          <NavSheet />
+          <NavSheet
+            links={links}
+            labels={{ openMenu: nav.openMenu, menu: nav.menu, mobile: nav.mobile }}
+          />
         </div>
       </div>
     </header>

@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import { CldImage } from "@/components/cld-image";
 import { ProductCard } from "@/components/product-card";
 import { storeProducts } from "@/content/products";
-import { getAllGuides, categoryLabels } from "@/lib/guides";
+import { getAllGuides } from "@/lib/guides";
+import { getDictionary } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 import { pageMetadata } from "@/lib/seo";
 
@@ -63,7 +64,7 @@ export default function DownloadsPage() {
                     />
                   )}
                   <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-                    {categoryLabels[guide.category]}
+                    {getDictionary("en").blog.categories[guide.category]}
                   </p>
                   <h3 className="mt-2 font-display text-xl font-semibold group-hover:text-indigo">
                     {guide.title}

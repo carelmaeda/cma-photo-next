@@ -1,55 +1,42 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Download } from "lucide-react";
 import { CldImage } from "@/components/cld-image";
 import { FrameCaption } from "@/components/frame-caption";
-import { JsonLd, breadcrumbList, personRef } from "@/components/json-ld";
-import { Download } from "lucide-react";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
+import { JsonLd, breadcrumbList, personRef } from "@/components/json-ld";
 import { RecipeCover } from "@/components/recipe-cover";
 import { recipes, getRecipe, presets } from "@/content/recipes";
 import { getGuide } from "@/lib/guides";
-import { siteConfig } from "@/lib/siteConfig";
+import { getDictionary, localePath, recipeTagline, type Locale } from "@/lib/i18n";
 import { pageMetadata, ogImageUrl } from "@/lib/seo";
+import { siteConfig } from "@/lib/siteConfig";
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
-
-export function generateStaticParams() {
-  return recipes.map((recipe) => ({ slug: recipe.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+export function recipeMetadata(locale: Locale, slug: string): Metadata {
   const recipe = getRecipe(slug);
   if (!recipe) return {};
+  const t = getDictionary(locale).recipePage;
 
   return pageMetadata({
-    title: `${recipe.name}: ${recipe.filmSimulation} Fujifilm Recipe`,
-    description: `Free Fujifilm recipe: ${recipe.name}, a ${recipe.filmSimulation} look for ${recipe.compatibility} bodies. Every setting listed. ${recipe.tagline}`,
-    path: `/recipes/${recipe.slug}`,
+    locale,
+    title: t.title(recipe),
+    description: t.description(recipe),
+    path: localePath(locale, `/recipes/${recipe.slug}`),
     image: recipe.sampleFrames[0]
       ? ogImageUrl(recipe.sampleFrames[0].publicId)
       : undefined,
-    keywords: [
-      `${recipe.name} Fujifilm recipe`,
-      `${recipe.filmSimulation} recipe`,
-      `Fujifilm ${recipe.filmSimulation} recipe`,
-      "X-Trans IV recipes",
-      "X-Trans V recipes",
-      "X100V recipes",
-      "Fujifilm JPEG settings",
-    ],
+    keywords: t.keywords(recipe),
   });
 }
 
-export default async function RecipePage({ params }: Props) {
-  const { slug } = await params;
+export function RecipePage({ locale, slug }: { locale: Locale; slug: string }) {
   const recipe = getRecipe(slug);
   if (!recipe) notFound();
 
-  const guide = recipe.guideSlug ? getGuide(recipe.guideSlug) : undefined;
+  const dict = getDictionary(locale);
+  const t = dict.recipePage;
+  const guide = recipe.guideSlug ? getGuide(recipe.guideSlug, locale) : undefined;
   const others = recipes.filter((entry) => entry.slug !== recipe.slug);
 
   return (
@@ -58,18 +45,18 @@ export default async function RecipePage({ params }: Props) {
         data={{
           "@context": "https://schema.org",
           "@type": "TechArticle",
-          headline: `${recipe.name}: a ${recipe.filmSimulation} Fujifilm recipe`,
-          description: recipe.tagline,
-          url: `${siteConfig.url}/recipes/${recipe.slug}`,
+          headline: t.headline(recipe),
+          description: recipeTagline(recipe, locale),
+          url: `${siteConfig.url}${localePath(locale, `/recipes/${recipe.slug}`)}`,
           author: personRef,
-          about: { "@type": "Thing", name: "Fujifilm film simulation recipes" },
-          keywords: `${recipe.name}, ${recipe.filmSimulation}, ${recipe.compatibility}, Fujifilm recipe`,
+          about: { "@type": "Thing", name: t.aboutName },
+          keywords: t.ldKeywords(recipe),
         }}
       />
       <JsonLd
         data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Recipes", path: "/recipes" },
+          { name: dict.breadcrumbs.home, path: localePath(locale, "/") },
+          { name: dict.breadcrumbs.recipes, path: localePath(locale, "/recipes") },
           { name: recipe.name },
         ])}
       />
@@ -81,11 +68,11 @@ export default async function RecipePage({ params }: Props) {
           </span>
           <div className="min-w-0">
             <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-              Free, full settings
+              {t.eyebrow}
             </p>
-            <h1 className="text-h3 mt-1">{recipe.name} Fujifilm recipe</h1>
+            <h1 className="text-h3 mt-1">{t.heading(recipe)}</h1>
             <p className="mt-0.5 text-sm">
-              by{" "}
+              {t.by}{" "}
               <a
                 href={siteConfig.instagram}
                 target="_blank"
@@ -98,7 +85,7 @@ export default async function RecipePage({ params }: Props) {
           </div>
         </div>
         <p className="mt-4 max-w-prose text-sm text-ink-soft">
-          {recipe.tagline} {recipe.filmSimulation}, {recipe.compatibility}.
+          {recipeTagline(recipe, locale)} {recipe.filmSimulation}, {recipe.compatibility}.
         </p>
       </header>
 
@@ -107,7 +94,7 @@ export default async function RecipePage({ params }: Props) {
           <thead>
             <tr className="border-b border-line text-left">
               <th className="py-3 pr-4 text-cap font-mono tracking-frame uppercase font-normal text-ink-soft">
-                Setting
+                {t.settingHeader}
               </th>
               <th className="py-3 text-cap font-mono tracking-frame uppercase font-normal text-ink-soft">
                 {recipe.compatibility}
@@ -124,32 +111,27 @@ export default async function RecipePage({ params }: Props) {
           </tbody>
         </table>
 
+        {/* One card per recipe, shared by both languages (settings stay English). */}
         <a
           href={`/recipes/${recipe.slug}/card.png`}
           download={`${recipe.slug}-fujifilm-recipe.png`}
           className="mt-6 inline-flex h-10 items-center gap-2 rounded-md bg-indigo px-4 text-sm font-semibold text-paper transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
         >
           <Download className="size-4" aria-hidden />
-          Download as PNG
+          {t.download}
         </a>
 
         <div className="mt-10 max-w-prose space-y-4 text-ink-soft">
           <h2 className="font-display text-xl font-semibold text-ink">
-            Loading it
+            {t.loadingHeading}
           </h2>
-          <p>
-            Save it as a custom slot (C1–C7) so it&apos;s one dial away. Then
-            you switch into the look without touching the menus again.
-          </p>
-          <p>
-            Then stop thinking about it. The whole point is that the camera
-            does the work and you watch the light.
-          </p>
+          <p>{t.loading1}</p>
+          <p>{t.loading2}</p>
           {guide && (
             <p>
-              I wrote about why the settings are what they are:{" "}
+              {t.wroteAbout}{" "}
               <Link
-                href={`/blog/${guide.slug}`}
+                href={localePath(locale, `/blog/${guide.slug}`)}
                 className="underline hover:text-indigo"
               >
                 {guide.title}
@@ -159,12 +141,12 @@ export default async function RecipePage({ params }: Props) {
           )}
           {others.length > 0 && (
             <p>
-              I also publish{" "}
+              {t.alsoPublish}{" "}
               {others.map((other, i) => (
                 <span key={other.slug}>
                   {i > 0 && ", "}
                   <Link
-                    href={`/recipes/${other.slug}`}
+                    href={localePath(locale, `/recipes/${other.slug}`)}
                     className="underline hover:text-indigo"
                   >
                     {other.name}
@@ -172,7 +154,7 @@ export default async function RecipePage({ params }: Props) {
                   ({other.filmSimulation})
                 </span>
               ))}
-              . Same deal: free, every setting on the page.
+              {t.sameDeal}
             </p>
           )}
         </div>
@@ -180,7 +162,7 @@ export default async function RecipePage({ params }: Props) {
 
       {recipe.sampleFrames.length > 0 && (
       <section className="mx-auto max-w-7xl pt-section">
-        <h2 className="text-h2">Shot on {recipe.name}</h2>
+        <h2 className="text-h2">{t.shotOn(recipe)}</h2>
         <ul className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">
           {recipe.sampleFrames.slice(0, 3).map((photo) => (
             <li key={photo.publicId}>
@@ -203,12 +185,8 @@ export default async function RecipePage({ params }: Props) {
       {presets.length > 0 && (
         <section className="mx-auto max-w-7xl pt-section">
           <div className="max-w-3xl border-t border-line pt-12">
-            <h2 className="text-h2">The Lightroom version</h2>
-            <p className="mt-3 max-w-prose text-ink-soft">
-              I shoot JPG, so the look above lives in the camera. If you shoot
-              RAW and edit, these presets get you the same feel in Lightroom.
-              Free downloads.
-            </p>
+            <h2 className="text-h2">{t.lightroomHeading}</h2>
+            <p className="mt-3 max-w-prose text-ink-soft">{t.lightroomIntro}</p>
             <ul className="mt-8 space-y-4">
               {presets.map((preset) => (
                 <li key={preset.file} className="border-b border-line pb-4">
@@ -232,11 +210,8 @@ export default async function RecipePage({ params }: Props) {
       {siteConfig.features.newsletter && (
         <section className="mx-auto max-w-7xl py-section">
           <div className="border-t border-line pt-12">
-            <h2 className="text-h2">If you want the next one</h2>
-            <p className="mt-3 max-w-prose text-ink-soft">
-              I send one email a month, mostly photos, plus new recipes when they
-              are ready. Unsubscribe anytime.
-            </p>
+            <h2 className="text-h2">{t.newsletterHeading}</h2>
+            <p className="mt-3 max-w-prose text-ink-soft">{t.newsletterIntro}</p>
             <div className="mt-6">
               <NewsletterForm source="recipes" />
             </div>

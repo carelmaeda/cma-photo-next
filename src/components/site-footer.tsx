@@ -1,9 +1,11 @@
+import type { Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 import { InstagramIcon, InstagramLink, ThreadsIcon } from "./instagram-link";
 
 const small = "text-cap font-mono tracking-frame uppercase text-ink-soft";
 
-export function SiteFooter() {
+export function SiteFooter({ locale }: { locale: Locale }) {
+  void locale;
   return (
     <footer className="px-gutter mt-section">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 py-8">

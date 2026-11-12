@@ -1,15 +1,20 @@
 import Link from "next/link";
 import { getAlbum } from "@/content/albums";
+import { getDictionary, localePath, type Locale } from "@/lib/i18n";
 
 interface RelatedLinksProps {
   albums?: string[];
+  locale: Locale;
 }
 
 /**
  * The internal-link lattice (SPEC.md §6): every guide links to at least one
- * album, the recipe page, and the gear page.
+ * album, the recipe page, and the gear page. Albums exist in English only, so
+ * they link there from both languages; the recipe and about links stay in
+ * the page's language.
  */
-export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
+export function RelatedLinks({ albums = [], locale }: RelatedLinksProps) {
+  const t = getDictionary(locale).related;
   const albumLinks = albums
     .map((slug) => ({ slug, album: getAlbum(slug) }))
     .filter((entry) => entry.album && !entry.album.placeholderImages);
@@ -17,7 +22,7 @@ export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
   return (
     <aside className="mt-14 border-t border-line pt-8">
       <h2 className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-        Keep going
+        {t.heading}
       </h2>
       <ul className="mt-4 space-y-2 text-sm">
         {albumLinks.map(({ slug, album }) => (
@@ -26,24 +31,24 @@ export function RelatedLinks({ albums = [] }: RelatedLinksProps) {
               href={`/gallery/${slug}`}
               className="underline underline-offset-2 hover:text-indigo"
             >
-              The {album!.title} album
+              {t.album(album!.title)}
             </Link>
           </li>
         ))}
         <li>
           <Link
-            href="/recipes/vanilla-summer"
+            href={localePath(locale, "/recipes/vanilla-summer")}
             className="underline underline-offset-2 hover:text-indigo"
           >
-            Vanilla Summer — the recipe
+            {t.recipe}
           </Link>
         </li>
         <li>
           <Link
-            href="/about"
+            href={localePath(locale, "/about")}
             className="underline underline-offset-2 hover:text-indigo"
           >
-            What I carry
+            {t.about}
           </Link>
         </li>
       </ul>

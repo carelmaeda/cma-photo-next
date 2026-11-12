@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import type { NavLink } from "@/lib/nav";
 import { track } from "@/lib/analytics";
 import { EVENTS } from "@/lib/analytics-events";
 
@@ -48,7 +49,19 @@ function MenuGlyph() {
   );
 }
 
-export function NavSheet() {
+export interface NavSheetLabels {
+  openMenu: string;
+  menu: string;
+  mobile: string;
+}
+
+interface NavSheetProps {
+  /** Built server-side for the page's language (navLinks(locale)). */
+  links: NavLink[];
+  labels: NavSheetLabels;
+}
+
+export function NavSheet({ links, labels }: NavSheetProps) {
   const [open, setOpen] = useState(false);
   // Stays mounted after the first open so the close animation can play.
   const [mounted, setMounted] = useState(false);
@@ -61,7 +74,7 @@ export function NavSheet() {
       <button
         ref={triggerRef}
         type="button"
-        aria-label="Open menu"
+        aria-label={labels.openMenu}
         aria-haspopup="dialog"
         aria-expanded={open}
         className="inline-flex size-7 items-center justify-center rounded-md text-ink transition-colors hover:text-indigo focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none md:hidden"
@@ -81,6 +94,9 @@ export function NavSheet() {
           open={open}
           onOpenChange={setOpen}
           returnFocusTo={triggerRef}
+          links={links}
+          title={labels.menu}
+          navLabel={labels.mobile}
         />
       )}
     </>

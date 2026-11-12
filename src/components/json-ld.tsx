@@ -1,3 +1,4 @@
+import { getDictionary, htmlLang, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 
 /** Renders a JSON-LD script tag. data must be a plain serializable object. */
@@ -25,7 +26,7 @@ export const personRef = {
   url: siteConfig.url,
 };
 
-/** BreadcrumbList from [{ name, path }]; the last item carries no URL. */
+/** BreadcrumbList from [{ name, path }]; the last item carries no URL. Paths arrive locale-prefixed. */
 export function breadcrumbList(items: { name: string; path?: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -61,8 +62,13 @@ export function itemList(name: string, items: { name: string; path: string }[]) 
   };
 }
 
-/** Site-wide Person schema (SPEC.md §6) — rendered once in the root layout. */
-export function PersonJsonLd() {
+/**
+ * Site-wide Person schema (SPEC.md §6) — rendered once in each root layout.
+ * One @id in both languages: the same photographer, described in the page's
+ * language.
+ */
+export function PersonJsonLd({ locale }: { locale: Locale }) {
+  const { person } = getDictionary(locale);
   return (
     <JsonLd
       data={{
@@ -71,18 +77,11 @@ export function PersonJsonLd() {
         "@id": personId,
         name: siteConfig.name,
         url: siteConfig.url,
-        jobTitle: "Travel photographer",
-        description:
-          "Travel photographer shooting Fujifilm, JPG straight out of camera. Publishes free Fujifilm recipes with full settings.",
-        homeLocation: { "@type": "Place", name: "Toronto, Canada" },
-        birthPlace: { "@type": "Place", name: "São Paulo, Brazil" },
-        knowsAbout: [
-          "Fujifilm film simulation recipes",
-          "Travel photography",
-          "Fujifilm X100V",
-          "Fujifilm GFX100RF",
-          "JPEG photography",
-        ],
+        jobTitle: person.jobTitle,
+        description: person.description,
+        homeLocation: { "@type": "Place", name: person.homeLocation },
+        birthPlace: { "@type": "Place", name: person.birthPlace },
+        knowsAbout: person.knowsAbout,
         sameAs: [siteConfig.instagram, siteConfig.threads],
       }}
     />
@@ -90,7 +89,8 @@ export function PersonJsonLd() {
 }
 
 /** Site-wide WebSite schema — names the site and ties it to the Person. */
-export function WebSiteJsonLd() {
+export function WebSiteJsonLd({ locale }: { locale: Locale }) {
+  const { site } = getDictionary(locale);
   return (
     <JsonLd
       data={{
@@ -99,8 +99,8 @@ export function WebSiteJsonLd() {
         "@id": websiteId,
         name: siteConfig.name,
         url: siteConfig.url,
-        description: siteConfig.description,
-        inLanguage: "en",
+        description: site.description,
+        inLanguage: htmlLang[locale],
         publisher: personRef,
       }}
     />

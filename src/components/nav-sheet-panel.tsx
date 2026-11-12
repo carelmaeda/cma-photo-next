@@ -8,13 +8,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { navLinks } from "@/lib/nav";
+import type { NavLink } from "@/lib/nav";
 
 interface NavSheetPanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /** The trigger button; focus goes back there on close, as a radix Trigger would do. */
   returnFocusTo: RefObject<HTMLButtonElement | null>;
+  links: NavLink[];
+  title: string;
+  navLabel: string;
 }
 
 /**
@@ -26,6 +29,9 @@ export function NavSheetPanel({
   open,
   onOpenChange,
   returnFocusTo,
+  links,
+  title,
+  navLabel,
 }: NavSheetPanelProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -38,11 +44,11 @@ export function NavSheetPanel({
         }}
       >
         <SheetHeader>
-          <SheetTitle className="font-display font-semibold">Menu</SheetTitle>
+          <SheetTitle className="font-display font-semibold">{title}</SheetTitle>
         </SheetHeader>
-        <nav aria-label="Mobile" data-ga-nav="mobile_menu" className="px-4">
+        <nav aria-label={navLabel} data-ga-nav="mobile_menu" className="px-4">
           <ul className="flex flex-col gap-5">
-            {navLinks.map((link) => (
+            {links.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}

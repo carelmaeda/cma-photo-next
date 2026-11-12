@@ -40,6 +40,8 @@ export interface GearItem {
   category: GearCategory;
   /** The owner's one-line honest take */
   blurb: string;
+  /** The same line in Brazilian Portuguese (SPEC §5 Languages). */
+  blurbPt: string;
   /** Affiliate link — stays empty until the affiliate phase */
   link?: string;
   image?: Photo;
@@ -62,6 +64,8 @@ export interface Recipe {
   slug: string;
   name: string;
   tagline: string;
+  /** The tagline in Brazilian Portuguese (SPEC §5 Languages). Settings stay English in both. */
+  taglinePt: string;
   /** The film simulation the recipe is built on. */
   filmSimulation: string;
   /** Bodies the recipe targets, e.g. "X-Trans IV / V". */

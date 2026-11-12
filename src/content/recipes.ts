@@ -51,6 +51,7 @@ export const recipes: Recipe[] = [
     slug: "vanilla-summer",
     name: "Vanilla Summer",
     tagline: "Warm shadows, soft highlights, that 4pm-light feeling.",
+    taglinePt: "Sombras quentes, altas luzes suaves, aquela sensação de luz das quatro da tarde.",
     filmSimulation: "PRO Neg. Hi",
     compatibility: "X-Trans IV / V",
     // Values are taken straight from the Vanilla Summer recipe card.
@@ -82,6 +83,7 @@ export const recipes: Recipe[] = [
     slug: "midnight-espresso",
     name: "Midnight Espresso",
     tagline: "Wet pavement, deep blacks and silver grain. My Ilford HP5 look in Acros.",
+    taglinePt: "Asfalto molhado, pretos profundos e grão prateado. Meu visual Ilford HP5 em Acros.",
     filmSimulation: "Acros +Ye",
     compatibility: "X-Trans IV / V",
     // Values are taken straight from the Midnight Espresso recipe card.

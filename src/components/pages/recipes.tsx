@@ -2,58 +2,51 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
-import { siteConfig } from "@/lib/siteConfig";
 import { JsonLd, itemList } from "@/components/json-ld";
 import { RecipeCover } from "@/components/recipe-cover";
 import { recipes, presets } from "@/content/recipes";
+import { getDictionary, localePath, recipeTagline, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/siteConfig";
 
-const description = `Free Fujifilm film simulation recipes for X-Trans IV and V bodies: ${recipes
-  .map((recipe) => `${recipe.name} on ${recipe.filmSimulation}`)
-  .join(", ")}. Every setting listed, nothing gated.`;
+export function recipesMetadata(locale: Locale): Metadata {
+  const dict = getDictionary(locale);
+  return pageMetadata({
+    locale,
+    title: dict.recipes.title,
+    description: dict.recipes.description(recipes),
+    path: localePath(locale, "/recipes"),
+    keywords: dict.recipes.keywords,
+  });
+}
 
-export const metadata: Metadata = pageMetadata({
-  title: "Free Fujifilm Recipes, Full Settings",
-  description,
-  path: "/recipes",
-  keywords: [
-    "free Fujifilm recipes",
-    "Fujifilm X-Trans IV recipes",
-    "Fujifilm X-Trans V recipes",
-    "X100V film simulation recipes",
-    "Fujifilm JPEG settings",
-    "Fujifilm Lightroom presets",
-  ],
-});
+export function RecipesPage({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale).recipes;
 
-export default function RecipesPage() {
   return (
     <div className="px-gutter">
       <JsonLd
         data={itemList(
-          "Fujifilm recipes",
+          t.listName,
           recipes.map((recipe) => ({
             name: recipe.name,
-            path: `/recipes/${recipe.slug}`,
+            path: localePath(locale, `/recipes/${recipe.slug}`),
           }))
         )}
       />
       <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
         <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-          Free, full settings
+          {t.eyebrow}
         </p>
-        <h1 className="text-h3 mt-1">Fujifilm recipes</h1>
-        <p className="mt-1 max-w-prose text-sm text-ink-soft">
-          The in-camera looks behind my photos. Every setting is on the page,
-          free. Dial it in, save it to a custom slot, go shoot.
-        </p>
+        <h1 className="text-h3 mt-1">{t.heading}</h1>
+        <p className="mt-1 max-w-prose text-sm text-ink-soft">{t.intro}</p>
       </header>
 
       <section className="mx-auto max-w-7xl">
         <ul className="grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {recipes.map((recipe) => (
             <li key={recipe.slug}>
-              <Link href={`/recipes/${recipe.slug}`} className="group block">
+              <Link href={localePath(locale, `/recipes/${recipe.slug}`)} className="group block">
                 {recipe.sampleFrames[0] ? (
                   <CldImage
                     photo={recipe.sampleFrames[0]}
@@ -76,7 +69,7 @@ export default function RecipesPage() {
                   {recipe.name}
                 </h2>
                 <p className="mt-1 max-w-prose text-sm text-ink-soft">
-                  {recipe.tagline}
+                  {recipeTagline(recipe, locale)}
                 </p>
                 <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
                   {recipe.filmSimulation} · {recipe.compatibility}
@@ -90,12 +83,8 @@ export default function RecipesPage() {
       {presets.length > 0 && (
         <section className="mx-auto max-w-7xl pt-section">
           <div className="max-w-3xl border-t border-line pt-12">
-            <h2 className="text-h2">Lightroom presets</h2>
-            <p className="mt-3 max-w-prose text-ink-soft">
-              I shoot JPG and build the look in camera. If you shoot RAW and
-              edit, these presets give you the same looks in Lightroom. Free
-              downloads, no email needed.
-            </p>
+            <h2 className="text-h2">{t.presetsHeading}</h2>
+            <p className="mt-3 max-w-prose text-ink-soft">{t.presetsIntro}</p>
             <ul className="mt-8 space-y-4">
               {presets.map((preset) => (
                 <li key={preset.file} className="border-b border-line pb-4">
@@ -119,11 +108,8 @@ export default function RecipesPage() {
       {siteConfig.features.newsletter && (
         <section className="mx-auto max-w-7xl py-section">
           <div className="border-t border-line pt-12">
-            <h2 className="text-h2">When the next recipe lands</h2>
-            <p className="mt-3 max-w-prose text-ink-soft">
-              I send one email a month, mostly photos, plus new recipes when they
-              are ready. Unsubscribe anytime.
-            </p>
+            <h2 className="text-h2">{t.newsletterHeading}</h2>
+            <p className="mt-3 max-w-prose text-ink-soft">{t.newsletterIntro}</p>
             <div className="mt-6">
               <NewsletterForm source="recipes" />
             </div>
