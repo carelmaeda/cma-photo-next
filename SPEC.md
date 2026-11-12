@@ -28,14 +28,14 @@
 
 **The feel:** a warm personal storyteller — generosity first, the store quiet and tasteful. No countdowns, no fake scarcity, no exit popups, no "coming soon" teasers. A real "Buy" exists now, stated plainly.
 
-**Third-party accounts:** Netlify (hosting + Forms + **one Function for Stripe checkout**), Cloudinary (existing, cloud `duwhxzb0q`), and **Stripe** (digital checkout) are the stack. Google Analytics is added **after** deploy behind a config flag. No ESP (Kit/Mailchimp), no EmailJS, no CMS, no database, no auth, no i18n.
+**Third-party accounts:** Netlify (hosting + Forms + **one Function for Stripe checkout**), Cloudinary (existing, cloud `duwhxzb0q`), and **Stripe** (digital checkout) are the stack. Google Analytics is added **after** deploy behind a config flag. No ESP (Kit/Mailchimp), no EmailJS, no CMS, no database, no auth. *(Languages: a hand-rolled Brazilian Portuguese mirror of the content pages at `/pt-br` since November 12, 2026, see §5. No i18n library, no language detection.)*
 
 ---
 
 ## 2. Site map & information architecture
 
 Adopted from the Studio Roldan IA teardown (now applied — this section is the canonical IA) — the same four-job model (Showcase /
-Store / Content / Convert), retuned for Carel and kept **fully in English**.
+Store / Content / Convert), retuned for Carel. English is the primary language at the root URLs. *(Since November 12, 2026 the content pages also have Brazilian Portuguese twins under `/pt-br`; see the amendment below and §5.)*
 
 ```
 /                  Home — album wall: one cover per live album, natural aspect, nothing else  [since Oct 21, 2026; was hero + posts + recipe + newsletter]
@@ -55,7 +55,7 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 
 **Nav (flat, no dropdowns), in order:** Home · About · Gallery · Prints · Downloads · Blog · Contact, then the cart icon. The logo also links Home.
 **Canonical routes (teardown's key lesson):** header, footer, and `sitemap.ts` use the **same** paths — no divergence. Labels match slugs (Gallery=/gallery, Prints=/prints, Downloads=/downloads).
-**Footer:** Instagram, Threads, Prints, Contact, © line. *(Since October 21, 2026: centered Instagram + Threads icons, then Privacy · Terms · © on one small mono line.)*
+**Footer:** Instagram, Threads, Prints, Contact, © line. *(Since October 21, 2026: centered Instagram + Threads icons, then Privacy · Terms · © on one small mono line. Since November 12, 2026: Privacy and Terms pages removed; the mono line is the language switch · ©, and just © on pages with no twin.)*
 **Old → new 301s** (`netlify.toml`): `/albums/* → /gallery/*`, `/guides/* → /blog/*`, `/recipes/* → /downloads/*`, `/gear → /about`.
 
 > **Launch-light amendment (August 4, 2026 — see §10).** While `siteConfig.features` flags are off, the shipped IA is:
@@ -64,6 +64,7 @@ Store / Content / Convert), retuned for Carel and kept **fully in English**.
 > - **New canonical section:** `/recipes` (hub) + `/recipes/[slug]` — free Fujifilm recipes with full settings, plus free Lightroom preset downloads from `public/presets/`.
 > - **301s while the store is parked:** `/downloads → /recipes`, `/downloads/vanilla-summer-recipe-card` and `/downloads/vanilla-summer` → `/recipes/vanilla-summer`, `/downloads/* → /recipes`. The old `/recipes/* → /downloads/*` rules are **removed** (they would hijack the new pages).
 > - `/gallery` stays live and indexed but out of nav; `/prints` unchanged (noindex, out of nav).
+> - **`/pt-br`** (November 12, 2026): Brazilian Portuguese twins of `/`, `/about`, `/recipes`, `/recipes/[slug]`, `/blog`, `/blog/[slug]`. Same shell in Portuguese, hreflang both ways, footer links to the other language. Gallery, album pages, `/links` and the parked store stay English only; the pt-BR home album wall links to the English album pages. Fujifilm setting labels and values stay in English in both languages, and the recipe card PNG is shared.
 
 ---
 
@@ -138,6 +139,7 @@ Handwritten mark only — never re-typed. Assets in `carel-brand-kit/assets/` (c
 - **Content lives in `src/content/`** (`albums.ts`, `gear.ts`, `prints.ts`, `recipes.ts`, `guides/*.mdx`). Types in `src/lib/types.ts`. Adding a post = adding one MDX file, zero code changes.
 - **All external IDs/URLs in `src/lib/siteConfig.ts`.** Unknown values stay `TODO_` placeholders — never invent real-looking IDs (Stripe publishable key + per-product price IDs included).
 - **Netlify Forms:** form definitions live in `public/__forms.html` (static HTML Netlify can parse at deploy). React forms POST url-encoded to `/__forms.html`. **Any field change must be made in both places.** Forms only work on Netlify deploys, never locally.
+- **Languages (since November 12, 2026):** two root layouts via route groups, `src/app/(en)/` (English, root URLs, unchanged) and `src/app/(pt)/pt-br/` (Brazilian Portuguese, `lang="pt-BR"`). Mirrored page bodies are shared server components in `src/components/pages/` that take a `locale`; thin route files in each group render them. All UI and page strings come from typed dictionaries `src/content/i18n/{en,pt-br}.tsx` through `getDictionary()` in `src/lib/i18n.ts`; client leaf components receive strings as props. Portuguese posts are `src/content/guides/pt-br/<same-slug>.mdx` (a post without a twin is absent from pt-BR and emits no hreflang). Recipes carry `taglinePt`, gear carries `blurbPt`. Site-wide 404 is `src/app/global-not-found.tsx` (`experimental.globalNotFound`). No i18n library, no middleware, no language detection.
 - **Stripe checkout (digital-only):** the single server touchpoint allowed. Netlify Functions in `netlify/functions/` create a Stripe Checkout Session from the client cart and verify paid sessions for post-purchase download delivery (Cloudinary `fl_attachment`). No DB — entitlement is `session_id`-verified at the success page. No accounts, no stored orders.
 
 ---
@@ -152,6 +154,7 @@ Handwritten mark only — never re-typed. Assets in `carel-brand-kit/assets/` (c
 6. Internal-link lattice: every blog post links ≥1 portfolio album + `/recipes` + `/about`; albums link back to related posts.
 7. Placeholder-image albums (see §7) get `noindex` until real photos are uploaded. Checkout/success and cart pages are `noindex`.
 8. Every page declares its metadata through `pageMetadata()` in `src/lib/seo.ts`: it sets the canonical URL (`alternates.canonical`), keywords, and OpenGraph/Twitter with `siteName` + `url`. No page builds these by hand. The default share image must be a publicId that exists on Cloudinary.
+9. Mirrored pages (§5 Languages) pass `locale` to `pageMetadata()`, which sets the canonical on the page's own locale, `alternates.languages` (`en`, `pt-BR`, `x-default` = English) when the twin exists, and `openGraph.locale`. `sitemap.ts` lists both locales with language alternates. JSON-LD `inLanguage`, breadcrumb names and the Person description follow the page language.
 
 ---
 
@@ -234,6 +237,19 @@ Goal: the home page looks like a photographer's wall (Roman Fox reference): head
 - [ ] OWNER — reorder `albums.ts` if you want a different lead image (column one, top left).
 - [ ] OWNER — run Lighthouse on `/` after deploy (SPEC §6.5, target ≥ 90).
 
+### Phase 9 — Brazilian Portuguese at `/pt-br` (November 12, 2026)
+Goal: Portuguese twins of the content pages for the Brazilian audience. English stays primary and byte-for-byte unchanged. Scope: `/`, `/about`, `/recipes`, `/recipes/[slug]`, `/blog`, `/blog/[slug]`. Gallery, `/links`, store: English only for now.
+- [ ] SPEC + CLAUDE.md amended (§1, §2, §5, §6.9, §9, §10).
+- [ ] `/privacy` and `/terms` deleted with their footer links and sitemap entries.
+- [ ] Route split: everything under `src/app/(en)/`, `global-not-found.tsx`, page bodies in `src/components/pages/`, `src/lib/i18n.ts` + English dictionary; English HTML verified unchanged.
+- [ ] `src/app/(pt)/pt-br/` tree, Portuguese dictionary, `taglinePt`, `blurbPt`.
+- [ ] Portuguese drafts of the two published posts in `src/content/guides/pt-br/` (marked `TODO (owner)` for review).
+- [ ] hreflang + `openGraph.locale` in `pageMetadata()`, both locales in `sitemap.ts`, JSON-LD per language.
+- [ ] Footer language switch.
+- [ ] `npm run build` + lint clean; §6 audited for both languages.
+- [ ] OWNER — read and correct the Portuguese (dictionary + the two posts) before pushing.
+- [ ] Later, not in this phase: Portuguese album descriptions and alt text for the gallery, `/pt-br/links`.
+
 ### Future
 - Affiliate links on the About gear list · ESP when the list outgrows Netlify Forms · physical prints (would add a print-on-demand partner — out of scope today).
 
@@ -241,7 +257,7 @@ Goal: the home page looks like a photographer's wall (Roman Fox reference): head
 
 ## 9. Out of scope (do not build)
 
-No CMS, no database, no auth, no user accounts, no stored orders, no client-side content-unlock logic beyond the goodwill gate and `session_id`-verified download, ~~no Lightroom presets~~ (amended August 4, 2026: free Lightroom presets are **in scope** — see §10; the framing is "recipes for the camera, presets for the ones who edit"), **no i18n** (English only), no comments/memberships/courses, no Reels-style video, **no physical-product fulfillment / shipping / inventory** (digital downloads only), no design-system §04 admin/upload UI. No new npm dependencies beyond what this spec names (Stripe SDKs are named) without flagging it first.
+No CMS, no database, no auth, no user accounts, no stored orders, no client-side content-unlock logic beyond the goodwill gate and `session_id`-verified download, ~~no Lightroom presets~~ (amended August 4, 2026: free Lightroom presets are **in scope** — see §10; the framing is "recipes for the camera, presets for the ones who edit"), ~~**no i18n** (English only)~~ (amended November 12, 2026: a Brazilian Portuguese mirror of the content pages lives at `/pt-br`, see §5; still no i18n library, no language detection, no third locale), no comments/memberships/courses, no Reels-style video, **no physical-product fulfillment / shipping / inventory** (digital downloads only), no design-system §04 admin/upload UI. No new npm dependencies beyond what this spec names (Stripe SDKs are named) without flagging it first.
 
 ---
 
@@ -265,3 +281,5 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 **Stable owner URLs:** `photo.carelmaeda.com/links` is the Instagram bio link (since October 20, 2026); `photo.carelmaeda.com/recipes/vanilla-summer` stays the direct recipe URL for replies and captions.
 
 **Restore procedure:** flip the flag(s), fix netlify.toml store redirects (store only), `npm run build`, verify redirects on a deploy preview.
+
+**Legal pages:** `/privacy` and `/terms` were removed on November 12, 2026 by owner decision (no store, no newsletter, nothing sold). Google Analytics 4 keeps running without a disclosure page; this is an accepted gap. If the store or newsletter return, bring a privacy page back first.
