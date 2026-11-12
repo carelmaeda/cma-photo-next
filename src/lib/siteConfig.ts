@@ -46,6 +46,6 @@ export const siteConfig = {
     store: false, // /downloads catalog + product pages + cart widget + nav item
     gallery: false, // Gallery nav item only; /gallery and album pages stay live (off since October 21, 2026, the home page is the album wall)
     prints: false, // Prints nav item (page itself is already noindex)
-    newsletter: false, // Signup sections on /recipes, recipe pages, and newsletter lines in /privacy (off since November 11, 2026: nothing to send yet)
+    newsletter: false, // Signup sections on /recipes and recipe pages (off since November 11, 2026: nothing to send yet)
   } as { store: boolean; gallery: boolean; prints: boolean; newsletter: boolean },
 } as const;

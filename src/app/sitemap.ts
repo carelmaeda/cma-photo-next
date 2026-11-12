@@ -23,7 +23,6 @@ import { siteConfig } from "@/lib/siteConfig";
  *  1.0  home
  *  0.8  section hubs (/recipes, /gallery, /blog) and /about
  *  0.6  individual items: recipes, albums, articles, products
- *  0.3  legal pages — present for completeness, not a crawl target
  *
  * changeFrequency reflects how often each type realistically changes:
  *  - home + /gallery: weekly  (the album wall turns over on every
@@ -31,7 +30,7 @@ import { siteConfig } from "@/lib/siteConfig";
  *  - /recipes, /blog: monthly  (gain children periodically)
  *  - recipe pages: monthly  (settings get revised; presets get added)
  *  - album pages: monthly  (the refresh flow appends new uploads)
- *  - articles, /about, legal: yearly  (fixed once published)
+ *  - articles, /about: yearly  (fixed once published)
  *
  * lastModified is set only where there's a real signal (a post's `updated`
  * or `date`). Elsewhere it's omitted on purpose — a build-time `new Date()`
@@ -85,12 +84,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       }))
     : [];
 
-  const legal: MetadataRoute.Sitemap = ["/privacy", "/terms"].map((path) => ({
-    url: `${url}${path}`,
-    changeFrequency: "yearly",
-    priority: 0.3,
-  }));
-
   return [
     ...home,
     ...hubs,
@@ -98,6 +91,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...albumRoutes,
     ...blogRoutes,
     ...productRoutes,
-    ...legal,
   ];
 }

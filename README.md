@@ -56,6 +56,5 @@ See `.env.example`. Everything is Netlify-side: `STRIPE_SECRET_KEY` (test key in
 1. **Rotate the Cloudinary API secret** (the old pair is in public git history) and set the new `CLOUDINARY_API_KEY`/`CLOUDINARY_API_SECRET` in Netlify. Consider making the GitHub repo private.
 2. Enable **Forms** in the Netlify dashboard + an email notification; test each form on a deploy preview.
 3. Put the Stripe **test** key in the deploy-preview env scope and run a full purchase: buy → success page → download works; declined card (4000 0000 0000 0002) shows the failure path; cancel returns to `/cart`. Then confirm the **live** key in the production scope.
-4. Read `/privacy` and `/terms` and make the wording yours (refund window especially).
-5. Edit the four guide drafts (`TODO` markers in `src/content/guides/`), then remove the markers.
-6. Optional hardening: flip the paid deliverable asset to `authenticated` type in Cloudinary once signed delivery is confirmed working — that closes the public-URL fallback entirely.
+4. Edit the four guide drafts (`TODO` markers in `src/content/guides/`), then remove the markers.
+5. Optional hardening: flip the paid deliverable asset to `authenticated` type in Cloudinary once signed delivery is confirmed working — that closes the public-URL fallback entirely.

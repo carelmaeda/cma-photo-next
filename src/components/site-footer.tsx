@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { siteConfig } from "@/lib/siteConfig";
 import { InstagramIcon, InstagramLink, ThreadsIcon } from "./instagram-link";
 
@@ -31,14 +30,6 @@ export function SiteFooter() {
           </li>
         </ul>
         <p className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 ${small}`}>
-          <Link href="/privacy" className="hover:text-indigo">
-            Privacy
-          </Link>
-          <span aria-hidden="true">·</span>
-          <Link href="/terms" className="hover:text-indigo">
-            Terms
-          </Link>
-          <span aria-hidden="true">·</span>
           <span>
             © {new Date().getFullYear()} {siteConfig.name}
           </span>
