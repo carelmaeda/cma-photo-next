@@ -76,6 +76,8 @@ export interface Recipe {
   /** Optional illustrated scene for the 64px thumb instead of the film-box initials. */
   thumbScene?: "summer";
   sampleFrames: Photo[];
+  /** Downloads from before the on-site counter existed, added to the live count. */
+  priorDownloads?: number;
   /** Slug of the blog post that explains the recipe, if one exists. */
   guideSlug?: string;
 }

@@ -10,7 +10,8 @@ import { siteConfig } from "@/lib/siteConfig";
  * The id ("recipe/vanilla-summer") is the blob key and is also what the page,
  * the API and GA4 use.
  *
- * Counts start at zero. Never seed or edit them by hand.
+ * The store starts at zero and is never edited by hand. A recipe can carry
+ * priorDownloads (downloads from before this counter existed), added on read.
  */
 
 const STORE = "downloads";
@@ -74,7 +75,13 @@ export async function getDownloadCounts(): Promise<DownloadCounts> {
             [blob.key, Number(await withTimeout(s.get(blob.key), "get")) || 0] as const
         )
     );
-    return Object.fromEntries(entries);
+    const counts: DownloadCounts = Object.fromEntries(entries);
+    for (const recipe of recipes) {
+      if (!recipe.priorDownloads) continue;
+      const id = recipeDownloadId(recipe.slug);
+      counts[id] = (counts[id] ?? 0) + recipe.priorDownloads;
+    }
+    return counts;
   } catch {
     return {};
   }

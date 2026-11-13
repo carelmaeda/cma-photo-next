@@ -136,6 +136,8 @@ export const recipes: Recipe[] = [
     coverTone: "brick",
     thumbScene: "summer",
     sampleFrames: vanillaSummerFrames,
+    // Downloads from the Gumroad page (closed November 13, 2026).
+    priorDownloads: 1100,
     guideSlug: "vanilla-summer-recipe-explained",
   },
   {
