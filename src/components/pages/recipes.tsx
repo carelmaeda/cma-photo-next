@@ -3,12 +3,7 @@ import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { JsonLd, itemList } from "@/components/json-ld";
-import {
-  DownloadCount,
-  MostDownloadedTag,
-  formatDownloadCount,
-  showsDownloadCount,
-} from "@/components/download-count";
+import { DownloadCount, DownloadTotal, MostDownloadedTag } from "@/components/download-count";
 import { RecipeCover } from "@/components/recipe-cover";
 import { TrackedDownload } from "@/components/tracked-download";
 import { recipes, presets } from "@/content/recipes";
@@ -60,11 +55,7 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
         </p>
         <h1 className="text-h3 mt-1">{t.heading}</h1>
         <p className="mt-1 max-w-prose text-sm text-ink-soft">{t.intro}</p>
-        {showsDownloadCount(total) && (
-          <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
-            {dict.downloadCounts.total(formatDownloadCount(total, locale))}
-          </p>
-        )}
+        <DownloadTotal total={total} locale={locale} className="mt-3" />
       </header>
 
       <section className="mx-auto max-w-7xl">
@@ -119,7 +110,7 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
                   <DownloadCount
                     count={counts[recipeDownloadId(recipe.slug)]}
                     locale={locale}
-                    className="mt-1"
+                    className="mt-3"
                   />
                 </div>
               </Link>

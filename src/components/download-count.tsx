@@ -1,3 +1,4 @@
+import { Download } from "lucide-react";
 import { getDictionary, dateLocale, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/siteConfig";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,25 @@ export function showsDownloadCount(count: number | undefined): count is number {
   return siteConfig.downloadCounts.enabled && (count ?? 0) >= siteConfig.downloadCounts.minToShow;
 }
 
-/** "1,200+ downloads" in the mono caption style. Renders nothing below the threshold. */
+/**
+ * The download chip: brick, the one spark on the page (SPEC §3). Mono caps
+ * with the number in bold, so "1,100+ downloads" reads at a glance.
+ */
+function Chip({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <p
+      className={cn(
+        "inline-flex h-7 items-center gap-1.5 rounded-sm border border-brick px-2.5 font-mono text-cap tracking-frame text-brick uppercase",
+        className
+      )}
+    >
+      <Download className="size-3.5 shrink-0" aria-hidden />
+      {children}
+    </p>
+  );
+}
+
+/** "1,100+ downloads" for one file. Renders nothing below the threshold. */
 export function DownloadCount({
   count,
   locale,
@@ -28,11 +47,22 @@ export function DownloadCount({
 }) {
   if (!showsDownloadCount(count)) return null;
   const t = getDictionary(locale).downloadCounts;
-  return (
-    <p className={cn("text-cap font-mono tracking-frame text-ink-soft uppercase", className)}>
-      {t.count(formatDownloadCount(count, locale))}
-    </p>
-  );
+  return <Chip className={className}>{t.count(formatDownloadCount(count, locale))}</Chip>;
+}
+
+/** The site-wide total on /recipes, same chip. */
+export function DownloadTotal({
+  total,
+  locale,
+  className,
+}: {
+  total: number;
+  locale: Locale;
+  className?: string;
+}) {
+  if (!showsDownloadCount(total)) return null;
+  const t = getDictionary(locale).downloadCounts;
+  return <Chip className={className}>{t.total(formatDownloadCount(total, locale))}</Chip>;
 }
 
 /** The "Most downloaded" tag on the leading recipe. */

@@ -64,6 +64,7 @@ async function withTimeout<T>(promise: Promise<T>, label: string): Promise<T> {
  */
 export async function getDownloadCounts(): Promise<DownloadCounts> {
   if (!siteConfig.downloadCounts.enabled) return {};
+  let counts: DownloadCounts = {};
   try {
     const s = store();
     const { blobs } = await withTimeout(s.list(), "list");
@@ -75,16 +76,16 @@ export async function getDownloadCounts(): Promise<DownloadCounts> {
             [blob.key, Number(await withTimeout(s.get(blob.key), "get")) || 0] as const
         )
     );
-    const counts: DownloadCounts = Object.fromEntries(entries);
-    for (const recipe of recipes) {
-      if (!recipe.priorDownloads) continue;
-      const id = recipeDownloadId(recipe.slug);
-      counts[id] = (counts[id] ?? 0) + recipe.priorDownloads;
-    }
-    return counts;
+    counts = Object.fromEntries(entries);
   } catch {
-    return {};
+    // Blobs unreachable: only the known prior downloads show.
   }
+  for (const recipe of recipes) {
+    if (!recipe.priorDownloads) continue;
+    const id = recipeDownloadId(recipe.slug);
+    counts[id] = (counts[id] ?? 0) + recipe.priorDownloads;
+  }
+  return counts;
 }
 
 /**

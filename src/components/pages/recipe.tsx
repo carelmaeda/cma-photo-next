@@ -117,6 +117,11 @@ export async function RecipePage({ locale, slug }: { locale: Locale; slug: strin
                   </p>
                 </div>
               </div>
+              <DownloadCount
+                count={counts[recipeDownloadId(recipe.slug)]}
+                locale={locale}
+                className="mt-5"
+              />
 
               <ul className="mt-5 divide-y divide-line border-y border-line text-sm text-ink-soft">
                 <li className="py-2.5">{t.specFree}</li>
@@ -135,11 +140,6 @@ export async function RecipePage({ locale, slug }: { locale: Locale; slug: strin
                 <Download aria-hidden />
                 {t.download}
               </TrackedDownload>
-              <DownloadCount
-                count={counts[recipeDownloadId(recipe.slug)]}
-                locale={locale}
-                className="mt-3 text-center"
-              />
             </div>
           </aside>
         </header>
