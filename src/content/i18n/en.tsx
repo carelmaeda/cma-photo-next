@@ -161,6 +161,7 @@ export const en: Dictionary = {
     heading: "Fujifilm recipes",
     intro:
       "The in-camera looks behind my photos. Each one is a free card with every setting on it. Download it, save it to a custom slot, go shoot.",
+    view: "View the recipe",
     presetsHeading: "Lightroom presets",
     presetsIntro:
       "I shoot JPG and build the look in camera. If you shoot RAW and edit, these presets give you the same looks in Lightroom. Free downloads, no email needed.",

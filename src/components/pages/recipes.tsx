@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { JsonLd, itemList } from "@/components/json-ld";
@@ -17,6 +18,7 @@ import {
 import { getDictionary, localePath, recipeTagline, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
+import { cn } from "@/lib/utils";
 
 export function recipesMetadata(locale: Locale): Metadata {
   const dict = getDictionary(locale);
@@ -30,6 +32,15 @@ export function recipesMetadata(locale: Locale): Metadata {
   });
 }
 
+/** Mono-role label (Jakarta small caps), the same device the recipe page uses. */
+const eyebrow = "font-mono text-micro tracking-eyebrow text-warm uppercase";
+
+/**
+ * The recipes index as a contents page (SPEC §10, November 13, 2026): a
+ * masthead, then one feature row per recipe, image on alternating sides,
+ * hairlines between. Reads as a curated index with two recipes and stays a
+ * contents list with twenty. Same bones as the recipe page.
+ */
 export async function RecipesPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.recipes;
@@ -49,119 +60,146 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
           localePath(locale, "/recipes")
         )}
       />
-      <header className="mx-auto max-w-7xl pt-3 pb-4 md:pt-4 md:pb-5">
-        <p className="text-cap font-mono tracking-frame text-ink-soft uppercase">
-          {t.eyebrow}
-        </p>
-        <h1 className="text-h3 mt-1">{t.heading}</h1>
-        <p className="mt-1 max-w-prose text-sm text-ink-soft">{t.intro}</p>
-        <DownloadTotal total={total} locale={locale} className="mt-3" />
-      </header>
 
-      <section className="mx-auto max-w-7xl">
-        {/* Phone: a compact list, 96px square thumb beside the text, so every
-            recipe is on screen without scrolling. sm and up: a 4:5 card grid,
-            three then four across, small enough to read as an index. */}
-        <ul className="border-t border-line sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 sm:border-0 lg:grid-cols-4">
-          {recipes.map((recipe) => (
-            <li key={recipe.slug} className="border-b border-line sm:border-0">
-              <Link
-                href={localePath(locale, `/recipes/${recipe.slug}`)}
-                className="group flex items-start gap-4 py-4 sm:block sm:py-0"
-              >
-                {recipe.sampleFrames[0] ? (
-                  <CldImage
-                    photo={recipe.sampleFrames[0]}
-                    width={800}
-                    height={1000}
-                    crop="fill"
-                    gravity="auto"
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 96px"
-                    className="aspect-square size-24 shrink-0 border border-line object-cover transition-opacity group-hover:opacity-90 sm:aspect-auto sm:size-auto sm:w-full"
-                  />
-                ) : (
-                  <>
-                    {/* No frames yet: the recipe's own drawn cover, never a
-                        random photo pretending to be the look. */}
-                    <RecipeCover
-                      recipe={recipe}
-                      variant="thumb"
-                      className="size-24 border border-line transition-opacity group-hover:opacity-90 sm:hidden"
-                    />
-                    <RecipeCover
-                      recipe={recipe}
-                      className="hidden transition-opacity group-hover:opacity-90 sm:block"
-                    />
-                  </>
-                )}
-                <div className="min-w-0">
-                  {recipe.slug === topSlug && (
-                    <MostDownloadedTag locale={locale} className="mb-1 sm:mt-3 sm:mb-0" />
-                  )}
-                  <h2 className="font-display text-lg font-semibold group-hover:text-indigo sm:mt-3 sm:text-xl">
-                    {recipe.name}
-                  </h2>
-                  <p className="mt-1 max-w-prose text-sm text-ink-soft">
-                    {recipeTagline(recipe, locale)}
-                  </p>
-                  <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
-                    {recipe.filmSimulation} · {recipe.compatibility}
-                  </p>
-                  <DownloadCount
-                    count={counts[recipeDownloadId(recipe.slug)]}
-                    locale={locale}
-                    className="mt-3"
-                  />
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {presets.length > 0 && (
-        <section className="mx-auto max-w-7xl pt-section">
-          <div className="max-w-3xl border-t border-line pt-12">
-            <h2 className="text-h2">{t.presetsHeading}</h2>
-            <p className="mt-3 max-w-prose text-ink-soft">{t.presetsIntro}</p>
-            <ul className="mt-8 space-y-4">
-              {presets.map((preset) => (
-                <li key={preset.file} className="border-b border-line pb-4">
-                  <TrackedDownload
-                    id={presetDownloadId(preset.file)}
-                    fileType="preset"
-                    href={preset.file}
-                    download
-                    className="font-display text-xl font-semibold hover:text-indigo"
-                  >
-                    {preset.name}
-                  </TrackedDownload>
-                  <p className="mt-1 max-w-prose text-sm text-ink-soft">
-                    {preset.description}
-                  </p>
-                  <DownloadCount
-                    count={counts[presetDownloadId(preset.file)]}
-                    locale={locale}
-                    className="mt-2"
-                  />
-                </li>
-              ))}
-            </ul>
+      <article className="mx-auto max-w-7xl">
+        {/* Masthead: title left, lead and the total on the right, bottoms aligned. */}
+        <header className="pt-3 pb-8 md:grid md:grid-cols-12 md:items-end md:gap-x-10 md:pt-6 md:pb-10 lg:gap-x-16">
+          <div className="md:col-span-7">
+            <p className={eyebrow}>{t.eyebrow}</p>
+            <h1 className="text-h1 mt-3 md:text-display">{t.heading}</h1>
           </div>
-        </section>
-      )}
+          <div className="mt-5 md:col-span-5 md:mt-0">
+            <p className="max-w-prose text-lg text-ink-soft">{t.intro}</p>
+            <DownloadTotal total={total} locale={locale} className="mt-5" />
+          </div>
+        </header>
 
-      {siteConfig.features.newsletter && (
-        <section className="mx-auto max-w-7xl py-section">
-          <div className="border-t border-line pt-12">
-            <h2 className="text-h2">{t.newsletterHeading}</h2>
-            <p className="mt-3 max-w-prose text-ink-soft">{t.newsletterIntro}</p>
-            <div className="mt-6">
-              <NewsletterForm source="recipes" />
+        {/* The contents: one row per recipe. */}
+        <ol className="border-t border-line">
+          {recipes.map((recipe, i) => {
+            const cover = recipe.sampleFrames[0];
+            const thumbs = recipe.sampleFrames.length >= 4 ? recipe.sampleFrames.slice(1, 4) : [];
+            const imageRight = i % 2 === 1;
+            return (
+              <li key={recipe.slug} className="border-b border-line">
+                <Link
+                  href={localePath(locale, `/recipes/${recipe.slug}`)}
+                  className="group grid gap-6 py-8 md:grid-cols-12 md:gap-x-10 md:py-10 lg:gap-x-16"
+                >
+                  <div className={cn("md:col-span-4", imageRight && "md:order-2")}>
+                    {cover ? (
+                      <CldImage
+                        photo={cover}
+                        width={800}
+                        height={1000}
+                        crop="fill"
+                        gravity="auto"
+                        priority={i === 0}
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className="aspect-[4/3] w-full border border-line object-cover transition-opacity group-hover:opacity-90 md:aspect-[4/5]"
+                      />
+                    ) : (
+                      // No frames yet: the recipe's own drawn cover, never a
+                      // random photo pretending to be the look.
+                      <RecipeCover
+                        recipe={recipe}
+                        className="transition-opacity group-hover:opacity-90"
+                      />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 md:col-span-8 md:flex md:flex-col md:justify-center">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                      <p className={eyebrow}>Nº {String(i + 1).padStart(2, "0")}</p>
+                      {recipe.slug === topSlug && <MostDownloadedTag locale={locale} />}
+                    </div>
+                    <h2 className="text-h2 mt-3 group-hover:text-indigo md:text-h1">
+                      {recipe.name}
+                    </h2>
+                    <p className="mt-3 max-w-prose text-lg text-ink-soft">
+                      {recipeTagline(recipe, locale)}
+                    </p>
+                    <p className={cn(eyebrow, "mt-5")}>
+                      {recipe.filmSimulation} · {recipe.compatibility}
+                    </p>
+
+                    {thumbs.length > 0 && (
+                      <ul className="mt-6 flex gap-2" aria-hidden>
+                        {thumbs.map((photo) => (
+                          <li key={photo.publicId} className="size-14 md:size-16">
+                            <CldImage
+                              photo={photo}
+                              width={160}
+                              height={160}
+                              crop="fill"
+                              gravity="auto"
+                              sizes="64px"
+                              className="size-full border border-line object-cover"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                      <DownloadCount count={counts[recipeDownloadId(recipe.slug)]} locale={locale} />
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo">
+                        {t.view}
+                        <ArrowRight
+                          className="size-4 transition-transform group-hover:translate-x-0.5"
+                          aria-hidden
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+
+        {presets.length > 0 && (
+          <section className="pt-section">
+            <div className="max-w-3xl">
+              <h2 className="text-h2">{t.presetsHeading}</h2>
+              <p className="mt-3 max-w-prose text-ink-soft">{t.presetsIntro}</p>
+              <ul className="mt-8 border-t border-line">
+                {presets.map((preset) => (
+                  <li key={preset.file} className="border-b border-line py-5">
+                    <TrackedDownload
+                      id={presetDownloadId(preset.file)}
+                      fileType="preset"
+                      href={preset.file}
+                      download
+                      className="font-display text-xl font-semibold hover:text-indigo"
+                    >
+                      {preset.name}
+                    </TrackedDownload>
+                    <p className="mt-1 max-w-prose text-sm text-ink-soft">{preset.description}</p>
+                    <DownloadCount
+                      count={counts[presetDownloadId(preset.file)]}
+                      locale={locale}
+                      className="mt-3"
+                    />
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+
+        {siteConfig.features.newsletter && (
+          <section className="py-section">
+            <div className="border-t border-line pt-12">
+              <h2 className="text-h2">{t.newsletterHeading}</h2>
+              <p className="mt-3 max-w-prose text-ink-soft">{t.newsletterIntro}</p>
+              <div className="mt-6">
+                <NewsletterForm source="recipes" />
+              </div>
+            </div>
+          </section>
+        )}
+      </article>
     </div>
   );
 }

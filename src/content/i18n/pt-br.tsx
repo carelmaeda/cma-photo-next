@@ -156,6 +156,7 @@ export const ptBr: Dictionary = {
     heading: "Receitas Fujifilm",
     intro:
       "Os visuais feitos dentro da câmera por trás das minhas fotos. Cada um é um cartão grátis com todas as configurações. Baixe, salve num slot personalizado, vá fotografar.",
+    view: "Ver a receita",
     presetsHeading: "Presets para Lightroom",
     presetsIntro:
       "Eu fotografo em JPG e construo o visual na câmera. Se você fotografa em RAW e edita, estes presets dão o mesmo visual no Lightroom. Download grátis, sem pedir e-mail.",

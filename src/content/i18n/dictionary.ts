@@ -77,6 +77,8 @@ export interface Dictionary {
     eyebrow: string;
     heading: string;
     intro: string;
+    /** The row link label on the index: "View the recipe". */
+    view: string;
     presetsHeading: string;
     presetsIntro: string;
     newsletterHeading: string;
