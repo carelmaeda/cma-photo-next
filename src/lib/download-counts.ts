@@ -12,6 +12,9 @@ import { siteConfig } from "@/lib/siteConfig";
 
 const STORE = "downloads";
 
+/** A Blobs call that hangs must fail here, never run into the function timeout. */
+const TIMEOUT_MS = 8000;
+
 export type DownloadCounts = Record<string, number>;
 
 export const recipeDownloadId = (slug: string) => `recipe:${slug}`;
@@ -25,6 +28,18 @@ export function isDownloadId(id: string): boolean {
   );
 }
 
+async function withTimeout<T>(promise: Promise<T>, label: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${label} timed out after ${TIMEOUT_MS}ms`)), TIMEOUT_MS);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /**
  * Every count, for server rendering. Returns {} whenever Blobs isn't
  * reachable (local dev, a build without Blobs context, an outage) so pages
@@ -34,11 +49,14 @@ export async function getDownloadCounts(): Promise<DownloadCounts> {
   if (!siteConfig.downloadCounts.enabled) return {};
   try {
     const store = getStore(STORE);
-    const { blobs } = await store.list();
+    const { blobs } = await withTimeout(store.list(), "list");
     const entries = await Promise.all(
       blobs
         .filter((blob) => isDownloadId(blob.key))
-        .map(async (blob) => [blob.key, Number(await store.get(blob.key)) || 0] as const)
+        .map(
+          async (blob) =>
+            [blob.key, Number(await withTimeout(store.get(blob.key), "get")) || 0] as const
+        )
     );
     return Object.fromEntries(entries);
   } catch {
@@ -47,13 +65,14 @@ export async function getDownloadCounts(): Promise<DownloadCounts> {
 }
 
 /**
- * Read-modify-write increment. Two clicks landing in the same instant can
- * lose one, which is fine at this traffic and only ever undercounts.
+ * Read-modify-write increment on the default (eventually consistent) client.
+ * Two clicks landing in the same instant can lose one, which is fine at this
+ * traffic and only ever undercounts. Throws (fast) when Blobs is unreachable.
  */
 export async function incrementDownload(id: string): Promise<number> {
-  const store = getStore({ name: STORE, consistency: "strong" });
-  const next = (Number(await store.get(id)) || 0) + 1;
-  await store.set(id, String(next));
+  const store = getStore(STORE);
+  const next = (Number(await withTimeout(store.get(id), "get")) || 0) + 1;
+  await withTimeout(store.set(id, String(next)), "set");
   return next;
 }
 
@@ -74,4 +93,51 @@ export function mostDownloadedSlug(counts: DownloadCounts): string | undefined {
   const [first, second] = ranked;
   if (first.count < siteConfig.downloadCounts.minToShow) return undefined;
   return first.count >= second.count * 1.2 ? first.slug : undefined;
+}
+
+interface ProbeStep {
+  label: string;
+  ms: number;
+  ok: boolean;
+  value?: unknown;
+  error?: string;
+}
+
+/**
+ * Diagnostics for GET /api/downloads?debug=1: each Blobs operation timed,
+ * with its error message when it fails. Writes only the `_probe` key, which
+ * isDownloadId() keeps out of the counts. No secrets, nothing personal.
+ */
+export async function probeDownloadStore() {
+  const steps: ProbeStep[] = [];
+  const run = async (label: string, fn: () => Promise<unknown>) => {
+    const started = Date.now();
+    try {
+      const value = await withTimeout(fn(), label);
+      steps.push({ label, ms: Date.now() - started, ok: true, value });
+    } catch (error) {
+      steps.push({
+        label,
+        ms: Date.now() - started,
+        ok: false,
+        error: error instanceof Error ? `${error.name}: ${error.message}` : String(error),
+      });
+    }
+  };
+
+  await run("list", async () => (await getStore(STORE).list()).blobs.map((blob) => blob.key));
+  await run("get", () => getStore(STORE).get("_probe"));
+  await run("set", () => getStore(STORE).set("_probe", new Date().toISOString()));
+  await run("get-after-set", () => getStore(STORE).get("_probe"));
+  await run("get-strong", () => getStore({ name: STORE, consistency: "strong" }).get("_probe"));
+
+  return {
+    env: {
+      netlify: Boolean(process.env.NETLIFY),
+      blobsContext: Boolean(process.env.NETLIFY_BLOBS_CONTEXT),
+      siteId: Boolean(process.env.SITE_ID ?? process.env.NETLIFY_SITE_ID),
+      runtime: process.env.NEXT_RUNTIME ?? "node",
+    },
+    steps,
+  };
 }

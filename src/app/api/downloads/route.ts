@@ -3,6 +3,7 @@ import {
   getDownloadCounts,
   incrementDownload,
   isDownloadId,
+  probeDownloadStore,
   totalDownloads,
 } from "@/lib/download-counts";
 import { siteConfig } from "@/lib/siteConfig";
@@ -11,6 +12,7 @@ import { siteConfig } from "@/lib/siteConfig";
  * Download counter endpoint. The TrackedDownload link POSTs here with
  * navigator.sendBeacon (text/plain body: {"id":"recipe:vanilla-summer"}).
  * GET returns every count plus the total, for checking on a deploy preview.
+ * GET ?debug=1 runs the Blobs probe (timings and errors per operation).
  */
 
 export const dynamic = "force-dynamic";
@@ -35,13 +37,23 @@ export async function POST(request: Request) {
   try {
     const count = await incrementDownload(id);
     return NextResponse.json({ id, count }, { headers: noStore });
-  } catch {
-    // Blobs unavailable (local dev). The download itself already happened.
-    return NextResponse.json({ error: "Counter unavailable" }, { status: 503, headers: noStore });
+  } catch (error) {
+    // Blobs unreachable or slow (local dev, an outage). The download itself
+    // already happened; say why so a deploy preview check can see it.
+    return NextResponse.json(
+      {
+        error: "Counter unavailable",
+        detail: error instanceof Error ? `${error.name}: ${error.message}` : String(error),
+      },
+      { status: 503, headers: noStore }
+    );
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (new URL(request.url).searchParams.get("debug") === "1") {
+    return NextResponse.json(await probeDownloadStore(), { headers: noStore });
+  }
   const counts = await getDownloadCounts();
   return NextResponse.json(
     { counts, total: totalDownloads(counts) },
