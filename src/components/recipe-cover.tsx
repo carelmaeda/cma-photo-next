@@ -4,7 +4,10 @@ import { cn } from "@/lib/utils";
 
 interface RecipeCoverProps {
   recipe: Recipe;
-  /** card = 4:5 grid tile, wide = 16:10 post hero, thumb = 64px square. */
+  /**
+   * card = 4:5 grid tile, wide = 16:10 post hero, thumb = 64px square.
+   * A recipe with a thumbScene draws that scene at every size.
+   */
   variant?: "card" | "wide" | "thumb";
   className?: string;
 }
@@ -83,12 +86,27 @@ function barcode(name: string) {
 export function RecipeCover({ recipe, variant = "card", className }: RecipeCoverProps) {
   const t = tones[recipe.coverTone];
 
-  if (variant === "thumb" && recipe.thumbScene === "summer") {
+  if (recipe.thumbScene === "summer") {
+    const shapes = summerScene.map(({ tag: Tag, tone, attrs }, i) => (
+      <Tag key={i} {...attrs} className={summerFill[tone]} />
+    ));
+    if (variant === "thumb") {
+      return (
+        <svg aria-hidden viewBox="0 0 100 100" className={cn("size-16 shrink-0", className)}>
+          {shapes}
+        </svg>
+      );
+    }
+    // Crop the square scene to the box: 4:5 trims the sides, 16:10 trims the
+    // top of the sky. The sun stays whole in both.
     return (
-      <svg aria-hidden viewBox="0 0 100 100" className={cn("size-16 shrink-0", className)}>
-        {summerScene.map(({ tag: Tag, tone, attrs }, i) => (
-          <Tag key={i} {...attrs} className={summerFill[tone]} />
-        ))}
+      <svg
+        role="img"
+        aria-label={`${recipe.name}, a Fujifilm recipe on ${recipe.filmSimulation}`}
+        viewBox={variant === "wide" ? "0 34 100 62.5" : "10 0 80 100"}
+        className={cn("block h-auto w-full border border-line", className)}
+      >
+        {shapes}
       </svg>
     );
   }
