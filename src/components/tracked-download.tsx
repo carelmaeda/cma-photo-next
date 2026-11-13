@@ -5,12 +5,12 @@ import { track } from "@/lib/analytics";
 import { EVENTS } from "@/lib/analytics-events";
 
 /**
- * A plain download link that also reports the download (SPEC §10).
- * The browser handles the file exactly as before; on click we fire a GA4
- * file_download event and, for files served statically (presets), a beacon
- * to /api/downloads, once per browser (localStorage flag) so repeat clicks
- * don't inflate the number. Recipe cards are counted by the card route
- * itself (countVia="server"), so they skip the beacon.
+ * A plain download link that also counts the download (SPEC §10).
+ * The browser handles the file exactly as before (static, from the CDN); on
+ * click we fire a GA4 file_download event and a beacon to /api/downloads,
+ * once per browser (localStorage flag) so repeat clicks don't inflate the
+ * number. countVia="server" is for a file whose own route increments the
+ * counter; nothing uses it today.
  * Nothing here can block or break the download.
  */
 export function TrackedDownload({

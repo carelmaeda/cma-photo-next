@@ -124,11 +124,10 @@ export async function RecipePage({ locale, slug }: { locale: Locale; slug: strin
               </ul>
 
               {/* The card is the recipe: values live only on the PNG, one card
-                  for both languages. The card route counts the download. */}
+                  for both languages. The click beacon counts the download. */}
               <TrackedDownload
                 id={recipeDownloadId(recipe.slug)}
                 fileType="recipe_card"
-                countVia="server"
                 href={`/recipes/${recipe.slug}/card.png`}
                 download={`${recipe.slug}-fujifilm-recipe.png`}
                 className={cn(buttonVariants({ size: "lg" }), "mt-5 w-full")}

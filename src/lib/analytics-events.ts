@@ -127,7 +127,7 @@ export const eventCatalog: EventDoc[] = [
       { key: "file_type", example: "recipe_card", note: "recipe_card | preset" },
     ],
     notes:
-      "Fires on every click. The on-site counter (Netlify Blobs) is separate: recipe cards are counted by the card.png route on every non-bot fetch, presets by a beacon to /api/downloads once per browser. It also catches visitors who block GA, so the two numbers will differ.",
+      "Fires on every click. The on-site counter (Netlify Blobs, via a beacon to /api/downloads) counts once per browser and also catches visitors who block GA, so the two numbers will differ.",
   },
   {
     name: EVENTS.search,

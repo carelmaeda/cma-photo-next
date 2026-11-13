@@ -1,28 +1,28 @@
 import { ImageResponse } from "next/og";
 import { summerScene, type SummerTone } from "@/components/recipe-cover";
-import { getRecipe } from "@/content/recipes";
-import { incrementDownload, recipeDownloadId } from "@/lib/download-counts";
+import { getRecipe, recipes } from "@/content/recipes";
 import { siteConfig } from "@/lib/siteConfig";
 
 /**
  * /recipes/[slug]/card.png: the recipe as a 1080x1350 card (Instagram
  * portrait size) to save to the phone and pull up while setting the camera.
+ * Built once at build time, served as a static PNG from the CDN, so the
+ * download starts at once. (A dynamic version that rendered per request took
+ * up to a minute on a cold Netlify function; never go back to that.)
  *
- * Since November 13, 2026 the card IS the recipe (SPEC §10): the setting
- * values appear only here, never on the page. So the route is dynamic, sends
- * the PNG as an attachment (the browser saves it instead of showing it in a
- * tab) and counts the download server-side, which makes the counter exact
- * for every way of fetching the file. Rendering is a few hundred ms; the
- * fonts are fetched once per server instance.
+ * The card IS the recipe (SPEC §10, November 13, 2026): the setting values
+ * appear only here, never on the page. Content-Disposition makes browsers
+ * save it rather than show it in a tab. Downloads are counted by the click
+ * beacon in TrackedDownload, not here.
  *
  * Satori renders inline styles only, so the brand tokens from globals.css are
  * mirrored here as hex. Keep them in sync if the palette changes.
  */
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
-/** Crawlers and link-preview fetchers must not inflate the count. */
-const BOT_UA =
-  /bot|crawl|spider|slurp|preview|facebookexternalhit|whatsapp|telegram|discord|skype|embedly|pinterest|headless|lighthouse/i;
+export function generateStaticParams() {
+  return recipes.map((recipe) => ({ slug: recipe.slug }));
+}
 
 const c = {
   paper: "#FAFAF8",
@@ -61,19 +61,7 @@ function summerSceneDataUri(): string {
 }
 
 /** Plus Jakarta Sans as TTF (Satori can't read woff2). Falls back to the built-in font. */
-const fontCache = new Map<400 | 700, Promise<ArrayBuffer | null>>();
-function loadFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
-  let cached = fontCache.get(weight);
-  if (!cached) {
-    cached = fetchFont(weight).then((font) => {
-      if (!font) fontCache.delete(weight); // retry next time instead of caching a miss
-      return font;
-    });
-    fontCache.set(weight, cached);
-  }
-  return cached;
-}
-async function fetchFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
+async function loadFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
   try {
     const css = await (
       await fetch(`https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@${weight}`)
@@ -86,18 +74,10 @@ async function fetchFont(weight: 400 | 700): Promise<ArrayBuffer | null> {
   }
 }
 
-export async function GET(req: Request, { params }: { params: Promise<{ slug: string }> }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const recipe = getRecipe(slug);
   if (!recipe) return new Response("Not found", { status: 404 });
-
-  if (!BOT_UA.test(req.headers.get("user-agent") ?? "")) {
-    try {
-      await incrementDownload(recipeDownloadId(recipe.slug));
-    } catch {
-      // Blobs unavailable (local dev). The card still downloads.
-    }
-  }
 
   const [regular, bold] = await Promise.all([loadFont(400), loadFont(700)]);
   const fonts = [
@@ -208,7 +188,6 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
       fonts: fonts.length ? fonts : undefined,
       headers: {
         "Content-Disposition": `attachment; filename="${recipe.slug}-fujifilm-recipe.png"`,
-        "Cache-Control": "no-store",
         "X-Robots-Tag": "noindex",
       },
     },
