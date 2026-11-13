@@ -171,7 +171,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
           }}
         >
           <span>{`${new URL(siteConfig.url).host}/recipes/${recipe.slug}`}</span>
-          <span>Free, full settings</span>
+          <span>My Fujifilm Recipe </span>
         </div>
       </div>
     ),

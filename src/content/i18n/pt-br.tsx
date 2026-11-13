@@ -152,7 +152,7 @@ export const ptBr: Dictionary = {
       "presets Lightroom Fujifilm",
     ],
     listName: "Receitas Fujifilm",
-    eyebrow: "Grátis, configurações completas",
+    eyebrow: "Receita Fujifilm",
     heading: "Receitas Fujifilm",
     intro:
       "Os visuais feitos dentro da câmera por trás das minhas fotos. Toda configuração está na página, de graça. Ajuste, salve num slot personalizado, vá fotografar.",
@@ -181,14 +181,14 @@ export const ptBr: Dictionary = {
     aboutName: "Receitas de simulação de filme Fujifilm",
     ldKeywords: (recipe) =>
       `${recipe.name}, ${recipe.filmSimulation}, ${recipe.compatibility}, receita Fujifilm`,
-    eyebrow: "Grátis, configurações completas",
-    heading: (recipe) => `Receita Fujifilm ${recipe.name}`,
+    eyebrow: "Receita Fujifilm",
+    heading: (recipe) => recipe.name,
     by: "por",
     settingHeader: "Configuração",
     download: "Baixar em PNG",
     loadingHeading: "Como carregar",
     loading1:
-      "Salve num slot personalizado (C1 a C7) para ficar a um giro do dial. Depois é só entrar no visual sem mexer nos menus de novo.",
+      "Salve num slot personalizado (C1 a C7). Depois é só entrar no visual sem mexer nos menus de novo.",
     loading2:
       "E então pare de pensar nisso. A ideia toda é a câmera fazer o trabalho enquanto você olha a luz.",
     wroteAbout: "Escrevi sobre o porquê de cada configuração:",

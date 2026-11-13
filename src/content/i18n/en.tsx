@@ -157,7 +157,7 @@ export const en: Dictionary = {
       "Fujifilm Lightroom presets",
     ],
     listName: "Fujifilm recipes",
-    eyebrow: "Free, full settings",
+    eyebrow: "Fujifilm recipe",
     heading: "Fujifilm recipes",
     intro:
       "The in-camera looks behind my photos. Every setting is on the page, free. Dial it in, save it to a custom slot, go shoot.",
@@ -186,14 +186,14 @@ export const en: Dictionary = {
     aboutName: "Fujifilm film simulation recipes",
     ldKeywords: (recipe) =>
       `${recipe.name}, ${recipe.filmSimulation}, ${recipe.compatibility}, Fujifilm recipe`,
-    eyebrow: "Free, full settings",
-    heading: (recipe) => `${recipe.name} Fujifilm recipe`,
+    eyebrow: "Fujifilm Recipe",
+    heading: (recipe) => recipe.name,
     by: "by",
     settingHeader: "Setting",
     download: "Download as PNG",
     loadingHeading: "Loading it",
     loading1:
-      "Save it as a custom slot (C1–C7) so it's one dial away. Then you switch into the look without touching the menus again.",
+      "Save it as a custom slot (C1–C7). Then you switch into the look without touching the menus again.",
     loading2:
       "Then stop thinking about it. The whole point is that the camera does the work and you watch the light.",
     wroteAbout: "I wrote about why the settings are what they are:",
