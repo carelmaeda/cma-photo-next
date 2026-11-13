@@ -7,25 +7,52 @@ import { siteConfig } from "@/lib/siteConfig";
  * one key per downloadable file, the value is the count as a string. Nothing
  * personal is stored: no IPs, no timestamps, no visitors.
  *
+ * Ids ("recipe:vanilla-summer") are what the page, the API and GA4 use. The
+ * blob key is a sanitised form of the id: on the live site a get() on a key
+ * containing ":" hung until the function timed out, while plain keys answered
+ * in milliseconds, so keys stay to letters, digits, ".", "_" and "-".
+ *
  * Counts start at zero. Never seed or edit them by hand.
  */
 
 const STORE = "downloads";
 
+/** Blob key for an id: "recipe:vanilla-summer" → "recipe-vanilla-summer". */
+export function blobKey(id: string): string {
+  return id.replace(/[^A-Za-z0-9._-]+/g, "-");
+}
+
+/** Every id that can be counted (the allowlist), in content order. */
+function allDownloadIds(): string[] {
+  return [
+    ...recipes.map((recipe) => recipeDownloadId(recipe.slug)),
+    ...presets.map((preset) => presetDownloadId(preset.file)),
+  ];
+}
+
 /** A Blobs call that hangs must fail here, never run into the function timeout. */
 const TIMEOUT_MS = 8000;
 
+/**
+ * Strong consistency everywhere: the default (eventually consistent) client
+ * served stale reads and an empty list for minutes on the live site; strong
+ * reads answered in under 50ms. Traffic is tiny, so the cost is nothing.
+ */
+const store = () => getStore({ name: STORE, consistency: "strong" });
+
 export type DownloadCounts = Record<string, number>;
 
-export const recipeDownloadId = (slug: string) => `recipe:${slug}`;
-export const presetDownloadId = (file: string) => `preset:${file}`;
+/**
+ * Keys use "/" as the separator. A ":" in a key made every Blobs call on it
+ * hang until the function timeout on Netlify (November 13, 2026), while the
+ * same calls on a plain key took milliseconds. Never put ":" in a key.
+ */
+export const recipeDownloadId = (slug: string) => `recipe/${slug}`;
+export const presetDownloadId = (file: string) => `preset/${file.replace(/^\/+/, "")}`;
 
-/** The only keys the counter accepts, so the store can't be filled with junk. */
+/** The only ids the counter accepts, so the store can't be filled with junk. */
 export function isDownloadId(id: string): boolean {
-  return (
-    recipes.some((recipe) => recipeDownloadId(recipe.slug) === id) ||
-    presets.some((preset) => presetDownloadId(preset.file) === id)
-  );
+  return allDownloadIds().includes(id);
 }
 
 async function withTimeout<T>(promise: Promise<T>, label: string): Promise<T> {
@@ -48,14 +75,14 @@ async function withTimeout<T>(promise: Promise<T>, label: string): Promise<T> {
 export async function getDownloadCounts(): Promise<DownloadCounts> {
   if (!siteConfig.downloadCounts.enabled) return {};
   try {
-    const store = getStore(STORE);
-    const { blobs } = await withTimeout(store.list(), "list");
+    const s = store();
+    const { blobs } = await withTimeout(s.list(), "list");
     const entries = await Promise.all(
       blobs
         .filter((blob) => isDownloadId(blob.key))
         .map(
           async (blob) =>
-            [blob.key, Number(await withTimeout(store.get(blob.key), "get")) || 0] as const
+            [blob.key, Number(await withTimeout(s.get(blob.key), "get")) || 0] as const
         )
     );
     return Object.fromEntries(entries);
@@ -65,14 +92,14 @@ export async function getDownloadCounts(): Promise<DownloadCounts> {
 }
 
 /**
- * Read-modify-write increment on the default (eventually consistent) client.
- * Two clicks landing in the same instant can lose one, which is fine at this
- * traffic and only ever undercounts. Throws (fast) when Blobs is unreachable.
+ * Read-modify-write increment. Two clicks landing in the same instant can
+ * lose one, which is fine at this traffic and only ever undercounts.
+ * Throws (fast) when Blobs is unreachable.
  */
 export async function incrementDownload(id: string): Promise<number> {
-  const store = getStore(STORE);
-  const next = (Number(await withTimeout(store.get(id), "get")) || 0) + 1;
-  await withTimeout(store.set(id, String(next)), "set");
+  const s = store();
+  const next = (Number(await withTimeout(s.get(id), "get")) || 0) + 1;
+  await withTimeout(s.set(id, String(next)), "set");
   return next;
 }
 
@@ -125,11 +152,14 @@ export async function probeDownloadStore() {
     }
   };
 
-  await run("list", async () => (await getStore(STORE).list()).blobs.map((blob) => blob.key));
-  await run("get", () => getStore(STORE).get("_probe"));
-  await run("set", () => getStore(STORE).set("_probe", new Date().toISOString()));
-  await run("get-after-set", () => getStore(STORE).get("_probe"));
-  await run("get-strong", () => getStore({ name: STORE, consistency: "strong" }).get("_probe"));
+  await run("list", async () => (await store().list()).blobs.map((blob) => blob.key));
+  await run("get", () => store().get("_probe"));
+  await run("set", () => store().set("_probe", new Date().toISOString()));
+  await run("get-after-set", () => store().get("_probe"));
+  await run("list-after-set", async () => (await store().list()).blobs.map((blob) => blob.key));
+  await run("get-slash-key", () => store().get("probe/slash"));
+  // Documents the November 13, 2026 finding: a ":" in the key hangs the call.
+  await run("get-colon-key", () => store().get("probe:colon"));
 
   return {
     env: {

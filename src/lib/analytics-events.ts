@@ -123,7 +123,7 @@ export const eventCatalog: EventDoc[] = [
     where: "Recipe page Download as PNG button, Lightroom preset links on /recipes and recipe pages (TrackedDownload)",
     status: "active",
     params: [
-      { key: "file_id", example: "recipe:vanilla-summer", note: "recipe:<slug> or preset:<file path>, same key as the on-site counter" },
+      { key: "file_id", example: "recipe/vanilla-summer", note: "recipe/<slug> or preset/<file path>, same key as the on-site counter" },
       { key: "file_type", example: "recipe_card", note: "recipe_card | preset" },
     ],
     notes:
