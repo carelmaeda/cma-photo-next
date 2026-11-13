@@ -200,7 +200,6 @@ export const en: Dictionary = {
     panelFormat: "PNG · 1080 × 1350 · for your phone",
     specFree: "Free. No email asked.",
     specPhone: "Save it to your phone, set the camera from it",
-    frames: (count) => `${count} frames`,
     scrollHint: "Scroll",
     loadingHeading: "Loading it",
     loading1:

@@ -25,7 +25,8 @@ function Chip({ children, className }: { children: React.ReactNode; className?: 
   return (
     <p
       className={cn(
-        "inline-flex h-7 items-center gap-1.5 rounded-sm border border-brick px-2.5 font-mono text-cap tracking-frame text-brick uppercase",
+        // Same height and corner as the default Button, so the chip sits level with a button beside it.
+        "inline-flex h-13 items-center gap-2 rounded-md border border-brick px-5 font-mono text-cap tracking-frame text-brick uppercase sm:h-10 sm:px-4",
         className
       )}
     >

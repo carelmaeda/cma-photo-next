@@ -109,8 +109,7 @@ export interface Dictionary {
     panelFormat: string;
     specFree: string;
     specPhone: string;
-    /** Contact-sheet strip: "7 frames", and the scroll hint. */
-    frames: (count: number) => string;
+    /** Contact-sheet strip scroll hint. */
     scrollHint: string;
     loadingHeading: string;
     loading1: string;

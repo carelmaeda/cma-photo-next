@@ -149,9 +149,7 @@ export async function RecipePage({ locale, slug }: { locale: Locale; slug: strin
         {frames.length > 0 && (
           <section aria-label={t.shotOn(recipe)} className="border-y border-line py-4 md:py-5">
             <div className="flex items-baseline justify-between gap-4">
-              <h2 className={eyebrow}>
-                {t.shotOn(recipe)} · {t.frames(frames.length)}
-              </h2>
+              <h2 className={eyebrow}>{t.shotOn(recipe)}</h2>
               <p className={cn(eyebrow, "hidden shrink-0 items-center gap-1 sm:inline-flex")}>
                 {t.scrollHint}
                 <ArrowRight className="size-3" aria-hidden />

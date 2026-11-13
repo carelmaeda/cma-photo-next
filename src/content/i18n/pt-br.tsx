@@ -195,7 +195,6 @@ export const ptBr: Dictionary = {
     panelFormat: "PNG · 1080 × 1350 · para o celular",
     specFree: "De graça. Sem pedir e-mail.",
     specPhone: "Salve no celular e ajuste a câmera por ele",
-    frames: (count) => `${count} fotos`,
     scrollHint: "Deslize",
     loadingHeading: "Como carregar",
     loading1:
