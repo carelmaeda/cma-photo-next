@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
-import { InstagramIcon } from "@/components/instagram-link";
 import { RecipeCover } from "@/components/recipe-cover";
 import { ShareButton } from "@/components/share-button";
 import { realAlbums } from "@/content/albums";
@@ -39,6 +37,8 @@ interface LinkRow {
   recipe?: Recipe;
   /** Slightly bigger, indigo-filled row at the top: the link I want tapped first. */
   featured?: boolean;
+  /** Set on a row that leads to the /pt-br mirror: the label is Portuguese and a flag sits beside it. */
+  lang?: "pt-BR";
 }
 
 const FEATURED_SLUG = "vanilla-summer";
@@ -64,6 +64,17 @@ const links: LinkRow[] = [
       featured: recipe.slug === FEATURED_SLUG,
     }))
     .sort((a, b) => Number(b.featured) - Number(a.featured)),
+  // The same recipe in Portuguese, for the Brazilians who follow me.
+  ...recipes
+    .filter((recipe) => recipe.slug === FEATURED_SLUG)
+    .map((recipe) => ({
+      href: `/pt-br/recipes/${recipe.slug}`,
+      label: `Receita ${recipe.name}`,
+      external: false,
+      photo: recipe.sampleFrames[0],
+      recipe,
+      lang: "pt-BR" as const,
+    })),
   {
     href: "/gallery",
     label: "Portfolio",
@@ -105,10 +116,43 @@ function Thumb({ link }: { link: LinkRow }) {
   return null;
 }
 
+/**
+ * Small Brazil flag (field, rhombus, globe; the stars and motto band are lost
+ * at this size anyway). Drawn inline because the 🇧🇷 emoji renders as the
+ * letters "BR" on Windows. The fills are the flag's official colours, not
+ * site tokens: it's a national symbol, not UI colour.
+ */
+function BrazilFlag() {
+  return (
+    <svg
+      role="img"
+      aria-label="Português (Brasil)"
+      viewBox="0 0 20 14"
+      className="h-3.5 w-5 shrink-0 rounded-sm"
+    >
+      <rect width="20" height="14" fill="#009C3B" />
+      <polygon points="10,1.6 18.2,7 10,12.4 1.8,7" fill="#FFDF00" />
+      <circle cx="10" cy="7" r="3.2" fill="#002776" />
+    </svg>
+  );
+}
+
 function RowBody({ link }: { link: LinkRow }) {
   return (
     <>
-      <Thumb link={link} />
+      {link.lang === "pt-BR" ? (
+        // Flag pinned to the thumb's bottom-right corner, on a chip in the
+        // row's own colour so it lifts off the picture. Sits outside the
+        // thumb's overflow-hidden tile so the corner isn't clipped.
+        <span className="relative shrink-0">
+          <Thumb link={link} />
+          <span className="absolute -right-1 -bottom-1 flex rounded-sm bg-paper-2 p-0.5">
+            <BrazilFlag />
+          </span>
+        </span>
+      ) : (
+        <Thumb link={link} />
+      )}
       <span className="min-w-0 flex-1">
         <span
           className={`block truncate font-semibold leading-snug ${link.featured ? "text-lg" : ""}`}
@@ -134,13 +178,15 @@ export default function LinksPage() {
           <div className="flex items-center gap-5">
             <span className="shrink-0 rounded-full bg-conic from-brick via-indigo to-brick p-0.5">
               <span className="block rounded-full bg-paper-2 p-0.5">
-                <Image
-                  src="/app-icon-180.png"
-                  alt=""
-                  width={180}
-                  height={180}
+                <CldImage
+                  photo={siteConfig.portrait}
+                  width={160}
+                  height={160}
+                  gravity="face"
+                  quality="good"
+                  sizes="80px"
                   priority
-                  className="size-20 rounded-full"
+                  className="size-20 rounded-full object-cover"
                 />
               </span>
             </span>
@@ -152,15 +198,6 @@ export default function LinksPage() {
           <p className="mt-3 text-sm text-ink-soft">
             Travel photographer. Toronto, from São Paulo.
           </p>
-          <a
-            href={siteConfig.instagram}
-            target="_blank"
-            rel="me noopener noreferrer"
-            className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-indigo text-sm font-semibold text-paper transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
-          >
-            <InstagramIcon className="size-4" />
-            Follow on Instagram
-          </a>
         </div>
 
         {/* The Links sheet. */}
@@ -191,7 +228,12 @@ export default function LinksPage() {
                     <RowBody link={link} />
                   </a>
                 ) : (
-                  <Link href={link.href} className={link.featured ? featuredClass : rowClass}>
+                  <Link
+                    href={link.href}
+                    lang={link.lang}
+                    hrefLang={link.lang}
+                    className={link.featured ? featuredClass : rowClass}
+                  >
                     <RowBody link={link} />
                   </Link>
                 )}

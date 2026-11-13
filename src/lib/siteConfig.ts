@@ -13,6 +13,11 @@ export const siteConfig = {
   cloudinary: {
     cloudName: "duwhxzb0q",
   },
+  /** My portrait, the same photo as the Instagram profile picture. Used on /links. */
+  portrait: {
+    publicId: "DOCS/_DSF3125-Edit-2_zps9li",
+    alt: "Carel Maeda",
+  },
   /** Netlify form names — must match public/__forms.html exactly */
   forms: {
     newsletter: "newsletter",
