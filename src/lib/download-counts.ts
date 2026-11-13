@@ -7,20 +7,13 @@ import { siteConfig } from "@/lib/siteConfig";
  * one key per downloadable file, the value is the count as a string. Nothing
  * personal is stored: no IPs, no timestamps, no visitors.
  *
- * Ids ("recipe:vanilla-summer") are what the page, the API and GA4 use. The
- * blob key is a sanitised form of the id: on the live site a get() on a key
- * containing ":" hung until the function timed out, while plain keys answered
- * in milliseconds, so keys stay to letters, digits, ".", "_" and "-".
+ * The id ("recipe/vanilla-summer") is the blob key and is also what the page,
+ * the API and GA4 use.
  *
  * Counts start at zero. Never seed or edit them by hand.
  */
 
 const STORE = "downloads";
-
-/** Blob key for an id: "recipe:vanilla-summer" → "recipe-vanilla-summer". */
-export function blobKey(id: string): string {
-  return id.replace(/[^A-Za-z0-9._-]+/g, "-");
-}
 
 /** Every id that can be counted (the allowlist), in content order. */
 function allDownloadIds(): string[] {
@@ -95,10 +88,17 @@ export async function getDownloadCounts(): Promise<DownloadCounts> {
  * Read-modify-write increment. Two clicks landing in the same instant can
  * lose one, which is fine at this traffic and only ever undercounts.
  * Throws (fast) when Blobs is unreachable.
+ *
+ * On the live site (November 13, 2026) every get() on a key that had never
+ * been written hung until the timeout, while get() on an existing key took
+ * milliseconds. So a key is read only after list() has shown it; a new key
+ * is written as "1" without a read.
  */
 export async function incrementDownload(id: string): Promise<number> {
   const s = store();
-  const next = (Number(await withTimeout(s.get(id), "get")) || 0) + 1;
+  const { blobs } = await withTimeout(s.list({ prefix: id }), "list");
+  const exists = blobs.some((blob) => blob.key === id);
+  const next = exists ? (Number(await withTimeout(s.get(id), "get")) || 0) + 1 : 1;
   await withTimeout(s.set(id, String(next)), "set");
   return next;
 }
@@ -157,8 +157,10 @@ export async function probeDownloadStore() {
   await run("set", () => store().set("_probe", new Date().toISOString()));
   await run("get-after-set", () => store().get("_probe"));
   await run("list-after-set", async () => (await store().list()).blobs.map((blob) => blob.key));
+  // November 13, 2026: which gets hang? A plain key that was never written,
+  // and the never-written slash and colon keys, against the existing _probe.
+  await run("get-missing-plain", () => store().get(`_probe_missing_${Date.now()}`));
   await run("get-slash-key", () => store().get("probe/slash"));
-  // Documents the November 13, 2026 finding: a ":" in the key hangs the call.
   await run("get-colon-key", () => store().get("probe:colon"));
 
   return {
