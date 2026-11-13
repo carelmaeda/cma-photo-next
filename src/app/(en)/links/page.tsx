@@ -68,7 +68,7 @@ const links: LinkRow[] = [
     .filter((recipe) => recipe.slug === FEATURED_SLUG)
     .map((recipe) => ({
       href: `/pt-br/recipes/${recipe.slug}`,
-      label: `Receita ${recipe.name}`,
+      label: `[PT] Receita ${recipe.name}`,
       external: false,
       recipe,
       lang: "pt-BR" as const,
