@@ -14,7 +14,7 @@ export const en: Dictionary = {
   site: {
     title: "Carel Maeda: Fujifilm Recipes and Travel Photography",
     description:
-      "Free Fujifilm recipes with every setting listed, travel photography city by city, and notes on shooting JPG straight out of camera. São Paulo made, Toronto based.",
+      "Free Fujifilm recipes as downloadable cards with every setting, travel photography city by city, and notes on shooting JPG straight out of camera. São Paulo made, Toronto based.",
     keywords: [
       "Fujifilm recipes",
       "Fujifilm film simulation recipes",
@@ -52,7 +52,7 @@ export const en: Dictionary = {
   person: {
     jobTitle: "Travel photographer",
     description:
-      "Travel photographer shooting Fujifilm, JPG straight out of camera. Publishes free Fujifilm recipes with full settings.",
+      "Travel photographer shooting Fujifilm, JPG straight out of camera. Publishes free Fujifilm recipes as downloadable cards.",
     knowsAbout: [
       "Fujifilm film simulation recipes",
       "Travel photography",
@@ -143,11 +143,11 @@ export const en: Dictionary = {
   },
 
   recipes: {
-    title: "Free Fujifilm Recipes, Full Settings",
+    title: "Free Fujifilm Recipes to Download",
     description: (recipes) =>
       `Free Fujifilm film simulation recipes for X-Trans IV and V bodies: ${recipes
         .map((recipe) => `${recipe.name} on ${recipe.filmSimulation}`)
-        .join(", ")}. Every setting listed, nothing gated.`,
+        .join(", ")}. Every setting on a free card you download, no email asked.`,
     keywords: [
       "free Fujifilm recipes",
       "Fujifilm X-Trans IV recipes",
@@ -160,7 +160,7 @@ export const en: Dictionary = {
     eyebrow: "Fujifilm recipe",
     heading: "Fujifilm recipes",
     intro:
-      "The in-camera looks behind my photos. Every setting is on the page, free. Dial it in, save it to a custom slot, go shoot.",
+      "The in-camera looks behind my photos. Each one is a free card with every setting on it. Download it, save it to a custom slot, go shoot.",
     presetsHeading: "Lightroom presets",
     presetsIntro:
       "I shoot JPG and build the look in camera. If you shoot RAW and edit, these presets give you the same looks in Lightroom. Free downloads, no email needed.",
@@ -169,10 +169,16 @@ export const en: Dictionary = {
       "I send one email a month, mostly photos, plus new recipes when they are ready. Unsubscribe anytime.",
   },
 
+  downloadCounts: {
+    count: (formatted) => `${formatted} downloads`,
+    total: (formatted) => `Downloaded ${formatted} times so far`,
+    mostDownloaded: "Most downloaded",
+  },
+
   recipePage: {
     title: (recipe) => `${recipe.name}: ${recipe.filmSimulation} Fujifilm Recipe`,
     description: (recipe) =>
-      `Free Fujifilm recipe: ${recipe.name}, a ${recipe.filmSimulation} look for ${recipe.compatibility} bodies. Every setting listed. ${recipe.tagline}`,
+      `Free Fujifilm recipe: ${recipe.name}, a ${recipe.filmSimulation} look for ${recipe.compatibility} bodies. Every setting on a free card you download. ${recipe.tagline}`,
     keywords: (recipe) => [
       `${recipe.name} Fujifilm recipe`,
       `${recipe.filmSimulation} recipe`,
@@ -189,16 +195,20 @@ export const en: Dictionary = {
     eyebrow: "Fujifilm Recipe",
     heading: (recipe) => recipe.name,
     by: "by",
-    settingHeader: "Setting",
-    download: "Download as PNG",
+    download: "Download the recipe card",
+    panelEyebrow: "Recipe card",
+    panelFormat: "PNG · 1080 × 1350 · for your phone",
+    specFree: "Free. No email asked.",
+    specPhone: "Save it to your phone, set the camera from it",
+    frames: (count) => `${count} frames`,
+    scrollHint: "Scroll",
     loadingHeading: "Loading it",
     loading1:
       "Save it as a custom slot (C1–C7). Then you switch into the look without touching the menus again.",
     loading2:
       "Then stop thinking about it. The whole point is that the camera does the work and you watch the light.",
     wroteAbout: "I wrote about why the settings are what they are:",
-    alsoPublish: "I also publish",
-    sameDeal: ". Same deal: free, every setting on the page.",
+    moreRecipes: "More recipes",
     shotOn: (recipe) => `Shot on ${recipe.name}`,
     lightroomHeading: "The Lightroom version",
     lightroomIntro:

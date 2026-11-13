@@ -21,6 +21,8 @@ export const EVENTS = {
   mobileMenuOpen: "mobile_menu_open",
   /** A code/settings sample was copied to the clipboard. */
   copyCodeSample: "copy_code_sample",
+  /** A free file (recipe card PNG or Lightroom preset) was downloaded. */
+  fileDownload: "file_download",
   /** GA4 recommended event — site search submitted. */
   search: "search",
   /** A listing filter/facet was selected. */
@@ -113,6 +115,19 @@ export const eventCatalog: EventDoc[] = [
     ],
     notes:
       "The copy button is attached to the MDX code-block render path, so any ``` fenced block in a guide gets it automatically. No guide ships a code block today, so it stays dormant until one does.",
+  },
+  {
+    name: EVENTS.fileDownload,
+    category: "Content",
+    trigger: "Click on a free download link",
+    where: "Recipe page Download as PNG button, Lightroom preset links on /recipes and recipe pages (TrackedDownload)",
+    status: "active",
+    params: [
+      { key: "file_id", example: "recipe:vanilla-summer", note: "recipe:<slug> or preset:<file path>, same key as the on-site counter" },
+      { key: "file_type", example: "recipe_card", note: "recipe_card | preset" },
+    ],
+    notes:
+      "Fires on every click. The on-site counter (Netlify Blobs) is separate: recipe cards are counted by the card.png route on every non-bot fetch, presets by a beacon to /api/downloads once per browser. It also catches visitors who block GA, so the two numbers will differ.",
   },
   {
     name: EVENTS.search,

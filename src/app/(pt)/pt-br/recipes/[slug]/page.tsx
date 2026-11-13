@@ -6,6 +6,9 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+/** Download counts come from Netlify Blobs; re-read at most once an hour (SPEC §10). */
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   return recipes.map((recipe) => ({ slug: recipe.slug }));
 }

@@ -83,6 +83,15 @@ export interface Dictionary {
     newsletterIntro: string;
   };
 
+  /** Download counters on recipes and presets (src/components/download-count.tsx). */
+  downloadCounts: {
+    /** Badge, gets the rounded number, e.g. "1,200+". */
+    count: (formatted: string) => string;
+    /** Site-wide line on /recipes. */
+    total: (formatted: string) => string;
+    mostDownloaded: string;
+  };
+
   recipePage: {
     title: (recipe: Recipe) => string;
     description: (recipe: Recipe) => string;
@@ -94,14 +103,20 @@ export interface Dictionary {
     eyebrow: string;
     heading: (recipe: Recipe) => string;
     by: string;
-    settingHeader: string;
     download: string;
+    /** Card panel: label, format line, the three facts above the button. */
+    panelEyebrow: string;
+    panelFormat: string;
+    specFree: string;
+    specPhone: string;
+    /** Contact-sheet strip: "7 frames", and the scroll hint. */
+    frames: (count: number) => string;
+    scrollHint: string;
     loadingHeading: string;
     loading1: string;
     loading2: string;
     wroteAbout: string;
-    alsoPublish: string;
-    sameDeal: string;
+    moreRecipes: string;
     shotOn: (recipe: Recipe) => string;
     lightroomHeading: string;
     lightroomIntro: string;

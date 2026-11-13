@@ -8,10 +8,7 @@ import type { Photo, PresetFile, Recipe } from "@/lib/types";
 
 /**
  * Placeholder frames, kept only as store product imagery while the store is
- * parked. Not shot on the recipe, so Vanilla Summer itself shows its
- * typographic RecipeCover instead.
- * TODO (owner): when there are frames actually shot on Vanilla Summer, put
- * them in the recipe's sampleFrames with recipe: "Vanilla Summer" on each.
+ * parked. Not shot on the recipe.
  */
 export const sampleFrames: Photo[] = [
   {
@@ -46,6 +43,68 @@ export const sampleFrames: Photo[] = [
   },
 ];
 
+/**
+ * Frames shot on Vanilla Summer, from the Cloudinary folder "Vanilla Summer"
+ * (added November 13, 2026). Shown as the teaser row on the recipe page.
+ */
+const vanillaSummerFrames: Photo[] = [
+  {
+    publicId: "Vanilla Summer/vanilla-summer_1_nrtziu",
+    alt: "The Belvedere palace behind clipped trees and lawns in warm afternoon light, Vienna",
+    city: "Vienna",
+    recipe: "Vanilla Summer",
+    width: 2667,
+    height: 4000,
+  },
+  {
+    publicId: "Vanilla Summer/vanilla-summer_2_o8m0ua",
+    alt: "The church spire of Hallstatt above the lake, mountains rising behind in haze",
+    city: "Hallstatt",
+    recipe: "Vanilla Summer",
+    width: 2667,
+    height: 4000,
+  },
+  {
+    publicId: "Vanilla Summer/vanilla-summer_3_xjwity",
+    alt: "Red striped awnings of a corner café on a sunny Paris street, tables full",
+    city: "Paris",
+    recipe: "Vanilla Summer",
+    width: 3000,
+    height: 4000,
+  },
+  {
+    publicId: "Vanilla Summer/vanilla-summer_4_kffojx",
+    alt: "A tabby cat looking up from sunlit cobblestones in Pérouges, France",
+    city: "Pérouges",
+    recipe: "Vanilla Summer",
+    width: 3000,
+    height: 4000,
+  },
+  {
+    publicId: "Vanilla Summer/vanilla-summer_5_ch6kok",
+    alt: "A sandstone Victorian facade in Old Montreal, framed by big green leaves",
+    city: "Montreal",
+    recipe: "Vanilla Summer",
+    width: 3000,
+    height: 4000,
+  },
+  {
+    publicId: "Vanilla Summer/vanilla-summer_6_w8vip5",
+    alt: "Blue bowls of ripe red tomatoes on a market stall",
+    recipe: "Vanilla Summer",
+    width: 3000,
+    height: 4000,
+  },
+  {
+    publicId: "Vanilla Summer/vanilla-summer_7_mr82gx",
+    alt: "A dog crossing a cobbled street past a pink wall and blue tiled house in Olinda, Brazil",
+    city: "Olinda",
+    recipe: "Vanilla Summer",
+    width: 3000,
+    height: 4000,
+  },
+];
+
 export const recipes: Recipe[] = [
   {
     slug: "vanilla-summer",
@@ -76,7 +135,7 @@ export const recipes: Recipe[] = [
     ],
     coverTone: "brick",
     thumbScene: "summer",
-    sampleFrames: [],
+    sampleFrames: vanillaSummerFrames,
     guideSlug: "vanilla-summer-recipe-explained",
   },
   {

@@ -274,7 +274,7 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 | `prints` | Prints out of nav (page was already noindex) | Prints nav item |
 
 **Free content model:**
-- Recipes are **open on the page** — full settings, no email gate, no checkout. Data in `src/content/recipes.ts` (`recipes` array); pages at `/recipes` + `/recipes/[slug]`. Never invent settings; values come from the published recipe card.
+- ~~Recipes are **open on the page** — full settings, no email gate, no checkout.~~ **Since November 13, 2026 the card is the recipe:** the recipe page shows the look, the setting *names* and the download button; the values appear only on the downloadable PNG (`/recipes/[slug]/card.png`, served as an attachment and counted server-side). Still free, still no email. Blog explainers describe the reasoning without exact values. Data in `src/content/recipes.ts` (`recipes` array); pages at `/recipes` + `/recipes/[slug]`. Never invent settings; values come from the published recipe card.
 - **Lightroom presets** are free static downloads: files in `public/presets/` (the one deliberate exception to the Cloudinary-only rule — they're .xmp/.dng profile files, not photos), listed via the `presets` array in `src/content/recipes.ts`. Sections render only when the array is non-empty — no "coming soon".
 - The newsletter form sits below the free content as an optional CTA, never a gate.
 
@@ -283,3 +283,5 @@ No CMS, no database, no auth, no user accounts, no stored orders, no client-side
 **Restore procedure:** flip the flag(s), fix netlify.toml store redirects (store only), `npm run build`, verify redirects on a deploy preview.
 
 **Legal pages:** `/privacy` and `/terms` were removed on November 12, 2026 by owner decision (no store, no newsletter, nothing sold). Google Analytics 4 keeps running without a disclosure page; this is an accepted gap. If the store or newsletter return, bring a privacy page back first.
+
+**Download counters (November 13, 2026):** recipe card and preset downloads are counted in a Netlify Blobs store (`downloads`, one key per file, counts only, nothing personal), incremented by the card route for recipe cards and by `/api/downloads` for presets, read server-side by `src/lib/download-counts.ts` with hourly ISR. Shown as a mono badge on recipe cards, recipe pages and preset rows, a total line on `/recipes`, and a "Most downloaded" tag on the clear leader. A badge stays hidden under `siteConfig.downloadCounts.minToShow` (50). Counts are never seeded or edited by hand and are rounded down on display. This is the one deliberate exception to the §9 no-database rule, approved by the owner; `@netlify/blobs` is the dependency.

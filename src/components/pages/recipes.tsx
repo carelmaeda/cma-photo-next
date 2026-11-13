@@ -3,8 +3,22 @@ import Link from "next/link";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { JsonLd, itemList } from "@/components/json-ld";
+import {
+  DownloadCount,
+  MostDownloadedTag,
+  formatDownloadCount,
+  showsDownloadCount,
+} from "@/components/download-count";
 import { RecipeCover } from "@/components/recipe-cover";
+import { TrackedDownload } from "@/components/tracked-download";
 import { recipes, presets } from "@/content/recipes";
+import {
+  getDownloadCounts,
+  mostDownloadedSlug,
+  presetDownloadId,
+  recipeDownloadId,
+  totalDownloads,
+} from "@/lib/download-counts";
 import { getDictionary, localePath, recipeTagline, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
@@ -21,8 +35,12 @@ export function recipesMetadata(locale: Locale): Metadata {
   });
 }
 
-export function RecipesPage({ locale }: { locale: Locale }) {
-  const t = getDictionary(locale).recipes;
+export async function RecipesPage({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.recipes;
+  const counts = await getDownloadCounts();
+  const total = totalDownloads(counts);
+  const topSlug = mostDownloadedSlug(counts);
 
   return (
     <div className="px-gutter">
@@ -42,6 +60,11 @@ export function RecipesPage({ locale }: { locale: Locale }) {
         </p>
         <h1 className="text-h3 mt-1">{t.heading}</h1>
         <p className="mt-1 max-w-prose text-sm text-ink-soft">{t.intro}</p>
+        {showsDownloadCount(total) && (
+          <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
+            {dict.downloadCounts.total(formatDownloadCount(total, locale))}
+          </p>
+        )}
       </header>
 
       <section className="mx-auto max-w-7xl">
@@ -81,6 +104,9 @@ export function RecipesPage({ locale }: { locale: Locale }) {
                   </>
                 )}
                 <div className="min-w-0">
+                  {recipe.slug === topSlug && (
+                    <MostDownloadedTag locale={locale} className="mb-1 sm:mt-3 sm:mb-0" />
+                  )}
                   <h2 className="font-display text-lg font-semibold group-hover:text-indigo sm:mt-3 sm:text-xl">
                     {recipe.name}
                   </h2>
@@ -90,6 +116,11 @@ export function RecipesPage({ locale }: { locale: Locale }) {
                   <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
                     {recipe.filmSimulation} · {recipe.compatibility}
                   </p>
+                  <DownloadCount
+                    count={counts[recipeDownloadId(recipe.slug)]}
+                    locale={locale}
+                    className="mt-1"
+                  />
                 </div>
               </Link>
             </li>
@@ -105,16 +136,23 @@ export function RecipesPage({ locale }: { locale: Locale }) {
             <ul className="mt-8 space-y-4">
               {presets.map((preset) => (
                 <li key={preset.file} className="border-b border-line pb-4">
-                  <a
+                  <TrackedDownload
+                    id={presetDownloadId(preset.file)}
+                    fileType="preset"
                     href={preset.file}
                     download
                     className="font-display text-xl font-semibold hover:text-indigo"
                   >
                     {preset.name}
-                  </a>
+                  </TrackedDownload>
                   <p className="mt-1 max-w-prose text-sm text-ink-soft">
                     {preset.description}
                   </p>
+                  <DownloadCount
+                    count={counts[presetDownloadId(preset.file)]}
+                    locale={locale}
+                    className="mt-2"
+                  />
                 </li>
               ))}
             </ul>

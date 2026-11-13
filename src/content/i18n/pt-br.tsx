@@ -16,7 +16,7 @@ export const ptBr: Dictionary = {
   site: {
     title: "Carel Maeda: Receitas Fujifilm e Fotografia de Viagem",
     description:
-      "Receitas Fujifilm gratuitas com todas as configurações, fotografia de viagem cidade por cidade e notas sobre fotografar em JPG direto da câmera. Feito em São Paulo, baseado em Toronto.",
+      "Receitas Fujifilm gratuitas em cartões para baixar com todas as configurações, fotografia de viagem cidade por cidade e notas sobre fotografar em JPG direto da câmera. Feito em São Paulo, baseado em Toronto.",
     keywords: [
       "receitas Fujifilm",
       "receitas de simulação de filme Fujifilm",
@@ -54,7 +54,7 @@ export const ptBr: Dictionary = {
   person: {
     jobTitle: "Fotógrafo de viagem",
     description:
-      "Fotógrafo de viagem com Fujifilm, JPG direto da câmera. Publica receitas Fujifilm gratuitas com todas as configurações.",
+      "Fotógrafo de viagem com Fujifilm, JPG direto da câmera. Publica receitas Fujifilm gratuitas em cartões para baixar.",
     knowsAbout: [
       "Receitas de simulação de filme Fujifilm",
       "Fotografia de viagem",
@@ -138,11 +138,11 @@ export const ptBr: Dictionary = {
   },
 
   recipes: {
-    title: "Receitas Fujifilm Grátis, Configurações Completas",
+    title: "Receitas Fujifilm Grátis para Baixar",
     description: (recipes) =>
       `Receitas de simulação de filme Fujifilm gratuitas para corpos X-Trans IV e V: ${recipes
         .map((recipe) => `${recipe.name} em ${recipe.filmSimulation}`)
-        .join(", ")}. Todas as configurações listadas, nada bloqueado.`,
+        .join(", ")}. Todas as configurações num cartão grátis para baixar, sem pedir e-mail.`,
     keywords: [
       "receitas Fujifilm grátis",
       "receitas Fujifilm X-Trans IV",
@@ -155,7 +155,7 @@ export const ptBr: Dictionary = {
     eyebrow: "Receita Fujifilm",
     heading: "Receitas Fujifilm",
     intro:
-      "Os visuais feitos dentro da câmera por trás das minhas fotos. Toda configuração está na página, de graça. Ajuste, salve num slot personalizado, vá fotografar.",
+      "Os visuais feitos dentro da câmera por trás das minhas fotos. Cada um é um cartão grátis com todas as configurações. Baixe, salve num slot personalizado, vá fotografar.",
     presetsHeading: "Presets para Lightroom",
     presetsIntro:
       "Eu fotografo em JPG e construo o visual na câmera. Se você fotografa em RAW e edita, estes presets dão o mesmo visual no Lightroom. Download grátis, sem pedir e-mail.",
@@ -164,10 +164,16 @@ export const ptBr: Dictionary = {
       "Mando um e-mail por mês, quase só fotos, e receitas novas quando ficam prontas. Cancele quando quiser.",
   },
 
+  downloadCounts: {
+    count: (formatted) => `${formatted} downloads`,
+    total: (formatted) => `Baixadas ${formatted} vezes até agora`,
+    mostDownloaded: "Mais baixada",
+  },
+
   recipePage: {
     title: (recipe) => `${recipe.name}: Receita Fujifilm ${recipe.filmSimulation}`,
     description: (recipe) =>
-      `Receita Fujifilm grátis: ${recipe.name}, um visual ${recipe.filmSimulation} para corpos ${recipe.compatibility}. Todas as configurações listadas. ${recipe.taglinePt}`,
+      `Receita Fujifilm grátis: ${recipe.name}, um visual ${recipe.filmSimulation} para corpos ${recipe.compatibility}. Todas as configurações num cartão grátis para baixar. ${recipe.taglinePt}`,
     keywords: (recipe) => [
       `receita Fujifilm ${recipe.name}`,
       `receita ${recipe.filmSimulation}`,
@@ -184,16 +190,20 @@ export const ptBr: Dictionary = {
     eyebrow: "Receita Fujifilm",
     heading: (recipe) => recipe.name,
     by: "por",
-    settingHeader: "Configuração",
-    download: "Baixar em PNG",
+    download: "Baixar o cartão da receita",
+    panelEyebrow: "Cartão da receita",
+    panelFormat: "PNG · 1080 × 1350 · para o celular",
+    specFree: "De graça. Sem pedir e-mail.",
+    specPhone: "Salve no celular e ajuste a câmera por ele",
+    frames: (count) => `${count} fotos`,
+    scrollHint: "Deslize",
     loadingHeading: "Como carregar",
     loading1:
       "Salve num slot personalizado (C1 a C7). Depois é só entrar no visual sem mexer nos menus de novo.",
     loading2:
       "E então pare de pensar nisso. A ideia toda é a câmera fazer o trabalho enquanto você olha a luz.",
     wroteAbout: "Escrevi sobre o porquê de cada configuração:",
-    alsoPublish: "Também publico",
-    sameDeal: ". Mesmo esquema: grátis, toda configuração na página.",
+    moreRecipes: "Mais receitas",
     shotOn: (recipe) => `Fotografado com ${recipe.name}`,
     lightroomHeading: "A versão para Lightroom",
     lightroomIntro:

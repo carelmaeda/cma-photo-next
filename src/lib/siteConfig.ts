@@ -47,6 +47,16 @@ export const siteConfig = {
    * their entry points. Flip a flag back to true to restore that section
    * (for the store, also reinstate the /downloads redirects in netlify.toml).
    */
+  /**
+   * Download counters on recipes and presets (SPEC §10). Counts live in
+   * Netlify Blobs and are read through src/lib/download-counts.ts. A badge
+   * stays hidden until a file reaches minToShow, so no page ever says
+   * "3 downloads". enabled: false hides every badge and stops counting.
+   */
+  downloadCounts: {
+    enabled: true,
+    minToShow: 50,
+  },
   features: {
     store: false, // /downloads catalog + product pages + cart widget + nav item
     gallery: false, // Gallery nav item only; /gallery and album pages stay live (off since October 21, 2026, the home page is the album wall)

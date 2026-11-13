@@ -10,6 +10,7 @@
     "check:functions": "tsc -p netlify/tsconfig.json"
   },
   "dependencies": {
+    "@netlify/blobs": "^11.1.9",
     "@next/third-parties": "^16.2.9",
     "@tailwindcss/postcss": "^4.3.0",
     "class-variance-authority": "^0.7.1",
