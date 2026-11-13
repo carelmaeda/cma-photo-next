@@ -24,7 +24,7 @@ export default function Error({
           of a checkout, nothing was charged.
         </p>
         <div className="mt-8">
-          <Button type="button" variant="outline" onClick={reset}>
+          <Button type="button" variant="outline" onClick={reset} className="w-full sm:w-auto">
             Try again
           </Button>
         </div>

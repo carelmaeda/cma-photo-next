@@ -26,9 +26,11 @@ const buttonVariants = cva(
         link: "text-indigo underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-[18px] py-2.5",
+        // Phones get a 52px button with 16px text: an easy thumb target that
+        // reads as an invitation. From sm up it settles to the desktop size.
+        default: "h-13 px-6 text-body sm:h-10 sm:px-[18px] sm:py-2.5 sm:text-sm",
         sm: "h-8 px-[13px] text-cap",
-        lg: "h-12 px-6 text-body",
+        lg: "h-14 px-7 text-body sm:h-12 sm:px-6",
         icon: "size-10",
         "icon-sm": "size-8",
         "icon-lg": "size-12",

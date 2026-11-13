@@ -117,7 +117,7 @@ export function RecipePage({ locale, slug }: { locale: Locale; slug: string }) {
         <a
           href={`/recipes/${recipe.slug}/card.png`}
           download={`${recipe.slug}-fujifilm-recipe.png`}
-          className="mt-6 inline-flex h-10 items-center gap-2 rounded-md bg-indigo px-4 text-sm font-semibold text-paper transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
+          className="mt-6 flex h-13 w-full items-center justify-center gap-2 rounded-md text-body sm:inline-flex sm:h-10 sm:w-auto sm:text-sm bg-indigo px-4 font-semibold text-paper transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
         >
           <Download className="size-4" aria-hidden />
           {t.download}

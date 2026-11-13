@@ -45,10 +45,16 @@ export function RecipesPage({ locale }: { locale: Locale }) {
       </header>
 
       <section className="mx-auto max-w-7xl">
-        <ul className="grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Phone: a compact list, 96px square thumb beside the text, so every
+            recipe is on screen without scrolling. sm and up: a 4:5 card grid,
+            three then four across, small enough to read as an index. */}
+        <ul className="border-t border-line sm:grid sm:grid-cols-3 sm:gap-x-5 sm:gap-y-8 sm:border-0 lg:grid-cols-4">
           {recipes.map((recipe) => (
-            <li key={recipe.slug}>
-              <Link href={localePath(locale, `/recipes/${recipe.slug}`)} className="group block">
+            <li key={recipe.slug} className="border-b border-line sm:border-0">
+              <Link
+                href={localePath(locale, `/recipes/${recipe.slug}`)}
+                className="group flex items-start gap-4 py-4 sm:block sm:py-0"
+              >
                 {recipe.sampleFrames[0] ? (
                   <CldImage
                     photo={recipe.sampleFrames[0]}
@@ -56,26 +62,35 @@ export function RecipesPage({ locale }: { locale: Locale }) {
                     height={1000}
                     crop="fill"
                     gravity="auto"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="w-full border border-line transition-opacity group-hover:opacity-90"
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 96px"
+                    className="aspect-square size-24 shrink-0 border border-line object-cover transition-opacity group-hover:opacity-90 sm:aspect-auto sm:size-auto sm:w-full"
                   />
                 ) : (
-                  /* No frames yet: a typographic cover in the same 4:5 box, so
-                     the grid stays even and nothing pretends to be the look. */
-                  <RecipeCover
-                    recipe={recipe}
-                    className="transition-opacity group-hover:opacity-90"
-                  />
+                  <>
+                    {/* No frames yet: the recipe's own drawn cover, never a
+                        random photo pretending to be the look. */}
+                    <RecipeCover
+                      recipe={recipe}
+                      variant="thumb"
+                      className="size-24 border border-line transition-opacity group-hover:opacity-90 sm:hidden"
+                    />
+                    <RecipeCover
+                      recipe={recipe}
+                      className="hidden transition-opacity group-hover:opacity-90 sm:block"
+                    />
+                  </>
                 )}
-                <h2 className="mt-3 font-display text-xl font-semibold group-hover:text-indigo">
-                  {recipe.name}
-                </h2>
-                <p className="mt-1 max-w-prose text-sm text-ink-soft">
-                  {recipeTagline(recipe, locale)}
-                </p>
-                <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
-                  {recipe.filmSimulation} · {recipe.compatibility}
-                </p>
+                <div className="min-w-0">
+                  <h2 className="font-display text-lg font-semibold group-hover:text-indigo sm:mt-3 sm:text-xl">
+                    {recipe.name}
+                  </h2>
+                  <p className="mt-1 max-w-prose text-sm text-ink-soft">
+                    {recipeTagline(recipe, locale)}
+                  </p>
+                  <p className="mt-2 text-cap font-mono tracking-frame text-ink-soft uppercase">
+                    {recipe.filmSimulation} · {recipe.compatibility}
+                  </p>
+                </div>
               </Link>
             </li>
           ))}

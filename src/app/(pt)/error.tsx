@@ -24,7 +24,7 @@ export default function Error({
           Alguma coisa deu errado do meu lado, não do seu.
         </p>
         <div className="mt-8">
-          <Button type="button" variant="outline" onClick={reset}>
+          <Button type="button" variant="outline" onClick={reset} className="w-full sm:w-auto">
             Tentar de novo
           </Button>
         </div>
