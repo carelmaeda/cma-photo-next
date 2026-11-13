@@ -40,8 +40,9 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           {/* Links are 48px flex boxes (size-7) like every other control, so
               their text centres on the header's midline instead of riding the
               baseline of a taller inline line box. The nav's right margin plus
-              the language trigger's left padding equals the gap-7 rhythm. */}
-          <nav aria-label={nav.main} data-ga-nav="header" className="mr-5 hidden md:block">
+              the language trigger's px-3 (44px) sits close to the gap-7
+              rhythm between links. */}
+          <nav aria-label={nav.main} data-ga-nav="header" className="mr-6 hidden md:block">
             <ul className="flex items-center gap-7">
               {links.map((link) => (
                 <li key={link.href}>
