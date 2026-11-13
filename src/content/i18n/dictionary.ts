@@ -89,8 +89,6 @@ export interface Dictionary {
   downloadCounts: {
     /** Badge, gets the rounded number, e.g. "1,200+". */
     count: (formatted: string) => string;
-    /** Site-wide line on /recipes. */
-    total: (formatted: string) => string;
     mostDownloaded: string;
   };
 

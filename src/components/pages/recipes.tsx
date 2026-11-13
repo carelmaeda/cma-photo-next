@@ -4,7 +4,7 @@ import { ArrowRight, Download } from "lucide-react";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { JsonLd, itemList } from "@/components/json-ld";
-import { DownloadCount, DownloadTotal, MostDownloadedTag } from "@/components/download-count";
+import { DownloadCount, MostDownloadedTag } from "@/components/download-count";
 import { RecipeCover } from "@/components/recipe-cover";
 import { TrackedDownload } from "@/components/tracked-download";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import {
   mostDownloadedSlug,
   presetDownloadId,
   recipeDownloadId,
-  totalDownloads,
 } from "@/lib/download-counts";
 import { getDictionary, localePath, recipeTagline, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
@@ -46,7 +45,6 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.recipes;
   const counts = await getDownloadCounts();
-  const total = totalDownloads(counts);
   const topSlug = mostDownloadedSlug(counts);
 
   return (
@@ -63,7 +61,7 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
       />
 
       <article className="mx-auto max-w-7xl">
-        {/* Masthead: title left, lead and the total on the right, bottoms aligned. */}
+        {/* Masthead: title left, lead on the right, bottoms aligned. */}
         <header className="pt-3 pb-8 md:grid md:grid-cols-12 md:items-end md:gap-x-10 md:pt-6 md:pb-10 lg:gap-x-16">
           <div className="md:col-span-7">
             <p className={eyebrow}>{t.eyebrow}</p>
@@ -71,7 +69,6 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
           </div>
           <div className="mt-5 md:col-span-5 md:mt-0">
             <p className="max-w-prose text-lg text-ink-soft">{t.intro}</p>
-            <DownloadTotal total={total} locale={locale} className="mt-5" />
           </div>
         </header>
 

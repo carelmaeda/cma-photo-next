@@ -167,7 +167,6 @@ export const ptBr: Dictionary = {
 
   downloadCounts: {
     count: (formatted) => `${formatted} downloads`,
-    total: (formatted) => `Baixadas ${formatted} vezes até agora`,
     mostDownloaded: "Mais baixada",
   },
 

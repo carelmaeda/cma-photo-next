@@ -50,21 +50,6 @@ export function DownloadCount({
   return <Chip className={className}>{t.count(formatDownloadCount(count, locale))}</Chip>;
 }
 
-/** The site-wide total on /recipes, same chip. */
-export function DownloadTotal({
-  total,
-  locale,
-  className,
-}: {
-  total: number;
-  locale: Locale;
-  className?: string;
-}) {
-  if (!showsDownloadCount(total)) return null;
-  const t = getDictionary(locale).downloadCounts;
-  return <Chip className={className}>{t.total(formatDownloadCount(total, locale))}</Chip>;
-}
-
 /** The "Most downloaded" tag on the leading recipe. */
 export function MostDownloadedTag({ locale, className }: { locale: Locale; className?: string }) {
   return (

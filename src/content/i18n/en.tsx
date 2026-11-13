@@ -172,7 +172,6 @@ export const en: Dictionary = {
 
   downloadCounts: {
     count: (formatted) => `${formatted} downloads`,
-    total: (formatted) => `Downloaded ${formatted} times so far`,
     mostDownloaded: "Most downloaded",
   },
 
