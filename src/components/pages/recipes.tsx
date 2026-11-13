@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { JsonLd, itemList } from "@/components/json-ld";
 import { DownloadCount, DownloadTotal, MostDownloadedTag } from "@/components/download-count";
 import { RecipeCover } from "@/components/recipe-cover";
 import { TrackedDownload } from "@/components/tracked-download";
+import { buttonVariants } from "@/components/ui/button";
 import { recipes, presets } from "@/content/recipes";
 import {
   getDownloadCounts,
@@ -77,82 +78,84 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
         {/* The contents: one row per recipe. */}
         <ol className="border-t border-line">
           {recipes.map((recipe, i) => {
-            const cover = recipe.sampleFrames[0];
-            const thumbs = recipe.sampleFrames.length >= 4 ? recipe.sampleFrames.slice(1, 4) : [];
+            const href = localePath(locale, `/recipes/${recipe.slug}`);
+            const thumbs = recipe.sampleFrames.length >= 3 ? recipe.sampleFrames.slice(0, 3) : [];
             const imageRight = i % 2 === 1;
             return (
-              <li key={recipe.slug} className="border-b border-line">
+              <li
+                key={recipe.slug}
+                className="grid gap-6 border-b border-line py-8 md:grid-cols-12 md:gap-x-10 md:py-10 lg:gap-x-16"
+              >
+                {/* The recipe's own cover, always: the drawn film box is its identity. */}
                 <Link
-                  href={localePath(locale, `/recipes/${recipe.slug}`)}
-                  className="group grid gap-6 py-8 md:grid-cols-12 md:gap-x-10 md:py-10 lg:gap-x-16"
+                  href={href}
+                  aria-label={recipe.name}
+                  className={cn("block md:col-span-4", imageRight && "md:order-2")}
                 >
-                  <div className={cn("md:col-span-4", imageRight && "md:order-2")}>
-                    {cover ? (
-                      <CldImage
-                        photo={cover}
-                        width={800}
-                        height={1000}
-                        crop="fill"
-                        gravity="auto"
-                        priority={i === 0}
-                        sizes="(min-width: 768px) 33vw, 100vw"
-                        className="aspect-[4/3] w-full border border-line object-cover transition-opacity group-hover:opacity-90 md:aspect-[4/5]"
-                      />
-                    ) : (
-                      // No frames yet: the recipe's own drawn cover, never a
-                      // random photo pretending to be the look.
-                      <RecipeCover
-                        recipe={recipe}
-                        className="transition-opacity group-hover:opacity-90"
-                      />
-                    )}
-                  </div>
-
-                  <div className="min-w-0 md:col-span-8 md:flex md:flex-col md:justify-center">
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                      <p className={eyebrow}>Nº {String(i + 1).padStart(2, "0")}</p>
-                      {recipe.slug === topSlug && <MostDownloadedTag locale={locale} />}
-                    </div>
-                    <h2 className="text-h2 mt-3 group-hover:text-indigo md:text-h1">
-                      {recipe.name}
-                    </h2>
-                    <p className="mt-3 max-w-prose text-lg text-ink-soft">
-                      {recipeTagline(recipe, locale)}
-                    </p>
-                    <p className={cn(eyebrow, "mt-5")}>
-                      {recipe.filmSimulation} · {recipe.compatibility}
-                    </p>
-
-                    {thumbs.length > 0 && (
-                      <ul className="mt-6 flex gap-2" aria-hidden>
-                        {thumbs.map((photo) => (
-                          <li key={photo.publicId} className="size-14 md:size-16">
-                            <CldImage
-                              photo={photo}
-                              width={160}
-                              height={160}
-                              crop="fill"
-                              gravity="auto"
-                              sizes="64px"
-                              className="size-full border border-line object-cover"
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-                      <DownloadCount count={counts[recipeDownloadId(recipe.slug)]} locale={locale} />
-                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo">
-                        {t.view}
-                        <ArrowRight
-                          className="size-4 transition-transform group-hover:translate-x-0.5"
-                          aria-hidden
-                        />
-                      </span>
-                    </div>
-                  </div>
+                  <RecipeCover recipe={recipe} className="transition-opacity hover:opacity-90" />
                 </Link>
+
+                <div className="min-w-0 md:col-span-8 md:flex md:flex-col md:justify-center">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <p className={eyebrow}>Nº {String(i + 1).padStart(2, "0")}</p>
+                    {recipe.slug === topSlug && <MostDownloadedTag locale={locale} />}
+                  </div>
+                  <h2 className="text-h2 mt-3 md:text-h1">
+                    <Link href={href} className="hover:text-indigo">
+                      {recipe.name}
+                    </Link>
+                  </h2>
+                  <p className="mt-3 max-w-prose text-lg text-ink-soft">
+                    {recipeTagline(recipe, locale)}
+                  </p>
+                  <p className={cn(eyebrow, "mt-5")}>
+                    {recipe.filmSimulation} · {recipe.compatibility}
+                  </p>
+
+                  {thumbs.length > 0 && (
+                    <ul className="mt-6 flex gap-2" aria-hidden>
+                      {thumbs.map((photo) => (
+                        <li key={photo.publicId} className="size-14 md:size-16">
+                          <CldImage
+                            photo={photo}
+                            width={160}
+                            height={160}
+                            crop="fill"
+                            gravity="auto"
+                            sizes="64px"
+                            className="size-full border border-line object-cover"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* The one action: the card itself, counted by the click beacon.
+                      The recipe page is the quiet second link. */}
+                  <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5">
+                    <TrackedDownload
+                      id={recipeDownloadId(recipe.slug)}
+                      fileType="recipe_card"
+                      href={`/recipes/${recipe.slug}/card.png`}
+                      download={`${recipe.slug}-fujifilm-recipe.png`}
+                      className={cn(buttonVariants(), "w-full sm:w-auto")}
+                    >
+                      <Download aria-hidden />
+                      {dict.recipePage.download}
+                    </TrackedDownload>
+                    <DownloadCount count={counts[recipeDownloadId(recipe.slug)]} locale={locale} />
+                    <Link
+                      href={href}
+                      className="group inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft hover:text-indigo"
+                    >
+                      {t.view}
+                      <ArrowRight
+                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </Link>
+                  </div>
+                </div>
               </li>
             );
           })}
