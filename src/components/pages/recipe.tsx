@@ -14,7 +14,7 @@ import { recipes, getRecipe, presets } from "@/content/recipes";
 import { getDownloadCounts, presetDownloadId, recipeDownloadId } from "@/lib/download-counts";
 import { getGuide } from "@/lib/guides";
 import { getDictionary, htmlLang, localePath, recipeTagline, type Locale } from "@/lib/i18n";
-import { pageMetadata, ogImageUrl } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/siteConfig";
 import { cn } from "@/lib/utils";
 
@@ -28,9 +28,6 @@ export function recipeMetadata(locale: Locale, slug: string): Metadata {
     title: t.title(recipe),
     description: t.description(recipe),
     path: localePath(locale, `/recipes/${recipe.slug}`),
-    image: recipe.sampleFrames[0]
-      ? ogImageUrl(recipe.sampleFrames[0].publicId)
-      : undefined,
     keywords: t.keywords(recipe),
     twin: true,
   });

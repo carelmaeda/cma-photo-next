@@ -32,7 +32,7 @@ interface LinkRow {
   href: string;
   label: string;
   external: boolean;
-  /** Cloudinary thumb; a recipe without one shows its RecipeCover. */
+  /** Cloudinary thumb for non-recipe rows. A recipe row always shows its own drawn RecipeCover. */
   photo?: Photo;
   recipe?: Recipe;
   /** Slightly bigger, indigo-filled row at the top: the link I want tapped first. */
@@ -59,7 +59,6 @@ const links: LinkRow[] = [
       href: `/recipes/${recipe.slug}`,
       label: `${recipe.name} recipe`,
       external: false,
-      photo: recipe.sampleFrames[0],
       recipe,
       featured: recipe.slug === FEATURED_SLUG,
     }))
@@ -71,7 +70,6 @@ const links: LinkRow[] = [
       href: `/pt-br/recipes/${recipe.slug}`,
       label: `Receita ${recipe.name}`,
       external: false,
-      photo: recipe.sampleFrames[0],
       recipe,
       lang: "pt-BR" as const,
     })),
