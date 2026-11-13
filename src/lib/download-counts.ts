@@ -35,11 +35,7 @@ const store = () => getStore({ name: STORE, consistency: "strong" });
 
 export type DownloadCounts = Record<string, number>;
 
-/**
- * Keys use "/" as the separator. A ":" in a key made every Blobs call on it
- * hang until the function timeout on Netlify (November 13, 2026), while the
- * same calls on a plain key took milliseconds. Never put ":" in a key.
- */
+/** Keys use "/" as the separator ("recipe/vanilla-summer"). */
 export const recipeDownloadId = (slug: string) => `recipe/${slug}`;
 export const presetDownloadId = (file: string) => `preset/${file.replace(/^\/+/, "")}`;
 
@@ -157,11 +153,9 @@ export async function probeDownloadStore() {
   await run("set", () => store().set("_probe", new Date().toISOString()));
   await run("get-after-set", () => store().get("_probe"));
   await run("list-after-set", async () => (await store().list()).blobs.map((blob) => blob.key));
-  // November 13, 2026: which gets hang? A plain key that was never written,
-  // and the never-written slash and colon keys, against the existing _probe.
-  await run("get-missing-plain", () => store().get(`_probe_missing_${Date.now()}`));
-  await run("get-slash-key", () => store().get("probe/slash"));
-  await run("get-colon-key", () => store().get("probe:colon"));
+  // Not probed on purpose: get() on a never-written key. On November 13, 2026
+  // it hung until the timeout every time (plain, slash and colon keys alike),
+  // which is why the counter only reads keys that list() has shown.
 
   return {
     env: {
