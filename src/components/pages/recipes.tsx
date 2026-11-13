@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { CldImage } from "@/components/cld-image";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { JsonLd, itemList } from "@/components/json-ld";
@@ -127,30 +127,17 @@ export async function RecipesPage({ locale }: { locale: Locale }) {
                     </ul>
                   )}
 
-                  {/* The one action: the card itself, counted by the click beacon.
-                      The recipe page is the quiet second link. */}
+                  {/* The one action: the recipe page, where the download lives.
+                      The index is for choosing; the page is the link to share. */}
                   <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5">
-                    <TrackedDownload
-                      id={recipeDownloadId(recipe.slug)}
-                      fileType="recipe_card"
-                      href={`/recipes/${recipe.slug}/card.png`}
-                      download={`${recipe.slug}-fujifilm-recipe.png`}
-                      className={cn(buttonVariants(), "w-full sm:w-auto")}
-                    >
-                      <Download aria-hidden />
-                      {dict.recipePage.download}
-                    </TrackedDownload>
-                    <DownloadCount count={counts[recipeDownloadId(recipe.slug)]} locale={locale} />
-                    <Link
-                      href={href}
-                      className="group inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft hover:text-indigo"
-                    >
+                    <Link href={href} className={cn(buttonVariants(), "group w-full sm:w-auto")}>
                       {t.view}
                       <ArrowRight
-                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        className="transition-transform group-hover:translate-x-0.5"
                         aria-hidden
                       />
                     </Link>
+                    <DownloadCount count={counts[recipeDownloadId(recipe.slug)]} locale={locale} />
                   </div>
                 </div>
               </li>
