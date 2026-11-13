@@ -134,7 +134,7 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
           role="menu"
           aria-label={labels.language}
           onKeyDown={onMenuKeyDown}
-          className="absolute top-full right-3 z-50 -mt-px w-max min-w-[11rem] origin-top-right overflow-hidden rounded-b-md border border-line bg-paper shadow-pop animate-in fade-in-0 slide-in-from-top-1 duration-200"
+          className="absolute top-full right-3 z-50 -mt-px w-max min-w-44 origin-top-right overflow-hidden rounded-b-md border border-line bg-paper shadow-pop animate-in fade-in-0 slide-in-from-top-1 duration-200"
         >
           <p className="border-b border-line px-3 pt-2 pb-1 font-mono text-micro tracking-eyebrow uppercase text-ink-soft">
             {labels.language}
@@ -151,7 +151,7 @@ export function LanguageMenu({ locale, labels, ptPostSlugs, className }: Languag
                 aria-current="true"
                 tabIndex={0}
                 lang={htmlLang[entry]}
-                className={`${row} font-semibold text-ink before:absolute before:inset-y-2 before:left-0 before:w-[2px] before:bg-brick`}
+                className={`${row} font-semibold text-ink before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:bg-brick`}
               >
                 <span>{labels.names[entry]}</span>
                 <span className={`${code} text-brick`}>{labels.codes[entry]}</span>
