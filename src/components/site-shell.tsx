@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { PersonJsonLd, WebSiteJsonLd } from "@/components/json-ld";
 import { Analytics } from "@/components/analytics";
 import { AnalyticsTracking } from "@/components/analytics-tracking";
-import { jakarta, spaceMono } from "@/lib/fonts";
+import { jakarta } from "@/lib/fonts";
 import { getDictionary, htmlLang, type Locale } from "@/lib/i18n";
 
 /**
@@ -41,7 +41,7 @@ export async function SiteShell({
     // Only suppresses attribute mismatches on these two elements.
     <html
       lang={htmlLang[locale]}
-      className={`${jakarta.variable} ${spaceMono.variable}`}
+      className={jakarta.variable}
       suppressHydrationWarning
     >
       {/* eslint-disable-next-line @next/next/no-head-element -- this is the

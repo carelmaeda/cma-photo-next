@@ -44,8 +44,8 @@
     --leading-tight: 1.12;
     --leading-snug: 1.35;
     --leading-body: 1.65;
-    --tracking-eyebrow: 0.14em;
-    --tracking-frame: 0.12em;
+    --tracking-eyebrow: 0.08em;   /* small-caps labels in Jakarta: light tracking, never the wide mono spacing */
+    --tracking-frame: 0.08em;
 
     /* — Spacing (4px base) — */
     --spacing-1: 0.25rem;
@@ -109,7 +109,9 @@
 /* Fonts come from next/font variables set on <html> in layout.tsx */
 @theme inline {
     --font-sans: var(--font-jakarta);
-    --font-mono: var(--font-space-mono);
+    /* Captions, eyebrows and data labels are Jakarta too (semibold small caps,
+       see .font-mono in @layer base). One face site-wide since November 13, 2026. */
+    --font-mono: var(--font-jakarta);
     --font-display: var(--font-jakarta);
 
     /* shadcn semantic bridge */
@@ -193,10 +195,17 @@
         color: var(--color-paper);
     }
 
-    /* Mono eyebrow helper — uppercase, letterspaced data labels */
+    /* Caption / data label role: Jakarta semibold small caps. font-mono is the
+       utility every caption already uses; base layer, so font-normal still wins. */
+    .font-mono {
+        font-weight: 600;
+    }
+
+    /* Eyebrow helper — uppercase, lightly letterspaced labels */
     .eyebrow {
         font-family: var(--font-mono);
         font-size: var(--text-micro);
+        font-weight: 600;
         letter-spacing: var(--tracking-eyebrow);
         text-transform: uppercase;
         color: var(--color-warm);

@@ -95,9 +95,9 @@ Light-only, photo-first, warm personal storyteller. **Authority:** the codified 
 | Axis | Value |
 |---|---|
 | Display + body font | **Plus Jakarta Sans** (`--font-sans`, weights 400–700) via next/font |
-| Data / captions / eyebrows font | **Space Mono** (`--font-mono`) via next/font |
+| Data / captions / eyebrows font | ~~Space Mono~~ **Plus Jakarta Sans, semibold small caps** (`--font-mono` points at Jakarta since November 13, 2026; one face site-wide) |
 | Type scale | `--fs-display 2.75rem` … `--fs-body 1rem` … `--fs-cap .75rem` / `--fs-micro .6875rem` (mono) |
-| Eyebrow | mono, uppercase, `letter-spacing .14em`, `--color-warm` |
+| Eyebrow | Jakarta 600, uppercase, `letter-spacing .08em`, `--color-warm` |
 | Radius | `--r-sm 4px / --r-md 6px / --r-lg 10px / --r-full 9999px`. **Photos are square (`--r-none 0`).** |
 | Elevation | mostly flat. `--shadow-pop 0 6px 22px/.10` (dropdowns, sticky header on scroll); `--shadow-overlay 0 16px 50px/.30` (lightbox controls). No shadows on cards/photos. |
 | Section spacing | 4px base scale `--space-1…--space-9` (`6rem` max). |
@@ -108,7 +108,7 @@ Light-only, photo-first, warm personal storyteller. **Authority:** the codified 
 - Frame photos on paper with a `--color-line` (`#E0DACD`) hairline so images stay the hero.
 - **Galleries are masonry**, square, edge-to-edge: CSS columns driven by `--cols` (2 → 3 @768 → 4 @1280) and `--photo-gap 4px`. Never card chrome around photos.
 - **Album wall** (home + `/gallery` index, `AlbumWall` in `src/components/album-wall.tsx`): same `.masonry` columns with the wider `--tile-gap 1rem` (`.masonry--wall`), one cover per album rendered `crop="limit"` at its stored `width`/`height` so each frame keeps its real proportions (covers without dimensions fall back to a 4:5 fill). No caption row: the city name sits in a `.tile-label` ink chip that fades in on hover/focus and stays visible on touch screens. Column order follows `albums.ts` order (columns fill top to bottom).
-- **Caption / EXIF row** = Space Mono, `--fs-cap`, `--color-warm` (the `FrameCaption` component, restyled). Format e.g. `FR-014 · PARIS · GFX100RF · VANILLA SUMMER`.
+- **Caption / EXIF row** = Jakarta semibold small caps, `--fs-cap`, `--color-warm` (the `FrameCaption` component, restyled). Format e.g. `FR-014 · PARIS · GFX100RF · VANILLA SUMMER`.
 
 ### Components
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { jakarta, spaceMono } from "@/lib/fonts";
+import { jakarta } from "@/lib/fonts";
 import { en } from "@/content/i18n/en";
 import { ptBr } from "@/content/i18n/pt-br";
 import "@/app/globals.css";
@@ -22,7 +22,7 @@ const back = "mt-8 inline-block text-cap font-mono tracking-frame uppercase hove
 
 export default function GlobalNotFound() {
   return (
-    <html lang="en" className={`${jakarta.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={jakarta.variable}>
       <body className="flex min-h-svh flex-col">
         <main className="px-gutter flex-1">
           <div className="mx-auto max-w-7xl py-24">
